@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="linq2db.SQLite" Version="1.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DataModel\Cintra.SQLite.Core.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Cintra.SQLite.Core.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DataModel\Cintra.SQLite.Core.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Cintra.SQLite.Core.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>
