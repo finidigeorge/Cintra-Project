@@ -5,6 +5,8 @@
 // </auto-generated>
 //---------------------------------------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using LinqToDB;
 using LinqToDB.Mapping;
@@ -12,23 +14,94 @@ using LinqToDB.Mapping;
 namespace DataModels
 {
 	/// <summary>
-	/// Database       : CintraDb
-	/// Data Source    : CintraDb
+	/// Database       : Cintra
+	/// Data Source    : Cintra
 	/// Server Version : 3.14.2
 	/// </summary>
-	public partial class CintraDbDB : LinqToDB.Data.DataConnection
+	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
-		public CintraDbDB()
+		public ITable<DbUpdatesLog> DbUpdatesLog { get { return this.GetTable<DbUpdatesLog>(); } }
+		public ITable<User>         Users        { get { return this.GetTable<User>(); } }
+		public ITable<UserRoles>    UserRoles    { get { return this.GetTable<UserRoles>(); } }
+
+		public CintraDB()
 		{
 			InitDataContext();
 		}
 
-		public CintraDbDB(string configuration)
+		public CintraDB(string configuration)
 			: base(configuration)
 		{
 			InitDataContext();
 		}
 
 		partial void InitDataContext();
+	}
+
+	[Table("db_updates_log")]
+	public partial class DbUpdatesLog
+	{
+		[PrimaryKey, Identity] public long     SchemaVersionID { get; set; } // integer
+		[Column,     NotNull ] public string   ScriptName      { get; set; } // text(max)
+		[Column,     NotNull ] public DateTime Applied         { get; set; } // datetime
+	}
+
+	[Table("users")]
+	public partial class User
+	{
+		[Column("id"),                    PrimaryKey,  Identity] public long   Id                 { get; set; } // integer
+		[Column("login"),                 NotNull              ] public string Login              { get; set; } // varchar(32)
+		[Column("name"),                  NotNull              ] public string Name               { get; set; } // varchar(128)
+		[Column("password"),              NotNull              ] public string Password           { get; set; } // varchar(255)
+		[Column("new_password_on_login"),    Nullable          ] public bool?  NewPasswordOnLogin { get; set; } // boolean
+		[Column("role_id"),               NotNull              ] public long   RoleId             { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_users_0_0
+		/// </summary>
+		[Association(ThisKey="RoleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_users_0_0", BackReferenceName="users")]
+		public UserRoles user_roles { get; set; }
+
+		#endregion
+	}
+
+	[Table("user_roles")]
+	public partial class UserRoles
+	{
+		[Column("id"),   PrimaryKey,  NotNull] public long   Id   { get; set; } // integer
+		[Column("name"),    Nullable         ] public string Name { get; set; } // varchar(255)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_users_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="RoleId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<User> users { get; set; }
+
+		#endregion
+	}
+
+	public static partial class TableExtensions
+	{
+		public static DbUpdatesLog Find(this ITable<DbUpdatesLog> table, long SchemaVersionID)
+		{
+			return table.FirstOrDefault(t =>
+				t.SchemaVersionID == SchemaVersionID);
+		}
+
+		public static User Find(this ITable<User> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static UserRoles Find(this ITable<UserRoles> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
 	}
 }

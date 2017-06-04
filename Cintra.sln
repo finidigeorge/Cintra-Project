@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbLayer", "DbLayer\DbLayer.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{E2A63353-1B0D-4248-8555-41F9628AE247}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "Controllers\Controllers.csproj", "{6E911347-D31F-4D73-8C54-F9303AAA17EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E2A63353-1B0D-4248-8555-41F9628AE247}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2A63353-1B0D-4248-8555-41F9628AE247}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2A63353-1B0D-4248-8555-41F9628AE247}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E911347-D31F-4D73-8C54-F9303AAA17EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E911347-D31F-4D73-8C54-F9303AAA17EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E911347-D31F-4D73-8C54-F9303AAA17EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E911347-D31F-4D73-8C54-F9303AAA17EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

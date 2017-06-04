@@ -36,7 +36,7 @@
 
 	NamespaceName = "DataModels";
 
-	LoadSQLiteMetadata(@"C:\ProgramData\Cintra\", "CintraDb.sqlite");
+	LoadSQLiteMetadata(@"C:\ProgramData\Cintra\Db\", "Cintra.sqlite");
 //	LoadSQLiteMetadata(string connectionString);
 
 	GenerateModel();
