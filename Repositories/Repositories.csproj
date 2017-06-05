@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbLayer\DbLayer.csproj" />
+    <ProjectReference Include="..\Shared\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

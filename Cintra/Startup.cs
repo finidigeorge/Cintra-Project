@@ -38,9 +38,7 @@ namespace Cintra
             // configure lin2db
             LinqToDB.Data.DataConnection.DefaultSettings = new DbSettings(configuration.GetSection("LinqToDb"));
 
-            var assemblyNames = new[] {
-                "Shared",
-                "DbLayer",
+            var assemblyNames = new[] {                
                 "Repositories",
                 "Controllers",
             };
@@ -197,6 +195,9 @@ namespace Cintra
             var a = app.ServerFeatures.Get<IServerAddressesFeature>();
             a.Addresses.Clear();
             a.Addresses.Add($"http://*:{Configuration.GetValue<int>("Port")}");
+
+            //app.UseMiddleware();
+            app.UseMvc();
 
         }
     }
