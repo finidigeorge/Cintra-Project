@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cintra", "Cintra\Cintra.csproj", "{C5860C5F-5DF3-4C6F-A618-CA89F3D0ACD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{C5860C5F-5DF3-4C6F-A618-CA89F3D0ACD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared\Shared.csproj", "{4AAC7E4A-A071-42CA-A6A5-5F24482FF3E3}"
 EndProject
