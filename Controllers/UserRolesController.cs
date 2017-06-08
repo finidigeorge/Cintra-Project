@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.Interfaces;
 using Shared.Dto;
@@ -9,6 +10,7 @@ using Shared.Interfaces;
 
 namespace Controllers
 {
+    [Authorize]
     [Route("/api/userRoles")]
     public class UserRolesController : Controller, IUserRolesController
     {

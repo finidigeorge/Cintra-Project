@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,8 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Server.Middlewares;
 using Shared;
 using Shared.Attributes;
 
@@ -161,10 +164,40 @@ namespace Cintra
             var a = app.ServerFeatures.Get<IServerAddressesFeature>();
             a.Addresses.Clear();
             a.Addresses.Add($"http://*:{Configuration.GetValue<int>("Port")}");
+            
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                TokenValidationParameters = GetJwtTokenValidationParameters()
+            });
 
-            //app.UseMiddleware();
+            app.UseMiddleware(typeof(ExceptionHandlerMiddleware));
             app.UseMvc();
 
+        }
+
+        private TokenValidationParameters GetJwtTokenValidationParameters()
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {                
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Jwt").GetValue<string>("SecretKey"))), 
+
+                // Validate the JWT Issuer (iss) claim
+                ValidateIssuer = true,
+                ValidIssuer = Configuration.GetSection("Jwt").GetValue<string>("Issuer"),
+
+                // Validate the JWT Audience (aud) claim
+                ValidateAudience = true,
+                ValidAudience = Configuration.GetSection("Jwt").GetValue<string>("Audience"),
+
+                // Validate the token expiry
+                ValidateLifetime = true,
+                
+                ClockSkew = TimeSpan.Zero
+            };
+            return tokenValidationParameters;
         }
     }
 }
