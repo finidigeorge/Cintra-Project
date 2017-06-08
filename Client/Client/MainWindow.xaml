@@ -1,0 +1,32 @@
+﻿<Window x:Class="Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="Sydney Horses Management" Height="800" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Menu x:Name="MainMenu" Height="20" Margin="0,0,0,0" VerticalAlignment="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About"/>
+            </MenuItem>
+
+        </Menu>
+        <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged">
+            <TabItem Header="User Roles" Name="UserRoles">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid Name="dgUserRoles" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        
+
+    </Grid>
+</Window>

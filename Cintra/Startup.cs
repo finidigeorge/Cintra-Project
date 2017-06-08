@@ -59,16 +59,11 @@ namespace Cintra
                     }
 
                     var ti = type.GetTypeInfo();
-                    var interfaces = ti.ImplementedInterfaces.Where(i => !i.Namespace.StartsWith("System") && i != typeof(IStartupHandler));
-                    interfaces = interfaces.Except(interfaces.SelectMany(i => i.GetTypeInfo().ImplementedInterfaces));
+                    var interfaces = ti.ImplementedInterfaces.Where(i => !i.Namespace.StartsWith("System") && i != typeof(IStartupHandler)).ToList();
+                    interfaces = interfaces.Except(interfaces.SelectMany(i => i.GetTypeInfo().ImplementedInterfaces)).ToList();
 
                     if (ti.GetCustomAttributes<PerScope>().Any())
                     {
-                        if (interfaces.Count() > 1)
-                        {
-                            Console.WriteLine($"Multiple interface implementations found: {type} - [{string.Join(",", interfaces.Select(i => i.Name))}]");
-                        }
-
                         foreach (var i in interfaces)
                         {
                             services.AddScoped(i, type);
@@ -77,11 +72,6 @@ namespace Cintra
 
                     if (ti.GetCustomAttributes<Chained>().Any())
                     {
-                        if (interfaces.Count() > 1)
-                        {
-                            Console.WriteLine($"Multiple interface implementations found: {type} - [{string.Join(",", interfaces.Select(i => i.Name))}]");
-                        }
-
                         foreach (var i in interfaces)
                         {
                             services.AddTransient(i, type);
@@ -91,11 +81,6 @@ namespace Cintra
                     if (ti.GetCustomAttributes<Singleton>().Any())
                     {
                         var attr = ti.GetCustomAttributes<Singleton>().First();
-
-                        if (interfaces.Count() > 1)
-                        {
-                            Console.WriteLine($"Multiple interface implementations found: {type} - [{string.Join(",", interfaces.Select(i => i.Name))}]");
-                        }
 
                         foreach (var i in interfaces)
                         {
@@ -118,38 +103,19 @@ namespace Cintra
 
                 }
             }
-
-            // configure automapper
-            //var allProfiles = Assemblies.SelectMany(a => a.ExportedTypes).Where(t => typeof(Profile).IsAssignableFrom(t));
-
-            /*var mapperConfiguration = new MapperConfiguration(cfg =>
-            {
-                //add your profiles (either resolve from container or however else you acquire them)
-                foreach (var profile in allProfiles)
-                {
-                    cfg.AddProfile(profile);
-                }
-            });
-            */
-
+            
             var serviceProvider = services.BuildServiceProvider();
-            //services.AddSingleton(mapperConfiguration.CreateMapper(serviceProvider.GetRequiredService));
 
             foreach (var singleton in instantiateOnStartup)
             {
                 System.Console.WriteLine($"Instantiating {singleton}");
 
                 IStartupHandler startupHandler = null;
-                if (isolatedScope.Contains(singleton))
-                {
-                    // TODO: new scope is deliberately left un-disposed, need some kind of app dispose handler to clean it up
-                    startupHandler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService(singleton) as IStartupHandler;
-                }
-                else
-                {
+                if (isolatedScope.Contains(singleton))                
+                    startupHandler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService(singleton) as IStartupHandler;                
+                else                
                     startupHandler = serviceProvider.GetRequiredService(singleton) as IStartupHandler;
-                }
-
+                
                 startupHandler?.Run();
             }
 
@@ -157,7 +123,7 @@ namespace Cintra
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    options.SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;                    
+                    //options.SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;                    
                     options.SerializerSettings.ObjectCreationHandling = ObjectCreationHandling.Replace;
                 });
             }

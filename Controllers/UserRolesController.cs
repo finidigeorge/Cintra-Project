@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.Interfaces;
+using Shared.Dto;
+using Shared.Interfaces;
 
 namespace Controllers
 {
     [Route("/api/userRoles")]
-    public class UserRolesController : Controller
+    public class UserRolesController : Controller, IUserRolesController
     {
         private readonly IUserRolesRepository _userRolesRepository;
 
@@ -19,9 +21,9 @@ namespace Controllers
 
         // GET api/userRoles
         [HttpGet]        
-        public async Task<IEnumerable<string>> Get()
+        public async Task<IEnumerable<UserRoleDto>> Get()
         {
-            return (await _userRolesRepository.GetAll()).Select(x => x.Name);
+            return (await _userRolesRepository.GetAll()).Select(ObjectMapper.Map<UserRoleDto>);                        
         }
 
         // GET api/userRoles/5
