@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Controllers.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +31,10 @@ namespace Cintra
     {        
         public static IEnumerable<Assembly> Assemblies;
 
-        private static void _configureServices(IServiceCollection services, IConfiguration configuration)
+        public IConfigurationRoot Configuration { get; }
+        private SymmetricSecurityKey SigningKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Jwt").GetValue<string>("SecretKey")));
+
+        private void _configureServices(IServiceCollection services)
         {
             services.AddCors(c => c.AddPolicy("*", b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build()));
 
@@ -39,13 +43,15 @@ namespace Cintra
             services.AddOptions();
 
             // configure lin2db
-            LinqToDB.Data.DataConnection.DefaultSettings = new DbSettings(configuration.GetSection("LinqToDb"));
+            LinqToDB.Data.DataConnection.DefaultSettings = new DbSettings(Configuration.GetSection("LinqToDb"));
 
             var assemblyNames = new[] {                
                 "Repositories",
                 "Controllers",
             };
 
+
+            //Set up DI container
             Assemblies = assemblyNames.Select(s => new AssemblyName(s)).Select(s => Assembly.Load(s)).ToList();
 
             var instantiateOnStartup = new HashSet<Type>();
@@ -122,11 +128,19 @@ namespace Cintra
                 startupHandler?.Run();
             }
 
+            // Configure JwtTokenOptions
+            var jwtAppSettingOptions = Configuration.GetSection("Jwt");            
+            services.Configure<JwtTokenOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)];
+                options.SigningCredentials = new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
+            });
+
             services.AddMvc()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    //options.SerializerSettings.TypeNameHandling = TypeNameHandling.Objects;                    
                     options.SerializerSettings.ObjectCreationHandling = ObjectCreationHandling.Replace;
                 });
             }
@@ -141,9 +155,7 @@ namespace Cintra
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
             
-        }
-
-        public IConfigurationRoot Configuration { get; }
+        }        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -151,7 +163,30 @@ namespace Cintra
             // Add framework services.
             services.AddSingleton<IConfiguration>(Configuration);
 
-            _configureServices(services, Configuration);
+            _configureServices(services);
+        }
+
+        private TokenValidationParameters GetJwtTokenValidationParameters()
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = SigningKey,
+
+                // Validate the JWT Issuer (iss) claim
+                ValidateIssuer = true,
+                ValidIssuer = Configuration.GetSection("Jwt").GetValue<string>("Issuer"),
+
+                // Validate the JWT Audience (aud) claim
+                ValidateAudience = true,
+                ValidAudience = Configuration.GetSection("Jwt").GetValue<string>("Audience"),
+
+                // Validate the token expiry
+                ValidateLifetime = true,
+
+                ClockSkew = TimeSpan.Zero
+            };
+            return tokenValidationParameters;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -175,29 +210,6 @@ namespace Cintra
             app.UseMiddleware(typeof(ExceptionHandlerMiddleware));
             app.UseMvc();
 
-        }
-
-        private TokenValidationParameters GetJwtTokenValidationParameters()
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {                
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Jwt").GetValue<string>("SecretKey"))), 
-
-                // Validate the JWT Issuer (iss) claim
-                ValidateIssuer = true,
-                ValidIssuer = Configuration.GetSection("Jwt").GetValue<string>("Issuer"),
-
-                // Validate the JWT Audience (aud) claim
-                ValidateAudience = true,
-                ValidAudience = Configuration.GetSection("Jwt").GetValue<string>("Audience"),
-
-                // Validate the token expiry
-                ValidateLifetime = true,
-                
-                ClockSkew = TimeSpan.Zero
-            };
-            return tokenValidationParameters;
-        }
+        }                       
     }
 }
