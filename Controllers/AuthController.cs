@@ -16,11 +16,11 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 using Shared.Dto;
+using Shared.Interfaces;
 
 namespace Controllers
-{
-    [Route("api/[controller]")]
-    public class AuthController : Controller
+{        
+    public class AuthController : Controller, IAuthController
     {
         private readonly JwtTokenOptions _jwtOptions;
         private readonly ILogger _logger;
@@ -57,7 +57,7 @@ namespace Controllers
 
         private static string GetSaltFromStoredPassword(string password)
         {
-            return password.Substring(password.Length - SALT_LENGTH);
+            return password.Substring(password.Length - SALT_LENGTH * 2);
         }
 
         private static string GeneratePassword(string plainPassword, string salt = null)
@@ -96,9 +96,18 @@ namespace Controllers
 
         #endregion
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/api/auth/password/{password}")]
+        public string GetPassword(string password)
+        {
+            return GeneratePassword(password);
+        }
+
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Get(UserDto applicationUser)
+        [Route("/api/auth/login")]
+        public async Task<IActionResult> Login([FromBody]UserDto applicationUser)
         {
             var identity = await GetClaimsIdentity(applicationUser);
             if (identity == null)

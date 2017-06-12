@@ -134,6 +134,7 @@ namespace Cintra
             {
                 options.Issuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)];
                 options.Audience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)];
+                options.ValidFor = TimeSpan.FromMinutes(Convert.ToInt32(jwtAppSettingOptions[nameof(JwtTokenOptions.ValidFor)]));
                 options.SigningCredentials = new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
             });
 
