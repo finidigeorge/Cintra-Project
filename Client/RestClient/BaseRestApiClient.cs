@@ -36,9 +36,9 @@ namespace RestClient
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
-            {
+            {                
                 var error = JsonConvert.DeserializeObject<ErrorMessageDto>(response.Content);
-                throw new Exception(error.Error);
+                throw new Exception(string.IsNullOrEmpty(response.ErrorMessage) ? error?.Error : response.ErrorMessage);
             }
 
             return response.Data;

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using Client.Commands;
 using Client.Security;
 using Common;
+using Shared;
 using Shared.Dto;
 using Shared.Interfaces;
 
@@ -66,7 +67,7 @@ namespace Client.ViewModels
                 if (IsAuthenticated)
                     return string.Format("Signed in as {0}. {1}",
                         Thread.CurrentPrincipal.Identity.Name,
-                        Thread.CurrentPrincipal.IsInRole("Administrators") ? "You are member of the administrators group"
+                        Thread.CurrentPrincipal.IsInRole(UserRolesEnum.Administrator.ToString("G")) ? "You are member of the administrators group"
                             : "You are regular user");
 
                 return "Not authenticated!";
@@ -101,13 +102,11 @@ namespace Client.ViewModels
                     throw new ArgumentException("The application's default thread principal must be set to a CustomPrincipal object on startup.");
 
                 //Authenticate the user
-                principal.Identity = new UserIdentity(Username, roles, token);
+                principal.Identity = new UserIdentity(Username, roles);
 
                 //Update UI
                 NotifyPropertyChanged(AuthVmProperties.AuthenticatedUser);
-                NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);
-
-                passwordBox.Password = string.Empty;                
+                NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);                            
             }            
             catch (Exception ex)
             {

@@ -10,11 +10,10 @@ namespace Client.Security
 {
     public class UserIdentity: IIdentity
     {
-        public UserIdentity(string name, IList<UserRoleDto> roles, JwtTokenDto token)
+        public UserIdentity(string name, IList<UserRoleDto> roles)
         {
             Roles = roles ?? new List<UserRoleDto>();
-            Name = name;
-            Token = token;
+            Name = name;            
         }
 
         public string Name { get; set; }
@@ -23,6 +22,5 @@ namespace Client.Security
 
         public IList<UserRoleDto> Roles { get; }
 
-        public JwtTokenDto Token { get; }
     }
 }

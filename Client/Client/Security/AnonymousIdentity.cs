@@ -8,7 +8,7 @@ namespace Client.Security
 {
     public class AnonymousIdentity: UserIdentity
     {
-        public AnonymousIdentity(): base(null, null, null)
+        public AnonymousIdentity(): base(null, null)
         {
         }
     }
