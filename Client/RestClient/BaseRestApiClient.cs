@@ -1,34 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 using RestSharp;
+using RestSharp.Authenticators;
 using RestSharp.Serializers;
 
-namespace RestApi
+namespace RestClient
 {
     public class BaseRestApiClient
-    {
-        private readonly RestClient _client;
-        private readonly JsonNetSerializer _serializer = new JsonNetSerializer();
-        private readonly string _url = ConfigurationManager.AppSettings["serverUrl"];
+    {        
+        private static readonly JsonNetSerializer _serializer = new JsonNetSerializer();
+        private static readonly string _url = ConfigurationManager.AppSettings["serverUrl"];
 
-        public BaseRestApiClient()
+        public async Task<T> SendRequest<T>(string path, Method method = Method.GET, string token = null, object body = null) where T: new()
         {
-            _client = new RestClient { BaseUrl = new Uri(_url) };            
-        }
+            var client = new RestSharp.RestClient { BaseUrl = new Uri(_url) };
+            if (token != null)
+                client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(token, "Bearer");
 
-        public async Task<T> SendRequest<T>(string path, Method method = Method.GET) where T: new()
-        {
             var request = new RestRequest(path, method) { RequestFormat = DataFormat.Json, JsonSerializer = _serializer };
+            if (body != null)
+                request.AddBody(body);
 
-            var response = await _client.ExecuteTaskAsync<T>(request);
+            var response = await client.ExecuteTaskAsync<T>(request);
 
-            if (response.Data == null)
+            if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception(response.ErrorMessage);
 
             return response.Data;
-        }
+        }        
     }
 }

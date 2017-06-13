@@ -56,8 +56,28 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\AsyncCommand.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="InputDialogWindow.xaml.cs">
+      <DependentUpon>InputDialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Security\AnonymousIdentity.cs" />
+    <Compile Include="Security\UserIdentity.cs" />
+    <Compile Include="Security\UserPrincipal.cs" />
+    <Compile Include="ViewModels\AuthVm.cs" />
+    <Compile Include="ViewModels\MainWindowVm.cs" />
     <Compile Include="ViewModels\UserRolesVm.cs" />
+    <Page Include="InputDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,6 +128,10 @@
       <Project>{9FA1E775-DCA9-424B-9FC5-BE2D2424EAEA}</Project>
       <Name>RestClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Images\question32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

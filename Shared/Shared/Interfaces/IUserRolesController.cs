@@ -6,6 +6,6 @@ namespace Shared.Interfaces
 {
     public interface IUserRolesController
     {
-        Task<IEnumerable<UserRoleDto>> Get();
+        Task<IList<UserRoleDto>> Get(string login);
     }
 }

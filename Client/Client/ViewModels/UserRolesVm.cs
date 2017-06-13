@@ -23,7 +23,7 @@ namespace Client.ViewModels
         {
             GetRolesCommand = new AsyncCommand<object>(async (x) =>
             {
-                UserRoles = await _userRolesClient.Get();
+                UserRoles = null;  //await _userRolesClient.Get();
             });
         }        
     }

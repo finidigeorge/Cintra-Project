@@ -9,7 +9,7 @@ namespace Shared.Interfaces
 {
     public interface IAuthController
     {
-        Task<IActionResult> Login(UserDto applicationUser);
+        Task<JwtTokenDto> Login(UserDto applicationUser);
         string GetPassword(string password);
     }
 }

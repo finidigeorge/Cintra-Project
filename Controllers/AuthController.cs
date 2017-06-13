@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Principal;
@@ -107,13 +108,13 @@ namespace Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("/api/auth/login")]
-        public async Task<IActionResult> Login([FromBody]UserDto applicationUser)
+        public async Task<JwtTokenDto> Login([FromBody]UserDto applicationUser)
         {
             var identity = await GetClaimsIdentity(applicationUser);
             if (identity == null)
             {
                 _logger.LogInformation($"Invalid login ({applicationUser.Login}) or password ({applicationUser.Password})");
-                return BadRequest("Invalid credentials");
+                throw new AuthenticationException("Invalid credentials");
             }
 
             var claims = new[]
@@ -121,7 +122,7 @@ namespace Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Login),
                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                identity.FindFirst("DisneyCharacter")
+                identity.FindFirst(applicationUser.Login)
             };
 
             // Create the JWT security token and encode it.
@@ -133,16 +134,12 @@ namespace Controllers
                 signingCredentials: _jwtOptions.SigningCredentials);
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            // Serialize and return the response
-            var response = new
+            
+            return new JwtTokenDto
             {
-                access_token = encodedJwt,
-                expires_in = (int)_jwtOptions.ValidFor.TotalSeconds
+                AccessToken = encodedJwt,
+                ExpiresIn = (int)_jwtOptions.ValidFor.TotalSeconds
             };
-
-            var json = JsonConvert.SerializeObject(response, _serializerSettings);
-            return new OkObjectResult(json);
         }
 
                 

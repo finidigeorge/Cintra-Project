@@ -22,10 +22,10 @@ namespace Controllers
 
         // GET api/userRoles
         [HttpGet]
-        [Route("/api/userRoles")]
-        public async Task<IEnumerable<UserRoleDto>> Get()
+        [Route("/api/userRoles/{login}")]
+        public async Task<IList<UserRoleDto>> Get(string login)
         {
-            return (await _userRolesRepository.GetAll()).Select(ObjectMapper.Map<UserRoleDto>);                        
+            return (await _userRolesRepository.GetByParamsWithUsers(x => x.users.Any(u => u.Login == login))).Select(ObjectMapper.Map<UserRoleDto>).ToList();                        
         }        
     }
 }

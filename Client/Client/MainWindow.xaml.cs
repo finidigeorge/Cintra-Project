@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.ViewModels;
 using RestApi;
+using RestClient;
 
 namespace Client
 {
@@ -22,13 +23,10 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        
         public MainWindow()
         {
             InitializeComponent();
-            
-            //dgUserRoles.ItemsSource = .Result;            
-            
+            DataContext = new MainWindowVm();
         }
 
         private async void OnTabSelectionChanged(Object sender, SelectionChangedEventArgs args)
@@ -39,12 +37,12 @@ namespace Client
                 var item = (TabItem)tc.SelectedItem;
                 if (item.IsSelected)
                 {
-                    if (item.Name == "UserRoles")
+                    /*if (item.Name == "UserRoles")
                     {
                         var vm = new UserRolesVm();
                         await vm.GetRolesCommand.ExecuteAsync(null);
                         dgUserRoles.ItemsSource = vm.UserRoles;
-                    }
+                    }*/
                 }
             }
         }

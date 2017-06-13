@@ -21,6 +21,9 @@
     <Reference Include="System.IdentityModel.Tokens.Jwt">
       <HintPath>C:\Users\alex\.nuget\packages\system.identitymodel.tokens.jwt\5.1.2\lib\netstandard1.4\System.IdentityModel.Tokens.Jwt.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Security">
+      <HintPath>C:\Users\alex\.nuget\packages\system.net.security\4.3.1\ref\netstandard1.3\System.Net.Security.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
