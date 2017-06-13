@@ -6,6 +6,7 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Shared.Dto;
 
 namespace Server.Middlewares
 {
@@ -38,9 +39,9 @@ namespace Server.Middlewares
             if (exception is AuthenticationException)
                 code = HttpStatusCode.Unauthorized;            
 
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
+            var result = JsonConvert.SerializeObject(new ErrorMessageDto { Error = exception.Message });
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = (int)code;            
             return context.Response.WriteAsync(result);
         }
         

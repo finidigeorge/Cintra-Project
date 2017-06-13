@@ -60,6 +60,10 @@
       <Project>{dafd5a59-271b-4710-9bb4-57e23e8634e2}</Project>
       <Name>Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{765816fa-e70c-48c8-adc7-56ab91a4fdb5}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

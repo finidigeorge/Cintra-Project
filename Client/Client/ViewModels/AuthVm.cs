@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Client.Commands;
 using Client.Security;
+using Common;
 using Shared.Dto;
 using Shared.Interfaces;
 
@@ -91,6 +92,7 @@ namespace Client.ViewModels
                 Mouse.OverrideCursor = Cursors.Wait;
                 //Validate credentials through the authentication service
                 var token = await _authController.Login(new UserDto {Login = Username, Password = clearTextPassword });
+                AuthProvider.SetToken(token);
                 var roles = await _userRolesController.Get(Username);
 
                 //Get the current principal object
@@ -106,11 +108,7 @@ namespace Client.ViewModels
                 NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);
 
                 passwordBox.Password = string.Empty;                
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Status = "Login failed! Please provide some valid credentials.";
-            }
+            }            
             catch (Exception ex)
             {
                 Status = string.Format("ERROR: {0}", ex.Message);

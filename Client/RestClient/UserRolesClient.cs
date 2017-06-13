@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Common;
 using RestClient;
 using RestSharp;
 using Shared.Dto;
@@ -13,7 +14,7 @@ namespace RestApi
     {
         public async Task<IList<UserRoleDto>> Get(string login)
         {
-            return await SendRequest<List<UserRoleDto>>("api/userRoles");
+            return await SendRequest<List<UserRoleDto>>($"api/userRoles/{login}");
         }
     }
 }

@@ -2,9 +2,12 @@
 using System.Configuration;
 using System.Net;
 using System.Threading.Tasks;
+using Common;
+using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Serializers;
+using Shared.Dto;
 
 namespace RestClient
 {
@@ -13,9 +16,11 @@ namespace RestClient
         private static readonly JsonNetSerializer _serializer = new JsonNetSerializer();
         private static readonly string _url = ConfigurationManager.AppSettings["serverUrl"];
 
-        public async Task<T> SendRequest<T>(string path, Method method = Method.GET, string token = null, object body = null) where T: new()
+        public async Task<T> SendRequest<T>(string path, Method method = Method.GET, object body = null) where T: new()
         {
             var client = new RestSharp.RestClient { BaseUrl = new Uri(_url) };
+
+            var token = AuthProvider.GetToken()?.AccessToken;
             if (token != null)
                 client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(token, "Bearer");
 
@@ -25,8 +30,16 @@ namespace RestClient
 
             var response = await client.ExecuteTaskAsync<T>(request);
 
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new Exception($"Requested path {path} not found");
+            }
+
             if (response.StatusCode != HttpStatusCode.OK)
-                throw new Exception(response.ErrorMessage);
+            {
+                var error = JsonConvert.DeserializeObject<ErrorMessageDto>(response.Content);
+                throw new Exception(error.Error);
+            }
 
             return response.Data;
         }        

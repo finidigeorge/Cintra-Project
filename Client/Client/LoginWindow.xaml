@@ -24,11 +24,14 @@
         <TextBox Text="{Binding Username}" Grid.Row="1" Grid.Column="1" Margin="8,0,10,0"/>
         <PasswordBox x:Name="passwordBox" Grid.Row="4" Grid.Column="1" Margin="8,3,10,2"/>
 
-        <TextBlock Text="{Binding Status}" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Width="342" FontSize="14" Margin="10,10,0,46" Foreground="Red"/>
+        <TextBox Text="{Binding Status, Mode=OneWay}" Grid.Row="5" Grid.Column="1" FontSize="14" Margin="10,10,10,46" 
+                 Foreground="Red" 
+                 BorderThickness="0" 
+                 Background="Transparent" 
+                 TextWrapping="Wrap"/>
 
-        <Button Content="Log in" Command="{Binding LoginCommand, IsAsync=True}"
-                CommandParameter="{Binding ElementName=passwordBox}"
-                Grid.Column="1" Margin="0,0,10,5" Grid.Row="5" Width="120" Height="36" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="True"/>
-        <Button Content="Cancel" Grid.Column="1" Margin="0,0,146,5" Grid.Row="5" Height="36" IsCancel="True" Click="CancelButton_Click" HorizontalAlignment="Right" Width="120" VerticalAlignment="Bottom"/>
+        <Button Content="Log in"                
+                Grid.Column="1" Margin="0,0,10,5" Grid.Row="5" Width="120" Height="36" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="True" Click="Button_Click"/>
+        <Button Content="Cancel" Grid.Column="1" Margin="0,0,146,5" Grid.Row="5" Height="36" IsCancel="True" HorizontalAlignment="Right" Width="120" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

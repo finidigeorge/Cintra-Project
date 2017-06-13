@@ -8,7 +8,15 @@
         Title="Sydney Horses Management" Height="800" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen"
         FontSize="16">
     <Grid>
-        <Menu x:Name="MainMenu" Height="20" Margin="0,0,0,0" VerticalAlignment="Top" FontSize="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="MainMenu" Margin="0,0,0,40" FontSize="16" Grid.ColumnSpan="2">
             <MenuItem Header="File">
                 <MenuItem Header="Login" Command="{Binding ShowLoginDialogCommand}"/>
                 <MenuItem Header="Exit" Command="{Binding ShowExitDialogCommand}"/>
@@ -18,7 +26,9 @@
             </MenuItem>
 
         </Menu>
-        <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged">
+        <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged"
+                    Grid.Row="0" Grid.ColumnSpan="2"
+                    Grid.Column="0">
             <TabItem Header="User Roles" Name="UserRoles">
                 <Grid Background="#FFE5E5E5">
                     <DataGrid Name="dgUserRoles" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" />
@@ -28,7 +38,11 @@
                 <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
-        
-
+        <Border BorderBrush="Gray" BorderThickness="1" SnapsToDevicePixels="True" DockPanel.Dock="Top" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Margin="1,2,1,1">
+            <StackPanel Orientation="Horizontal"  Margin="0">
+                <Label Content="Current User:"/>
+                <Label Content="Current User:"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

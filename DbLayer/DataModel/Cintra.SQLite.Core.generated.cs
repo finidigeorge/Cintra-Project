@@ -55,6 +55,8 @@ namespace DataModels
 		[Column("password"),              NotNull              ] public string Password           { get; set; } // varchar(255)
 		[Column("new_password_on_login"),    Nullable          ] public bool?  NewPasswordOnLogin { get; set; } // boolean
 		[Column("role_id"),               NotNull              ] public long   RoleId             { get; set; } // integer
+		[Column("email"),                    Nullable          ] public string Email              { get; set; } // varchar(50)
+		[Column("phone"),                    Nullable          ] public string Phone              { get; set; } // varchar(50)
 
 		#region Associations
 

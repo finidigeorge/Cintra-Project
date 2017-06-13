@@ -114,7 +114,7 @@ namespace Controllers
             if (identity == null)
             {
                 _logger.LogInformation($"Invalid login ({applicationUser.Login}) or password ({applicationUser.Password})");
-                throw new AuthenticationException("Invalid credentials");
+                throw new AuthenticationException($"Invalid login or password");
             }
 
             var claims = new[]

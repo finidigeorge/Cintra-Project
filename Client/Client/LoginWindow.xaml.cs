@@ -24,13 +24,18 @@ namespace Client
     {
         public LoginWindow()
         {
-            InitializeComponent();
-            DataContext = new AuthVm(new AuthClient(), new UserRolesClient());            
+            InitializeComponent();                       
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            var context = DataContext as AuthVm;
+            if (context != null)
+            {
+                await context.LoginCommand.ExecuteAsync(passwordBox);
+                if (context.IsAuthenticated)
+                    Close();
+            }
         }
     }
 }

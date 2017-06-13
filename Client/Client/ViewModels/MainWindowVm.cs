@@ -16,15 +16,19 @@ namespace Client.ViewModels
         public ICommand ShowLoginDialogCommand { get; }
         public ICommand ShowExitDialogCommand { get; }
 
+        public AuthVm AuthVm { get; }
+
         public MainWindowVm()
         {
             ShowLoginDialogCommand = new Command(LoginCommandAction, true);
             ShowExitDialogCommand = new Command(ExitAppCommandAction, true);
+
+            AuthVm = new AuthVm(new AuthClient(), new UserRolesClient());
         }
 
         private void LoginCommandAction()
         {
-            var loginWindow = new LoginWindow();
+            var loginWindow = new LoginWindow() {DataContext = AuthVm };
             loginWindow.ShowDialog();
         }
 
