@@ -42,18 +42,26 @@ namespace Client
             return result;
         }
 
+        private string selectedTab;
+
         private async void OnTabSelectionChanged(Object sender, SelectionChangedEventArgs args)
         {
             var tc = sender as TabControl;
             if (tc != null)
             {
                 var item = (TabItem)tc.SelectedItem;
-                if (item.IsSelected)
+                if (item.IsSelected && selectedTab != item.Name)
                 {
+                    selectedTab = ((TabItem)tc.SelectedItem).Name;
+
+                    //TODO add proper events handling
                     if (item.Name == "UserRoles")
                     {
                         if (CheckAndWarnAuth())
+                        {                           
                             await UserRolesRefView.Model.GetItemsCommand.ExecuteAsync(null);
+                            UserRolesRefView.OnActivated();
+                        }
                     }
                 }
             }

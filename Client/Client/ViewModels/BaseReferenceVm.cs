@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using Client.Annotations;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
@@ -12,8 +13,22 @@ using Client.ViewModels.Interfaces;
 namespace Client.ViewModels
 {
     public class BaseReferenceVm<T> : INotifyPropertyChanged, IEditableSelectableReference<T> where T : new()
-    {        
-        public IList<T> Items { get; protected set; }
+    {
+        private IList<T> _items = new List<T>();
+   
+        protected CollectionView ItemsCollectionView;
+
+        public IList<T> Items
+        {
+            get => _items;
+            set
+            {                 
+                Set(ref _items, value, "Items");
+                if (ItemsCollectionView == null)
+                    ItemsCollectionView = new CollectionView(_items);
+            }
+        }
+        
         public IAsyncCommand GetItemsCommand { get; set; }
         public IAsyncCommand AddItemsCommand { get; set; }
         public IAsyncCommand DeleteItemsCommand { get; set; }
@@ -22,6 +37,7 @@ namespace Client.ViewModels
         public bool IsEditModeEnabled { get; protected set; }
         public bool IsSelectionModeEnabled { get; protected set; }
         public bool IsMultiSelectionModeEnabled { get; protected set; }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
         [NotifyPropertyChangedInvocator]

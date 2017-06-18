@@ -25,7 +25,7 @@ namespace Controllers
         [Route("/api/userRoles/{login}")]
         public async Task<IList<UserRoleDto>> Get(string login)
         {
-            return (await _userRolesRepository.GetByParamsWithUsers(x => x.users.Any(u => u.Login == login))).Select(ObjectMapper.Map<UserRoleDto>).ToList();                        
+            return (await _userRolesRepository.GetByParamsWithUsers(x => true)).Select(ObjectMapper.Map<UserRoleDto>).ToList();                        
         }        
     }
 }

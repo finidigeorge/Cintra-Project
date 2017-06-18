@@ -9,7 +9,7 @@ using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class UsersVm : BaseReferenceVm<UserDto>
+    public class UsersRefVm : BaseReferenceVm<UserDto>
     {       
     }
 

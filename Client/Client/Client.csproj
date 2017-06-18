@@ -62,6 +62,7 @@
     </ApplicationDefinition>
     <Compile Include="Commands\AsyncCommand.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Controls\DataGridHelper.cs" />
     <Compile Include="Controls\InputDialogWindow.xaml.cs">
       <DependentUpon>InputDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -83,7 +84,7 @@
     <Compile Include="ViewModels\Interfaces\ISelectableReference.cs" />
     <Compile Include="ViewModels\MainWindowVm.cs" />
     <Compile Include="ViewModels\UserRolesRefVm.cs" />
-    <Compile Include="ViewModels\UsersVm.cs" />
+    <Compile Include="ViewModels\UsersRefVm.cs" />
     <Page Include="Controls\InputDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

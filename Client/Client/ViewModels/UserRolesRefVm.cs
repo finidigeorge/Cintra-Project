@@ -23,6 +23,9 @@ namespace Client.ViewModels
             {
                 Items = await _userRolesClient.Get(Thread.CurrentPrincipal.Identity.Name);
             });
+
+            if (Thread.CurrentPrincipal.Identity.IsAuthenticated)
+                GetItemsCommand.ExecuteAsync(null);
         }
         
     }

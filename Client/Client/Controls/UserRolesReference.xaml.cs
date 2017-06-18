@@ -26,6 +26,11 @@ namespace Client.Controls
         public UserRolesReference()
         {
             InitializeComponent();            
+        }
+
+        public void OnActivated()
+        {
+            ItemsDataGrid.GrabFocus(Model.Items);
         }        
     }
 }

@@ -5,17 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Client.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="320">
+             d:DesignHeight="300" d:DesignWidth="320"
+             FocusManager.IsFocusScope="True"
+             FocusManager.FocusedElement="{Binding ElementName=ItemsDataGrid}">
     <UserControl.Resources>
         <viewModels:UserRolesRefVm x:Key="ViewModel" />
     </UserControl.Resources>
-    <Grid>
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <DataGrid Name="ItemsDataGrid" DataContext="{StaticResource ViewModel}" ItemsSource="{Binding Source=Items}">
-        </DataGrid>
+        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Items}" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True"/>
 
     </Grid>
 </UserControl>

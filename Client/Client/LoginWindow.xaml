@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterScreen"
         FontSize="16"
         >
-    <Grid Margin="0,0,0,12">
+    <Grid Margin="0,0,0,12" FocusManager.FocusedElement="{Binding ElementName=userName}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="100"/>
             <ColumnDefinition/>
@@ -21,7 +21,7 @@
 
         <TextBlock Text="Username:" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Width="80" FontSize="16" Margin="0,0,10,0"/>
         <TextBlock Text="Password:" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Width="80" Height="24" VerticalAlignment="Center" FontSize="16" Margin="0,3,10,2"/>
-        <TextBox Text="{Binding Username}" Grid.Row="1" Grid.Column="1" Margin="8,0,10,0"/>
+        <TextBox x:Name="userName" Text="{Binding Username}" Grid.Row="1" Grid.Column="1" Margin="8,0,10,0"/>
         <PasswordBox x:Name="passwordBox" Grid.Row="4" Grid.Column="1" Margin="8,3,10,2"/>
 
         <TextBox Text="{Binding Status, Mode=OneWay}" Grid.Row="5" Grid.Column="1" FontSize="14" Margin="10,10,10,46" 

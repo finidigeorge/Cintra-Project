@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Client.Commands;
+using Client.ViewModels.Interfaces;
 using Common;
 using RestApi;
 using RestClient;
@@ -19,6 +20,7 @@ namespace Client.ViewModels
         public ICommand ShowExitDialogCommand { get; }
 
         public AuthVm AuthVm { get; }
+        public Dictionary<string, IEditableSelectableReference<object>> TabsDictionary = new Dictionary<string, IEditableSelectableReference<object>>();
 
         public MainWindowVm()
         {
