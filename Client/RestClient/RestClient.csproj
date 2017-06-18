@@ -61,7 +61,7 @@
       <Name>Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{765816fa-e70c-48c8-adc7-56ab91a4fdb5}</Project>
+      <Project>{f3bbb837-e0b0-4775-a7df-f40dfac61524}</Project>
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
