@@ -5,10 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         xmlns:controls="clr-namespace:Client.Controls"
+        xmlns:viewModels="clr-namespace:Client.ViewModels"
         mc:Ignorable="d"
         Title="Sydney Horses Management" Height="800" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen"
         FontSize="16">
-    <Grid>
+    <Window.Resources>
+        <viewModels:MainWindowVm x:Key="ViewModel" />
+    </Window.Resources>
+    <Grid DataContext="{StaticResource ViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
@@ -32,6 +36,11 @@
                     Grid.Column="0">
             <TabItem Header="Users" Name="Users">
                 <Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="User Roles" Name="UserRoles">
+                <Grid>
+                    <controls:UserRolesReference x:Name="UserRolesRefView"/>
                 </Grid>
             </TabItem>
         </TabControl>

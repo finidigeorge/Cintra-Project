@@ -21,6 +21,8 @@ namespace Client.Controls
     /// </summary>
     public partial class UserRolesReference : UserControl
     {
+        public UserRolesRefVm Model => (UserRolesRefVm)Resources["ViewModel"];
+
         public UserRolesReference()
         {
             InitializeComponent();            

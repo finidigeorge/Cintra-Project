@@ -13,8 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.ViewModels;
+using Common;
 using RestApi;
 using RestClient;
+using WPFCustomMessageBox;
 
 namespace Client
 {
@@ -23,10 +25,21 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainWindowVm Model => (MainWindowVm)Resources["ViewModel"];
+
         public MainWindow()
         {
-            InitializeComponent();
-            DataContext = new MainWindowVm();
+            InitializeComponent();            
+        }
+
+        private bool CheckAndWarnAuth()
+        {
+            var result = Model.AuthVm.IsAuthenticated;
+
+            if (!result)
+                CustomMessageBox.Show(Messages.YOU_NEED_TO_LOGIN_MSG, "Attention", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+
+            return result;
         }
 
         private async void OnTabSelectionChanged(Object sender, SelectionChangedEventArgs args)
@@ -37,12 +50,11 @@ namespace Client
                 var item = (TabItem)tc.SelectedItem;
                 if (item.IsSelected)
                 {
-                    /*if (item.Name == "UserRoles")
+                    if (item.Name == "UserRoles")
                     {
-                        var vm = new UserRolesVm();
-                        await vm.GetRolesCommand.ExecuteAsync(null);
-                        dgUserRoles.ItemsSource = vm.UserRoles;
-                    }*/
+                        if (CheckAndWarnAuth())
+                            await UserRolesRefView.Model.GetItemsCommand.ExecuteAsync(null);
+                    }
                 }
             }
         }

@@ -14,7 +14,8 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <DataGrid Name="itemsDataGrid" DataContext="{StaticResource ViewModel.Items}"/>
+        <DataGrid Name="ItemsDataGrid" DataContext="{StaticResource ViewModel}" ItemsSource="{Binding Source=Items}">
+        </DataGrid>
 
     </Grid>
 </UserControl>
