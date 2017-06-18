@@ -28,7 +28,7 @@ namespace Client.ViewModels
 
         private void LoginCommandAction()
         {
-            var loginWindow = new LoginWindow() {DataContext = AuthVm };
+            var loginWindow = new LoginWindow() { DataContext = AuthVm };
             loginWindow.ShowDialog();
         }
 

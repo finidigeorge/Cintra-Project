@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
+        xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
         Title="Sydney Horses Management" Height="800" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen"
         FontSize="16">
@@ -29,13 +30,9 @@
         <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged"
                     Grid.Row="0" Grid.ColumnSpan="2"
                     Grid.Column="0">
-            <TabItem Header="User Roles" Name="UserRoles">
-                <Grid Background="#FFE5E5E5">
-                    <DataGrid Name="dgUserRoles" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" />
+            <TabItem Header="Users" Name="Users">
+                <Grid>
                 </Grid>
-            </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
         <Border BorderBrush="Gray" BorderThickness="1" SnapsToDevicePixels="True" DockPanel.Dock="Top" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Margin="1,2,1,1">

@@ -99,7 +99,7 @@ namespace Client.ViewModels
                 //Get the current principal object
                 var principal = Thread.CurrentPrincipal as UserPrincipal;
                 if (principal == null)
-                    throw new ArgumentException("The application's default thread principal must be set to a CustomPrincipal object on startup.");
+                    throw new ArgumentException("The application's default thread principal must be set on startup.");
 
                 //Authenticate the user
                 principal.Identity = new UserIdentity(Username, roles);
