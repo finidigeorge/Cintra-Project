@@ -22,7 +22,8 @@ namespace Client.ViewModels
         UserName,
         Status,
         AuthenticatedUser,
-        IsAuthenticated
+        IsAuthenticated,
+        IsAdmin
     }
 
     public class AuthVm : INotifyPropertyChanged
@@ -67,8 +68,7 @@ namespace Client.ViewModels
                 if (IsAuthenticated)
                     return string.Format("Signed in as {0}. {1}",
                         Thread.CurrentPrincipal.Identity.Name,
-                        Thread.CurrentPrincipal.IsInRole(UserRolesEnum.Administrator.ToString("G")) ? "You are member of the administrators group"
-                            : "You are regular user");
+                        IsAdmin ? "You are member of the administrators group" : "You are regular user");
 
                 return "Not authenticated!";
             }
@@ -104,7 +104,8 @@ namespace Client.ViewModels
 
                 //Update UI
                 NotifyPropertyChanged(AuthVmProperties.AuthenticatedUser);
-                NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);                            
+                NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);
+                NotifyPropertyChanged(AuthVmProperties.IsAdmin);
             }            
             catch (Exception ex)
             {
@@ -146,7 +147,9 @@ namespace Client.ViewModels
 
         public bool IsAuthenticated => Thread.CurrentPrincipal.Identity.IsAuthenticated;
 
-        
+        public bool IsAdmin => IsAuthenticated && Thread.CurrentPrincipal.IsInRole(UserRolesEnum.Administrator.ToString("G"));
+
+
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
 

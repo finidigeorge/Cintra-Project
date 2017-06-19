@@ -11,6 +11,7 @@
         FontSize="16">
     <Window.Resources>
         <viewModels:MainWindowVm x:Key="ViewModel" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid DataContext="{StaticResource ViewModel}">
         <Grid.ColumnDefinitions>
@@ -34,12 +35,12 @@
         <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged"
                     Grid.Row="0" Grid.ColumnSpan="2"
                     Grid.Column="0">
-            <TabItem Header="Users" Name="Users">
+            <TabItem Header="Users" Name="Users" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UsersReference x:Name="UsersRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="User Roles" Name="UserRoles">
+            <TabItem Header="User Roles" Name="UserRoles" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UserRolesReference x:Name="UserRolesRefView"/>
                 </Grid>

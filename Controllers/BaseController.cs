@@ -18,19 +18,19 @@ namespace Controllers
             _repository = repository;
         }
 
-        [HttpPost("Update")]
+        [HttpPost("update")]
         public virtual async Task Update([FromBody] T1 entity)
         {
            await Task.Run(() => _repository.Update(ObjectMapper.Map<T>(entity)));
         }
 
-        [HttpPost("Insert")]
+        [HttpPost("insert")]
         public virtual async Task<long> Insert([FromBody] T1 entity)
         {
             return await Task.Run(() => _repository.Insert(ObjectMapper.Map<T>(entity)));
         }
 
-        [HttpDelete]
+        [HttpDelete("values")]
         public virtual async Task Delete([FromBody]T1 entity)
         {
             await Task.Run(() => _repository.Delete(ObjectMapper.Map<T> (entity)));

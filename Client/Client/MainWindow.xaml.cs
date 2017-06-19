@@ -42,7 +42,7 @@ namespace Client
             return result;
         }
 
-        private string selectedTab;
+        private string selectedTab = "Users";
 
         private async void OnTabSelectionChanged(Object sender, SelectionChangedEventArgs args)
         {
@@ -64,14 +64,14 @@ namespace Client
                         }
                     }
 
-                    /*if (item.Name == "Users")
+                    if (item.Name == "Users")
                     {
                         if (CheckAndWarnAuth())
                         {
                             await UsersRefView.Model.GetItemsCommand.ExecuteAsync(null);
                             UsersRefView.OnActivated();
                         }
-                    }*/
+                    }
                 }
             }
         }

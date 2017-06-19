@@ -16,7 +16,7 @@ namespace Client.Controls
                 dataGrid.SelectedItem = items[0];
 
             dataGrid.Focus();
-            if (dataGrid.SelectedCells.Count == 0)
+            if (dataGrid.SelectedCells.Count == 0 && dataGrid.Items.Count > 0 && dataGrid.Columns.Count > 0)
             {
                 dataGrid.CurrentCell =
                     new DataGridCellInfo(dataGrid.Items[0], dataGrid.Columns[0]);
