@@ -53,9 +53,9 @@ namespace RestClient
             return response.Data;
         }
 
-        public Task Delete(T entity)
+        public async Task Delete(T entity)
         {
-            throw new NotImplementedException();
+            await SendRequest<T>($"api/{controllerName}/values", Method.DELETE, entity);
         }
 
         public async Task<List<T>> GetAll()
@@ -68,14 +68,14 @@ namespace RestClient
             return await SendRequest<T>($"api/{controllerName}/values/{id}");
         }
 
-        public Task<long> Insert(T entity)
+        public async Task<long> Insert(T entity)
         {
-            throw new NotImplementedException();
+            return await SendRequest<long>($"api/{controllerName}/insert", Method.POST, entity);
         }
 
-        public Task Update(T entity)
+        public async Task Update(T entity)
         {
-            throw new NotImplementedException();
+            await SendRequest<T>($"api/{controllerName}/update", Method.POST, entity);
         }
     }
 }
