@@ -10,11 +10,15 @@ using Shared.Interfaces;
 
 namespace RestApi
 {
-    public class UserRolesClient: BaseRestApiClient, IUserRolesController
+    public class UserRolesClient: BaseRestApiClient<UserRoleDto>, IUserRolesController
     {
-        public async Task<IList<UserRoleDto>> Get(string login)
+        public UserRolesClient() : base("userRoles")
         {
-            return await SendRequest<List<UserRoleDto>>($"api/userRoles/{login}");
+        }
+
+        public async Task<IList<UserRoleDto>> GetByUser(string login)
+        {
+            return await SendRequest<List<UserRoleDto>>($"api/userRoles/getByUser/{login}");
         }
     }
 }

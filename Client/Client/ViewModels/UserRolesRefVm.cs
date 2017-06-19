@@ -21,7 +21,7 @@ namespace Client.ViewModels
         {
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
-                Items = await _userRolesClient.Get(Thread.CurrentPrincipal.Identity.Name);
+                Items = await _userRolesClient.GetAll();
             });
 
             if (Thread.CurrentPrincipal.Identity.IsAuthenticated)

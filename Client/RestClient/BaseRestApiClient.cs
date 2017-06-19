@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,15 +9,23 @@ using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Serializers;
 using Shared.Dto;
+using Shared.Interfaces;
 
 namespace RestClient
 {
-    public class BaseRestApiClient
+    public class BaseRestApiClient<T> : IBaseController<T> where T : class
     {        
         private static readonly JsonNetSerializer _serializer = new JsonNetSerializer();
         private static readonly string _url = ConfigurationManager.AppSettings["serverUrl"];
 
-        public async Task<T> SendRequest<T>(string path, Method method = Method.GET, object body = null) where T: new()
+        private readonly string controllerName;
+
+        public BaseRestApiClient(string controllerName)
+        {
+            this.controllerName = controllerName;
+        }
+
+        protected async Task<T1> SendRequest<T1>(string path, Method method = Method.GET, object body = null)
         {
             var client = new RestSharp.RestClient { BaseUrl = new Uri(_url) };
 
@@ -28,7 +37,7 @@ namespace RestClient
             if (body != null)
                 request.AddBody(body);
 
-            var response = await client.ExecuteTaskAsync<T>(request);
+            var response = await client.ExecuteTaskAsync<T1>(request);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -42,6 +51,31 @@ namespace RestClient
             }
 
             return response.Data;
-        }        
+        }
+
+        public Task Delete(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<T>> GetAll()
+        {
+            return await SendRequest<List<T>>($"api/{controllerName}/values");
+        }
+
+        public async Task<T> GetById(long id)
+        {
+            return await SendRequest<T>($"api/{controllerName}/values/{id}");
+        }
+
+        public Task<long> Insert(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Update(T entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

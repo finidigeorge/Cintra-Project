@@ -10,7 +10,7 @@ using Shared.Interfaces;
 
 namespace RestClient
 {
-    public class AuthClient : BaseRestApiClient, IAuthController
+    public class AuthClient : BaseRestApiClient<UserDto>, IAuthController
     {
         public string GetPassword(string password)
         {
@@ -20,6 +20,10 @@ namespace RestClient
         public async Task<JwtTokenDto> Login(UserDto applicationUser)
         {
             return await SendRequest<JwtTokenDto>("/api/auth/login", Method.POST, body: applicationUser);
+        }
+
+        public AuthClient() : base("auth")
+        {
         }
     }
 }

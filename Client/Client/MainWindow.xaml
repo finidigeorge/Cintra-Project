@@ -36,6 +36,7 @@
                     Grid.Column="0">
             <TabItem Header="Users" Name="Users">
                 <Grid>
+                    <controls:UsersReference x:Name="UsersRefView"/>
                 </Grid>
             </TabItem>
             <TabItem Header="User Roles" Name="UserRoles">

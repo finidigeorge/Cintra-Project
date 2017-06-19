@@ -81,9 +81,7 @@ namespace Client.ViewModels
         }
         
         #endregion
-
         
-
         private async Task Login(object parameter)
         {
             PasswordBox passwordBox = parameter as PasswordBox;
@@ -94,7 +92,7 @@ namespace Client.ViewModels
                 //Validate credentials through the authentication service
                 var token = await _authController.Login(new UserDto {Login = Username, Password = clearTextPassword });
                 AuthProvider.SetToken(token);
-                var roles = await _userRolesController.Get(Username);
+                var roles = await _userRolesController.GetByUser(Username);
 
                 //Get the current principal object
                 var principal = Thread.CurrentPrincipal as UserPrincipal;

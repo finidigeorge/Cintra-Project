@@ -66,6 +66,9 @@
     <Compile Include="Controls\InputDialogWindow.xaml.cs">
       <DependentUpon>InputDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UsersReference.xaml.cs">
+      <DependentUpon>UsersReference.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UserRolesReference.xaml.cs">
       <DependentUpon>UserRolesReference.xaml</DependentUpon>
     </Compile>
@@ -88,6 +91,10 @@
     <Page Include="Controls\InputDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UsersReference.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\UserRolesReference.xaml">
       <SubType>Designer</SubType>

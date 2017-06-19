@@ -63,6 +63,15 @@ namespace Client
                             UserRolesRefView.OnActivated();
                         }
                     }
+
+                    /*if (item.Name == "Users")
+                    {
+                        if (CheckAndWarnAuth())
+                        {
+                            await UsersRefView.Model.GetItemsCommand.ExecuteAsync(null);
+                            UsersRefView.OnActivated();
+                        }
+                    }*/
                 }
             }
         }
