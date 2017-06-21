@@ -1,0 +1,1 @@
+alter table users add is_locked boolean not null default 0;

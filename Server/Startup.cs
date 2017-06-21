@@ -44,6 +44,7 @@ namespace Cintra
 
             // configure lin2db
             LinqToDB.Data.DataConnection.DefaultSettings = new DbSettings(Configuration.GetSection("LinqToDb"));
+            LinqToDB.Common.Configuration.Linq.AllowMultipleQuery = true;
 
             var assemblyNames = new[] {                
                 "Repositories",
@@ -144,7 +145,12 @@ namespace Cintra
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.ObjectCreationHandling = ObjectCreationHandling.Replace;
                 });
-            }
+
+            /*services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+            });*/
+        }
         
 
         public Startup(IHostingEnvironment env)

@@ -115,6 +115,7 @@ namespace DataModels
 		[Column("role_id"),               NotNull              ] public long   RoleId             { get; set; } // integer
 		[Column("email"),                    Nullable          ] public string Email              { get; set; } // varchar(50)
 		[Column("phone"),                    Nullable          ] public string Phone              { get; set; } // varchar(50)
+		[Column("is_locked"),             NotNull              ] public bool   IsLocked           { get; set; } // boolean
 
 		#region Associations
 

@@ -25,8 +25,8 @@ namespace Controllers
     {
         private readonly JwtTokenOptions _jwtOptions;
         private readonly ILogger _logger;
-        private readonly IUsersRepository _userRepository;
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly IUsersRepository _userRepository;        
+        private static string JwtRoleToMsIdentiryMapKey = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
 
         public AuthController(IOptions<JwtTokenOptions> jwtOptions, IUsersRepository userRepository, ILoggerFactory loggerFactory)
         {
@@ -34,12 +34,7 @@ namespace Controllers
             ThrowIfInvalidOptions(_jwtOptions);
 
             _logger = loggerFactory.CreateLogger<AuthController>();
-            _userRepository = userRepository;
-
-            _serializerSettings = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented
-            };
+            _userRepository = userRepository;            
         }
 
         #region passwords utility
@@ -81,14 +76,15 @@ namespace Controllers
 
         private async Task<ClaimsIdentity> GetClaimsIdentity(UserDto userDto)
         {
-            var user = (await _userRepository.GetByParams(x => x.Login == userDto.Login)).FirstOrDefault();
+            var user = (await _userRepository.GetByParamsWithRoles(x => x.Login == userDto.Login)).FirstOrDefault();
             if (user != null && IsPasswordValid(user, userDto.Password))
             {
                 return new ClaimsIdentity(
                     new GenericIdentity(user.Login, "Token"),
                     new[]
                     {
-                        new Claim("Role", user.RoleId.ToString())
+                        new Claim("User", user.Login),
+                        new Claim(JwtRoleToMsIdentiryMapKey, user.user_roles.Name)
                     });
             }
 
@@ -122,7 +118,8 @@ namespace Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, applicationUser.Login),
                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                identity.FindFirst(applicationUser.Login)
+                identity.FindFirst("User"),
+                identity.FindFirst(JwtRoleToMsIdentiryMapKey),
             };
 
             // Create the JWT security token and encode it.
