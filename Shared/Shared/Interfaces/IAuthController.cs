@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Shared.Dto;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Shared.Dto;
 
 namespace Shared.Interfaces
 {
