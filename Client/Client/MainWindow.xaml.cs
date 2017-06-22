@@ -42,7 +42,7 @@ namespace Client
             return result;
         }
 
-        private string selectedTab = "Users";
+        private string selectedTab = "Horses";
 
         private async void OnTabSelectionChanged(Object sender, SelectionChangedEventArgs args)
         {
@@ -70,6 +70,33 @@ namespace Client
                         {
                             await UsersRefView.Model.GetItemsCommand.ExecuteAsync(null);
                             UsersRefView.OnActivated();
+                        }
+                    }
+
+                    if (item.Name == "Horses")
+                    {
+                        if (CheckAndWarnAuth())
+                        {
+                            await HorsesRefView.Model.GetItemsCommand.ExecuteAsync(null);
+                            HorsesRefView.OnActivated();
+                        }
+                    }
+
+                    if (item.Name == "Services")
+                    {
+                        if (CheckAndWarnAuth())
+                        {
+                            await ServicesRefView.Model.GetItemsCommand.ExecuteAsync(null);
+                            ServicesRefView.OnActivated();
+                        }
+                    }
+
+                    if (item.Name == "Trainers")
+                    {
+                        if (CheckAndWarnAuth())
+                        {
+                            await TrainersRefView.Model.GetItemsCommand.ExecuteAsync(null);
+                            TrainersRefView.OnActivated();
                         }
                     }
                 }

@@ -18,31 +18,31 @@ namespace Controllers
             _repository = repository;
         }
 
-        [HttpPost("update")]
+        [HttpPut]
         public virtual async Task Update([FromBody] T1 entity)
         {
            await Task.Run(() => _repository.Update(ObjectMapper.Map<T>(entity)));
         }
 
-        [HttpPost("insert")]
+        [HttpPost]
         public virtual async Task<long> Insert([FromBody] T1 entity)
         {
             return await Task.Run(() => _repository.Insert(ObjectMapper.Map<T>(entity)));
         }
 
-        [HttpDelete("values")]
+        [HttpDelete]
         public virtual async Task Delete([FromBody]T1 entity)
         {
             await Task.Run(() => _repository.Delete(ObjectMapper.Map<T> (entity)));
         }
 
-        [HttpGet("values")]
+        [HttpGet]
         public virtual async Task<List<T1>> GetAll()
         {
             return (await Task.Run(() => _repository.GetAll())).Select(ObjectMapper.Map<T1>).ToList();
         }
 
-        [HttpGet("values/{id}")]
+        [HttpGet("{id}")]
         public virtual async Task<T1> GetById(long id)
         {
             return ObjectMapper.Map<T1>(await Task.Run(() => _repository.GetById(id)));

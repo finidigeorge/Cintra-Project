@@ -9,14 +9,27 @@ using System.Windows.Data;
 using Client.Annotations;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
+using RestClient;
+using Shared.Interfaces;
 
 namespace Client.ViewModels
 {
-    public class BaseReferenceVm<T> : INotifyPropertyChanged, IEditableSelectableReference<T> where T : new()
+    public class BaseReferenceVm<T> : INotifyPropertyChanged, IEditableSelectableReference<T> where T : class, new()
     {
         private IList<T> _items = new List<T>();
    
         protected CollectionView ItemsCollectionView;
+
+        protected IBaseController<T> Client;
+
+        protected BaseReferenceVm()
+        {
+            GetItemsCommand = new AsyncCommand<object>(async (x) =>
+            {
+                Items = await Client.GetAll();
+            });
+        }
+
 
         public IList<T> Items
         {

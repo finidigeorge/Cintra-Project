@@ -70,12 +70,12 @@ namespace RestClient
 
         public async Task<long> Insert(T entity)
         {
-            return await SendRequest<long>($"api/{controllerName}/insert", Method.POST, entity);
+            return await SendRequest<long>($"api/{controllerName}/values", Method.POST, entity);
         }
 
         public async Task Update(T entity)
         {
-            await SendRequest<T>($"api/{controllerName}/update", Method.POST, entity);
+            await SendRequest<T>($"api/{controllerName}/values", Method.PUT, entity);
         }
     }
 }

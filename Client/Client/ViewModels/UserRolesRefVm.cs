@@ -15,17 +15,9 @@ namespace Client.ViewModels
 {
     public class UserRolesRefVm : BaseReferenceVm<UserRoleDto>
     {
-        private readonly UserRolesClient _userRolesClient = new UserRolesClient();        
-
         public UserRolesRefVm()
         {
-            GetItemsCommand = new AsyncCommand<object>(async (x) =>
-            {
-                Items = await _userRolesClient.GetAll();
-            });
-
-            if (Thread.CurrentPrincipal.Identity.IsAuthenticated)
-                GetItemsCommand.ExecuteAsync(null);
+            Client = new UserRolesClient();
         }
         
     }

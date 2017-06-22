@@ -11,11 +11,11 @@ using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class UsersRefVm : BaseReferenceVm<UserDto>
-    {
-        public UsersRefVm()
+    public class HorsesRefVm : BaseReferenceVm<HorseDto>
+    {        
+        public HorsesRefVm()
         {
-            Client = new UsersClient();
+            Client = new HorsesClient();
         }
     }
 

@@ -66,6 +66,15 @@
     <Compile Include="Controls\InputDialogWindow.xaml.cs">
       <DependentUpon>InputDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HorsesReference.xaml.cs">
+      <DependentUpon>HorsesReference.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ServicesReference.xaml.cs">
+      <DependentUpon>ServicesReference.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TrainersReference.xaml.cs">
+      <DependentUpon>TrainersReference.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\UsersReference.xaml.cs">
       <DependentUpon>UsersReference.xaml</DependentUpon>
     </Compile>
@@ -87,10 +96,25 @@
     <Compile Include="ViewModels\Interfaces\ISelectableReference.cs" />
     <Compile Include="ViewModels\MainWindowVm.cs" />
     <Compile Include="ViewModels\UserRolesRefVm.cs" />
+    <Compile Include="ViewModels\ServicesRefVm.cs" />
+    <Compile Include="ViewModels\HorsesRefVm.cs" />
+    <Compile Include="ViewModels\TrainersRefVm.cs" />
     <Compile Include="ViewModels\UsersRefVm.cs" />
     <Page Include="Controls\InputDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\HorsesReference.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ServicesReference.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TrainersReference.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\UsersReference.xaml">
       <Generator>MSBuild:Compile</Generator>

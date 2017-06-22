@@ -35,6 +35,21 @@
         <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged"
                     Grid.Row="0" Grid.ColumnSpan="2"
                     Grid.Column="0">
+            <TabItem Header="Horses" Name="Horses">
+                <Grid>
+                    <controls:HorsesReference x:Name="HorsesRefView"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Services" Name="Services">
+                <Grid>
+                    <controls:ServicesReference x:Name="ServicesRefView"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Trainers" Name="Trainers">
+                <Grid>
+                    <controls:TrainersReference x:Name="TrainersRefView"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="Users" Name="Users" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UsersReference x:Name="UsersRefView"/>
