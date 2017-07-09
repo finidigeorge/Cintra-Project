@@ -26,11 +26,6 @@ namespace Client.Controls
         public ServicesReference()
         {
             InitializeComponent();            
-        }
-
-        public void OnActivated()
-        {
-            ItemsDataGrid.GrabFocus(Model.Items);
         }        
     }
 }

@@ -62,7 +62,6 @@
     </ApplicationDefinition>
     <Compile Include="Commands\AsyncCommand.cs" />
     <Compile Include="Commands\Command.cs" />
-    <Compile Include="Controls\DataGridHelper.cs" />
     <Compile Include="Controls\InputDialogWindow.xaml.cs">
       <DependentUpon>InputDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -72,8 +71,8 @@
     <Compile Include="Controls\ServicesReference.xaml.cs">
       <DependentUpon>ServicesReference.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TrainersReference.xaml.cs">
-      <DependentUpon>TrainersReference.xaml</DependentUpon>
+    <Compile Include="Controls\CoachesReference.xaml.cs">
+      <DependentUpon>CoachesReference.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\UsersReference.xaml.cs">
       <DependentUpon>UsersReference.xaml</DependentUpon>
@@ -98,7 +97,7 @@
     <Compile Include="ViewModels\UserRolesRefVm.cs" />
     <Compile Include="ViewModels\ServicesRefVm.cs" />
     <Compile Include="ViewModels\HorsesRefVm.cs" />
-    <Compile Include="ViewModels\TrainersRefVm.cs" />
+    <Compile Include="ViewModels\CoachesRefVm.cs" />
     <Compile Include="ViewModels\UsersRefVm.cs" />
     <Page Include="Controls\InputDialogWindow.xaml">
       <SubType>Designer</SubType>
@@ -112,7 +111,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TrainersReference.xaml">
+    <Page Include="Controls\CoachesReference.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -16,6 +16,16 @@ namespace Shared
         public const string User = "User";
     }
 
+    public static class enKnownControllers
+    {
+        public const string AuthController = "auth";
+        public const string CoachesController = "coaches";
+        public const string HorsesController = "horses";
+        public const string ServicesController = "services";
+        public const string UserRolesController = "userRoles";
+        public const string UsersController = "users";        
+    }
+
     public static class EnumTools
     {
         public static T ToEnumValue<T>(string value) where T : struct

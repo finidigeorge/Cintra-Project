@@ -12,7 +12,7 @@ using Shared.Dto;
 using Shared.Interfaces;
 
 namespace RestClient
-{
+{    
     public class BaseRestApiClient<T> : IBaseController<T> where T : class
     {        
         private static readonly JsonNetSerializer _serializer = new JsonNetSerializer();

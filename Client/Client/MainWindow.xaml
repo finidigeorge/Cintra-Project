@@ -32,30 +32,31 @@
             </MenuItem>
 
         </Menu>
-        <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged"
-                    Grid.Row="0" Grid.ColumnSpan="2"
+        <TabControl HorizontalAlignment="Stretch" Margin="0,25,0,0" VerticalAlignment="Stretch" SelectionChanged="OnTabSelectionChanged"                    
+                    Grid.Row="0" 
+                    Grid.ColumnSpan="2"
                     Grid.Column="0">
-            <TabItem Header="Horses" Name="Horses">
+            <TabItem Header="Horses" Name="Horses" TabIndex="0">
                 <Grid>
                     <controls:HorsesReference x:Name="HorsesRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Services" Name="Services">
+            <TabItem Header="Services" Name="Services" TabIndex="1">
                 <Grid>
                     <controls:ServicesReference x:Name="ServicesRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Trainers" Name="Trainers">
+            <TabItem Header="Coaches" Name="Coaches" TabIndex="2">
                 <Grid>
-                    <controls:TrainersReference x:Name="TrainersRefView"/>
+                    <controls:CoachesReference x:Name="CoachesRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Users" Name="Users" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Header="Users" Name="Users" TabIndex="3" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UsersReference x:Name="UsersRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="User Roles" Name="UserRoles" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Header="User Roles" Name="UserRoles" TabIndex="4" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UserRolesReference x:Name="UserRolesRefView"/>
                 </Grid>

@@ -11,12 +11,12 @@ using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class TrainersRefVm : BaseReferenceVm<TrainerDto>
+    public class CoachesRefVm : BaseReferenceVm<TrainerDto>
     {        
 
-        public TrainersRefVm()
+        public CoachesRefVm()
         {
-            Client = new TrainersClient();          
+            Client = new CoachesClient();          
         }
     }
 

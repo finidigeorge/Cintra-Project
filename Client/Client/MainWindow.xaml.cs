@@ -55,48 +55,32 @@ namespace Client
                     selectedTab = ((TabItem)tc.SelectedItem).Name;
 
                     //TODO add proper events handling
-                    if (item.Name == "UserRoles")
-                    {
-                        if (CheckAndWarnAuth())
-                        {                           
-                            await UserRolesRefView.Model.GetItemsCommand.ExecuteAsync(null);
-                            UserRolesRefView.OnActivated();
-                        }
-                    }
-
-                    if (item.Name == "Users")
-                    {
-                        if (CheckAndWarnAuth())
+                    if (CheckAndWarnAuth())
+                    {                        
+                        if (item.Name == "UserRoles")
                         {
-                            await UsersRefView.Model.GetItemsCommand.ExecuteAsync(null);
-                            UsersRefView.OnActivated();
+                            await UserRolesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
                         }
-                    }
 
-                    if (item.Name == "Horses")
-                    {
-                        if (CheckAndWarnAuth())
+                        if (item.Name == "Users")
                         {
-                            await HorsesRefView.Model.GetItemsCommand.ExecuteAsync(null);
-                            HorsesRefView.OnActivated();
+                            await UsersRefView.Model.GetItemsCommand.ExecuteAsync(null);                            
+                            
                         }
-                    }
 
-                    if (item.Name == "Services")
-                    {
-                        if (CheckAndWarnAuth())
+                        if (item.Name == "Horses")
                         {
-                            await ServicesRefView.Model.GetItemsCommand.ExecuteAsync(null);
-                            ServicesRefView.OnActivated();
+                            await HorsesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
                         }
-                    }
 
-                    if (item.Name == "Trainers")
-                    {
-                        if (CheckAndWarnAuth())
+                        if (item.Name == "Services")
                         {
-                            await TrainersRefView.Model.GetItemsCommand.ExecuteAsync(null);
-                            TrainersRefView.OnActivated();
+                            await ServicesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
+                        }
+
+                        if (item.Name == "Coaches")
+                        {
+                            await CoachesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
                         }
                     }
                 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RestApi;
 using RestSharp;
+using Shared;
 using Shared.Dto;
 using Shared.Interfaces;
 
@@ -22,7 +23,7 @@ namespace RestClient
             return await SendRequest<JwtTokenDto>("/api/auth/login", Method.POST, body: applicationUser);
         }
 
-        public AuthClient() : base("auth")
+        public AuthClient() : base(enKnownControllers.AuthController)
         {
         }
     }

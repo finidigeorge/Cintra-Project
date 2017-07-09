@@ -13,11 +13,6 @@ namespace Client.Controls
         public UsersReference()
         {
             InitializeComponent();            
-        }
-
-        public void OnActivated()
-        {
-            ItemsDataGrid.GrabFocus(Model.Items);
         }        
     }
 }
