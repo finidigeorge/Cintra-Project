@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
+using Shared;
 using Shared.Dto;
 using Shared.Interfaces;
 
@@ -94,7 +95,7 @@ namespace Controllers
         #endregion
 
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize(Roles = enUserRoles.Administrator)]
         [Route("/api/auth/password/{password}")]
         public string GetPassword(string password)
         {

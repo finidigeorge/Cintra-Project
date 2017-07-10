@@ -11,9 +11,9 @@ namespace Controllers
 {
     [Authorize]
     [Route("/api/[controller]/values")]
-    public class CoachesController: BaseController<Trainer, TrainerDto>
+    public class CoachesController: BaseController<Coach, CoachDto>
     {
-        public CoachesController(ITrainersRepository repository) : base(repository)
+        public CoachesController(ICoachesRepository repository) : base(repository)
         {
         }
     }

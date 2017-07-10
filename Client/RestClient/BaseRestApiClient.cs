@@ -18,11 +18,11 @@ namespace RestClient
         private static readonly JsonNetSerializer _serializer = new JsonNetSerializer();
         private static readonly string _url = ConfigurationManager.AppSettings["serverUrl"];
 
-        private readonly string controllerName;
+        protected readonly string ControllerName;
 
         public BaseRestApiClient(string controllerName)
         {
-            this.controllerName = controllerName;
+            ControllerName = controllerName;
         }
 
         protected async Task<T1> SendRequest<T1>(string path, Method method = Method.GET, object body = null)
@@ -55,27 +55,27 @@ namespace RestClient
 
         public async Task Delete(T entity)
         {
-            await SendRequest<T>($"api/{controllerName}/values", Method.DELETE, entity);
+            await SendRequest<T>($"api/{ControllerName}/values", Method.DELETE, entity);
         }
 
         public async Task<List<T>> GetAll()
         {
-            return await SendRequest<List<T>>($"api/{controllerName}/values");
+            return await SendRequest<List<T>>($"api/{ControllerName}/values");
         }
 
         public async Task<T> GetById(long id)
         {
-            return await SendRequest<T>($"api/{controllerName}/values/{id}");
+            return await SendRequest<T>($"api/{ControllerName}/values/{id}");
         }
 
         public async Task<long> Insert(T entity)
         {
-            return await SendRequest<long>($"api/{controllerName}/values", Method.POST, entity);
+            return await SendRequest<long>($"api/{ControllerName}/values", Method.POST, entity);
         }
 
         public async Task Update(T entity)
         {
-            await SendRequest<T>($"api/{controllerName}/values", Method.PUT, entity);
+            await SendRequest<T>($"api/{ControllerName}/values", Method.PUT, entity);
         }
     }
 }

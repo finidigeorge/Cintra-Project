@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Shared.Dto
 {
-    public class TrainerDto
+    public class CoachDto
     {
         public long Id { get; set; }
         public string Name { get; set; }

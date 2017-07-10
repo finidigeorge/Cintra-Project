@@ -2,7 +2,7 @@
 
 namespace Repositories.Interfaces
 {
-    public interface ITrainersRepository : IGenericRepository<Trainer>
+    public interface ICoachesRepository : IGenericRepository<Coach>
     {
         
     }

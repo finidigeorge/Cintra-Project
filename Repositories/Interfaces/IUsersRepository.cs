@@ -9,5 +9,7 @@ namespace Repositories.Interfaces
     public interface IUsersRepository : IGenericRepository<User>
     {
         Task<IList<User>> GetByParamsWithRoles(Func<User, bool> where);
+
+        Task<bool> HasAdminAccess(string login);
     }
 }    

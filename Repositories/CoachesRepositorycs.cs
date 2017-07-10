@@ -8,7 +8,7 @@ using Shared.Attributes;
 namespace Repositories
 {
     [PerScope]
-    public class TrainersRepositorycs: GenericRepository<Trainer>, ITrainersRepository
+    public class CoachesRepositorycs: GenericRepository<Coach>, ICoachesRepository
     {
     }
 }

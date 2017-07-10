@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DataModels;
 using LinqToDB;
 using Repositories.Interfaces;
+using Shared;
 using Shared.Attributes;
 
 namespace Repositories
@@ -22,5 +23,10 @@ namespace Repositories
             }
         }
 
+        public async Task<bool> HasAdminAccess(string login)
+        {
+            var user = (await GetByParamsWithRoles(x => x.Login == login)).FirstOrDefault();
+            return user?.user_roles.Name == enUserRoles.Administrator;
+        }
     }
 }

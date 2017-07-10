@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -118,9 +119,9 @@ namespace Cintra
 
             foreach (var singleton in instantiateOnStartup)
             {
-                System.Console.WriteLine($"Instantiating {singleton}");
+                Console.WriteLine($"Instantiating {singleton}");
 
-                IStartupHandler startupHandler = null;
+                IStartupHandler startupHandler;
                 if (isolatedScope.Contains(singleton))                
                     startupHandler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService(singleton) as IStartupHandler;                
                 else                
@@ -145,6 +146,8 @@ namespace Cintra
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.ObjectCreationHandling = ObjectCreationHandling.Replace;
                 });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             /*services.AddAuthorization(options =>
             {
