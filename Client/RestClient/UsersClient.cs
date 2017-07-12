@@ -15,14 +15,14 @@ namespace RestClient
         {            
         }
 
-        public async void UpdatePassword(long userId, string password)
+        public async Task UpdatePassword(string login, string password)
         {
-            await SendRequest<UserDto>($"api/{ControllerName}/updatePassword", Method.PUT, new UserDto() {Id = userId, Password = password});
+            await SendRequest<UserDto>($"api/{ControllerName}/updatePassword", Method.PUT, new UserDto() {Login = login, Password = password});
         }
 
-        public async void ResetPassword(long userId)
+        public async Task ResetPassword(string login)
         {
-            await SendRequest<UserDto>($"api/{ControllerName}/resetPassword", Method.PUT, new UserDto() { Id = userId });
+            await SendRequest<UserDto>($"api/{ControllerName}/resetPassword", Method.PUT, new UserDto() { Login = login });
         }
     }
 }

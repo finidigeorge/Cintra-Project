@@ -10,6 +10,8 @@ namespace Repositories.Interfaces
     {
         Task<IList<User>> GetByParamsWithRoles(Func<User, bool> where);
 
+        Task<User> GetByLogin(string login);
+
         Task<bool> HasAdminAccess(string login);
     }
 }    

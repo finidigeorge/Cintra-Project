@@ -8,7 +8,7 @@ using Shared.Dto;
 
 namespace RestClient
 {
-    public class CoachesClient: BaseRestApiClient<TrainerDto>
+    public class CoachesClient: BaseRestApiClient<CoachDto>
     {
         public CoachesClient() : base(enKnownControllers.CoachesController)
         {

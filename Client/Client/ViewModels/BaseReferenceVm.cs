@@ -14,7 +14,7 @@ using Shared.Interfaces;
 
 namespace Client.ViewModels
 {
-    public class BaseReferenceVm<T> : INotifyPropertyChanged, IEditableSelectableReference<T> where T : class, new()
+    public class BaseReferenceVm<T> : BaseVm, INotifyPropertyChanged, IEditableSelectableReference<T> where T : class, new()
     {
         private IList<T> _items = new List<T>();
    
@@ -50,15 +50,7 @@ namespace Client.ViewModels
         public bool IsEditModeEnabled { get; protected set; }
         public bool IsSelectionModeEnabled { get; protected set; }
         public bool IsMultiSelectionModeEnabled { get; protected set; }
-        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+                
         protected void Set<T1>(ref T1 oldValue, T1 newValue, string propertyName)
         {
             if (!oldValue.Equals(newValue))

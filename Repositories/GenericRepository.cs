@@ -13,7 +13,7 @@ namespace Repositories
 {
     public class GenericRepository<T>: IGenericRepository<T> where T : class
     {
-        public async void Update(T entity)
+        public async Task Update(T entity)
         {
             using (var db = new CintraDB())
             {
@@ -29,7 +29,7 @@ namespace Repositories
             }
         }
 
-        public async void Delete(T entity)
+        public async Task Delete(T entity)
         {
             using (var db = new CintraDB())
             {

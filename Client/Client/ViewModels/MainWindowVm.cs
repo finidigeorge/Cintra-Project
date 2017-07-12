@@ -13,6 +13,7 @@ namespace Client.ViewModels
     public class MainWindowVm
     {
         public ICommand ShowLoginDialogCommand { get; }
+        public ICommand ShowChangePasswordDialogCommand { get; }
         public ICommand ShowExitDialogCommand { get; }
 
         public AuthVm AuthVm { get; }
@@ -20,17 +21,22 @@ namespace Client.ViewModels
 
         public MainWindowVm()
         {
-            ShowLoginDialogCommand = new Command(LoginCommandAction, true);
-            ShowExitDialogCommand = new Command(ExitAppCommandAction, true);
+            ShowLoginDialogCommand = new Command(() =>
+            {
+                new LoginWindow() {DataContext = AuthVm}.ShowDialog(); 
+                
+            }, true);
+
+            ShowChangePasswordDialogCommand = new Command(() =>
+                {
+                    new ChangePasswordWindow() {DataContext = new ChangePasswordVm()}.ShowDialog();
+                }, true);
+
+            ShowExitDialogCommand = new Command(ExitAppCommandAction, true);            
+
 
             AuthVm = new AuthVm(new AuthClient(), new UserRolesClient());
-        }
-
-        private void LoginCommandAction()
-        {
-            var loginWindow = new LoginWindow() { DataContext = AuthVm };
-            loginWindow.ShowDialog();
-        }
+        }              
 
         private void ExitAppCommandAction()
         {

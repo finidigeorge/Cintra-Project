@@ -26,7 +26,7 @@ namespace Client.ViewModels
         IsAdmin
     }
 
-    public class AuthVm : INotifyPropertyChanged
+    public class AuthVm : BaseVm
     {
         private readonly IAuthController _authController;
         private readonly IUserRolesController _userRolesController;
@@ -58,7 +58,7 @@ namespace Client.ViewModels
         public string Username
         {
             get => _username;
-            set { _username = value; NotifyPropertyChanged(AuthVmProperties.UserName); }
+            set { _username = value; OnPropertyChanged(nameof(AuthVmProperties.UserName)); }
         }
 
         public string AuthenticatedUser
@@ -66,9 +66,8 @@ namespace Client.ViewModels
             get
             {
                 if (IsAuthenticated)
-                    return string.Format("Signed in as {0}. {1}",
-                        Thread.CurrentPrincipal.Identity.Name,
-                        IsAdmin ? "You are member of the administrators group" : "You are regular user");
+                    return
+                        $"Signed in as {Thread.CurrentPrincipal.Identity.Name}. {(IsAdmin ? "You are member of the administrators group" : "You are regular user")}";
 
                 return "Not authenticated!";
             }
@@ -77,15 +76,14 @@ namespace Client.ViewModels
         public string Status
         {
             get => _status;
-            set { _status = value; NotifyPropertyChanged(AuthVmProperties.Status); }
+            set { _status = value; OnPropertyChanged(nameof(AuthVmProperties.Status)); }
         }
         
         #endregion
         
         private async Task Login(object parameter)
-        {
-            PasswordBox passwordBox = parameter as PasswordBox;
-            string clearTextPassword = passwordBox?.Password;
+        {            
+            string clearTextPassword = parameter.ToString();
             try
             {
                 Mouse.OverrideCursor = Cursors.Wait;
@@ -103,13 +101,13 @@ namespace Client.ViewModels
                 principal.Identity = new UserIdentity(Username, roles);
 
                 //Update UI
-                NotifyPropertyChanged(AuthVmProperties.AuthenticatedUser);
-                NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);
-                NotifyPropertyChanged(AuthVmProperties.IsAdmin);
+                OnPropertyChanged(nameof(AuthVmProperties.AuthenticatedUser));
+                OnPropertyChanged(nameof(AuthVmProperties.IsAuthenticated));
+                OnPropertyChanged(nameof(AuthVmProperties.IsAdmin));
             }            
             catch (Exception ex)
             {
-                Status = string.Format("ERROR: {0}", ex.Message);
+                Status = $"ERROR: {ex.Message}";
             }
             finally
             {
@@ -132,8 +130,8 @@ namespace Client.ViewModels
                     principal.Identity = new AnonymousIdentity();
 
                     //update UI
-                    NotifyPropertyChanged(AuthVmProperties.AuthenticatedUser);
-                    NotifyPropertyChanged(AuthVmProperties.IsAuthenticated);
+                    OnPropertyChanged(nameof(AuthVmProperties.AuthenticatedUser));
+                    OnPropertyChanged(nameof(AuthVmProperties.IsAuthenticated));
 
                     Status = string.Empty;
                 }
@@ -147,17 +145,8 @@ namespace Client.ViewModels
 
         public bool IsAuthenticated => Thread.CurrentPrincipal.Identity.IsAuthenticated;
 
-        public bool IsAdmin => IsAuthenticated && Thread.CurrentPrincipal.IsInRole(UserRolesEnum.Administrator.ToString("G"));
-
-
-        #region INotifyPropertyChanged Members
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(AuthVmProperties property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property.ToString("G")));
-        }
-        #endregion
+        public bool IsAdmin => IsAuthenticated && Thread.CurrentPrincipal.IsInRole(nameof(UserRolesEnum.Administrator));
+        
     }
 }
 

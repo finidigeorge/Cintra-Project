@@ -11,7 +11,7 @@ using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class CoachesRefVm : BaseReferenceVm<TrainerDto>
+    public class CoachesRefVm : BaseReferenceVm<CoachDto>
     {        
 
         public CoachesRefVm()

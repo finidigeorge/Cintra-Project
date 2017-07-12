@@ -7,11 +7,11 @@ namespace Repositories.Interfaces
 {
      public interface IGenericRepository<T> where T: class
      {
-         void Update(T entity);
+         Task Update(T entity);
 
          Task<long> Insert(T entity);
 
-         void Delete(T entity);
+         Task Delete(T entity);
 
          Task<List<T>> GetAll();
 

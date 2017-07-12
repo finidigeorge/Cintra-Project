@@ -7,6 +7,7 @@ using LinqToDB;
 using Repositories.Interfaces;
 using Shared;
 using Shared.Attributes;
+using Shared.Dto;
 
 namespace Repositories
 {
@@ -20,6 +21,14 @@ namespace Repositories
                 return await Task.FromResult(
                     db.Users.LoadWith(x => x.user_roles).Where(where).ToList()
                 );
+            }
+        }
+
+        public async Task<User> GetByLogin(string login)
+        {
+            using (var db = new CintraDB())
+            {
+                return await db.Users.FirstOrDefaultAsync(x => x.Login == login);                
             }
         }
 

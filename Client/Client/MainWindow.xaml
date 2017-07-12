@@ -25,6 +25,8 @@
         <Menu x:Name="MainMenu" Margin="0,0,0,40" FontSize="16" Grid.ColumnSpan="2">
             <MenuItem Header="File">
                 <MenuItem Header="Login" Command="{Binding ShowLoginDialogCommand}"/>
+                <MenuItem Header="Change password" Command="{Binding ShowChangePasswordDialogCommand}"/>
+                <Separator />
                 <MenuItem Header="Exit" Command="{Binding ShowExitDialogCommand}"/>
             </MenuItem>
             <MenuItem Header="Help">

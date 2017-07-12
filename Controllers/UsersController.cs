@@ -23,11 +23,13 @@ namespace Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthController _authController;
+        private readonly IUsersRepository repository;
 
         public UsersController(IHttpContextAccessor httpContextAccessor, IUsersRepository repository, IAuthController authController) : base(repository)
         {
             _httpContextAccessor = httpContextAccessor;
             _authController = authController;
+            repository = (IUsersRepository) _repository;
         }
 
         [HttpPut]
@@ -38,30 +40,30 @@ namespace Controllers
             await base.Update(entity);
         }
 
-        [HttpPut("/updatePassword")]        
+        [HttpPut("/api/[controller]/updatePassword")]        
         public async Task UpdatePassword(UserDto entity)
         {
             var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var _entity = await base.GetById(entity.Id);
+            var _entity = await repository.GetByLogin(entity.Login);
 
-            if (!await ((IUsersRepository)_repository).HasAdminAccess(userName))
+            if (!await repository.HasAdminAccess(userName))
                 if (_entity.Login != userName)
                     throw new Exception("You need to have the Administrator role to complete this operation");
 
             
             _entity.Password = _authController.GetPassword(entity.Password);
 
-            await base.Update(_entity);
+            await repository.Update(_entity);
         }
 
-        [HttpPut("/resetPassword")]
+        [HttpPut("/api/[controller]/resetPassword")]
         [Authorize(Roles = enUserRoles.Administrator)]
         public async Task ResetPassword([FromBody]UserDto entity)
         {            
-            var _entity = await base.GetById(entity.Id);
+            var _entity = await repository.GetByLogin(entity.Login);
             _entity.Password = _authController.GetPassword(_entity.Login);
 
-            await base.Update(_entity);
+            await repository.Update(_entity);
         }
 
         [HttpPost]
