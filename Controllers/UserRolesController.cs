@@ -6,6 +6,7 @@ using DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Repositories.Interfaces;
 using Shared;
 using Shared.Dto;
@@ -17,7 +18,7 @@ namespace Controllers
     [Route("/api/[controller]/values")]
     public class UserRolesController : BaseController<UserRoles, UserRoleDto>, IUserRolesController
     {
-        public UserRolesController(IUserRolesRepository userRolesRepository) : base(userRolesRepository)
+        public UserRolesController(IUserRolesRepository userRolesRepository, ILoggerFactory loggerFactory) : base(userRolesRepository, loggerFactory)
         {
         }
 

@@ -38,7 +38,6 @@ namespace Cintra
         private void _configureServices(IServiceCollection services)
         {
             services.AddCors(c => c.AddPolicy("*", b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().Build()));
-
             
             // Setup options with DI
             services.AddOptions();
@@ -49,9 +48,8 @@ namespace Cintra
 
             var assemblyNames = new[] {                
                 "Repositories",
-                "Controllers",
+                "Controllers"
             };
-
 
             //Set up DI container
             Assemblies = assemblyNames.Select(s => new AssemblyName(s)).Select(s => Assembly.Load(s)).ToList();
@@ -59,6 +57,51 @@ namespace Cintra
             var instantiateOnStartup = new HashSet<Type>();
             var isolatedScope = new HashSet<Type>();
 
+            //load assemblies
+            InitAssemblies(services, instantiateOnStartup, isolatedScope);            
+            var serviceProvider = services.BuildServiceProvider();
+
+            //run singletons on startup
+            foreach (var singleton in instantiateOnStartup)
+            {
+                Console.WriteLine($"Instantiating {singleton}");
+
+                IStartupHandler startupHandler;
+                if (isolatedScope.Contains(singleton))                
+                    startupHandler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService(singleton) as IStartupHandler;                
+                else                
+                    startupHandler = serviceProvider.GetRequiredService(singleton) as IStartupHandler;
+                
+                startupHandler?.Run();
+            }
+
+            // Configure JwtTokenOptions
+            var jwtAppSettingOptions = Configuration.GetSection("Jwt");            
+            services.Configure<JwtTokenOptions>(options =>
+            {
+                options.Issuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)];
+                options.ValidFor = TimeSpan.FromMinutes(Convert.ToInt32(jwtAppSettingOptions[nameof(JwtTokenOptions.ValidFor)]));
+                options.SigningCredentials = new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
+            });
+
+            services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+                });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            /*services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+            });*/
+        }
+
+        private static void InitAssemblies(IServiceCollection services, HashSet<Type> instantiateOnStartup, HashSet<Type> isolatedScope)
+        {
             foreach (var assembly in Assemblies)
             {
                 foreach (var type in assembly.ExportedTypes)
@@ -70,7 +113,8 @@ namespace Cintra
                     }
 
                     var ti = type.GetTypeInfo();
-                    var interfaces = ti.ImplementedInterfaces.Where(i => !i.Namespace.StartsWith("System") && i != typeof(IStartupHandler)).ToList();
+                    var interfaces = ti.ImplementedInterfaces
+                        .Where(i => !i.Namespace.StartsWith("System") && i != typeof(IStartupHandler)).ToList();
                     interfaces = interfaces.Except(interfaces.SelectMany(i => i.GetTypeInfo().ImplementedInterfaces)).ToList();
 
                     if (ti.GetCustomAttributes<PerScope>().Any())
@@ -111,50 +155,10 @@ namespace Cintra
                             }
                         }
                     }
-
                 }
             }
-            
-            var serviceProvider = services.BuildServiceProvider();
-
-            foreach (var singleton in instantiateOnStartup)
-            {
-                Console.WriteLine($"Instantiating {singleton}");
-
-                IStartupHandler startupHandler;
-                if (isolatedScope.Contains(singleton))                
-                    startupHandler = serviceProvider.CreateScope().ServiceProvider.GetRequiredService(singleton) as IStartupHandler;                
-                else                
-                    startupHandler = serviceProvider.GetRequiredService(singleton) as IStartupHandler;
-                
-                startupHandler?.Run();
-            }
-
-            // Configure JwtTokenOptions
-            var jwtAppSettingOptions = Configuration.GetSection("Jwt");            
-            services.Configure<JwtTokenOptions>(options =>
-            {
-                options.Issuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)];
-                options.Audience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)];
-                options.ValidFor = TimeSpan.FromMinutes(Convert.ToInt32(jwtAppSettingOptions[nameof(JwtTokenOptions.ValidFor)]));
-                options.SigningCredentials = new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
-            });
-
-            services.AddMvc()
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    options.SerializerSettings.ObjectCreationHandling = ObjectCreationHandling.Replace;
-                });
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            /*services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
-            });*/
         }
-        
+
 
         public Startup(IHostingEnvironment env)
         {
@@ -203,6 +207,7 @@ namespace Cintra
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddFile(Configuration.GetSection("Logging")["LogFile"]);
             loggerFactory.AddDebug();
 
             // configure port

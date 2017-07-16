@@ -78,9 +78,13 @@ namespace Client.ViewModels
             get => _status;
             set { _status = value; OnPropertyChanged(nameof(AuthVmProperties.Status)); }
         }
-        
+
+        public bool IsAuthenticated => Thread.CurrentPrincipal.Identity.IsAuthenticated;
+
+        public bool IsAdmin => IsAuthenticated && Thread.CurrentPrincipal.IsInRole(nameof(UserRolesEnum.Administrator));
+
         #endregion
-        
+
         private async Task Login(object parameter)
         {            
             string clearTextPassword = parameter.ToString();
@@ -142,10 +146,6 @@ namespace Client.ViewModels
         {
             return IsAuthenticated;
         }
-
-        public bool IsAuthenticated => Thread.CurrentPrincipal.Identity.IsAuthenticated;
-
-        public bool IsAdmin => IsAuthenticated && Thread.CurrentPrincipal.IsInRole(nameof(UserRolesEnum.Administrator));
         
     }
 }

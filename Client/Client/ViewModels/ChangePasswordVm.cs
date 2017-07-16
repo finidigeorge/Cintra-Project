@@ -26,7 +26,7 @@ namespace Client.ViewModels
             ChangePasswordCommand = new AsyncCommand<object>(async (x) =>
             {                
                 await _client.UpdatePassword(Thread.CurrentPrincipal.Identity.Name, x.ToString());
-            });
+            }, x => true);
         }
 
         public bool IsUpdatePasswordSuccess { get; set; }

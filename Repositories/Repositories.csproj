@@ -9,4 +9,10 @@
     <ProjectReference Include="..\Shared\Shared\Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Security.Claims">
+      <HintPath>C:\Users\alex\.nuget\packages\system.security.claims\4.3.0\ref\netstandard1.3\System.Security.Claims.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

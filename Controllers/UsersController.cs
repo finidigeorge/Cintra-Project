@@ -9,6 +9,7 @@ using DataModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 using Shared;
@@ -22,48 +23,66 @@ namespace Controllers
     public class UsersController: BaseController<User, UserDto>, IUserController
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAuthController _authController;
+        private readonly IAuthRepository _authRepository;
         private readonly IUsersRepository repository;
+        private readonly ILogger _logger;
 
-        public UsersController(IHttpContextAccessor httpContextAccessor, IUsersRepository repository, IAuthController authController) : base(repository)
+        public UsersController(IHttpContextAccessor httpContextAccessor, IUsersRepository repository, IAuthRepository authRepository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
             _httpContextAccessor = httpContextAccessor;
-            _authController = authController;
-            repository = (IUsersRepository) _repository;
+            _authRepository = authRepository;
+            this.repository = (IUsersRepository) _repository;
+            _logger = loggerFactory.CreateLogger<UsersController>();
         }
 
         [HttpPut]
         [Authorize(Roles = enUserRoles.Administrator)]
-        public override async Task Update(UserDto entity)
+        public override async Task Update([FromBody]UserDto entity)
         {            
             entity.Password = (await base.GetById(entity.Id)).Password;
             await base.Update(entity);
         }
 
         [HttpPut("/api/[controller]/updatePassword")]        
-        public async Task UpdatePassword(UserDto entity)
+        public async Task UpdatePassword([FromBody]UserDto entity)
         {
-            var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var _entity = await repository.GetByLogin(entity.Login);
+            try
+            {
+                var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var _entity = await repository.GetByLogin(entity.Login);
 
-            if (!await repository.HasAdminAccess(userName))
-                if (_entity.Login != userName)
-                    throw new Exception("You need to have the Administrator role to complete this operation");
+                if (!await repository.HasAdminAccess(userName))
+                    if (_entity.Login != userName)
+                        throw new Exception("You need to have the Administrator role to complete this operation");
 
-            
-            _entity.Password = _authController.GetPassword(entity.Password);
 
-            await repository.Update(_entity);
+                _entity.Password = _authRepository.GeneratePassword(entity.Password);
+
+                await repository.Update(_entity);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }           
         }
 
         [HttpPut("/api/[controller]/resetPassword")]
         [Authorize(Roles = enUserRoles.Administrator)]
         public async Task ResetPassword([FromBody]UserDto entity)
-        {            
-            var _entity = await repository.GetByLogin(entity.Login);
-            _entity.Password = _authController.GetPassword(_entity.Login);
+        {
+            try
+            {
+                var _entity = await repository.GetByLogin(entity.Login);
+                _entity.Password = _authRepository.GeneratePassword(_entity.Login);
 
-            await repository.Update(_entity);
+                await repository.Update(_entity);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }            
         }
 
         [HttpPost]
