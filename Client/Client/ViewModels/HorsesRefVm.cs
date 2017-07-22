@@ -6,12 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
+using Common.DtoMapping;
 using RestClient;
 using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class HorsesRefVm : BaseReferenceVm<HorseDto>
+    public class HorsesRefVm : BaseReferenceVm<HorseDto, HorseDtoUi>
     {        
         public HorsesRefVm()
         {

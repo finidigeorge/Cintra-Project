@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Client.ViewModels;
+using Shared.Dto;
 
 namespace Client.Controls
 {
@@ -23,9 +24,42 @@ namespace Client.Controls
     {
         public HorsesRefVm Model => (HorsesRefVm)Resources["ViewModel"];
 
+        /*private bool isEditing;
+        private bool isInserting;*/
+
         public HorsesReference()
         {
             InitializeComponent();            
-        }        
+        }
+
+        /*private void ItemsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            try
+            {
+                if (e.EditAction == DataGridEditAction.Commit && e.Row.DataContext != null)
+                {
+                    if (isInserting)
+                        Model.AddItemCommand.ExecuteAsync(e.Row.DataContext);
+                    if (isEditing)
+                        Model.EditItemCommand.ExecuteAsync(e.Row.DataContext);
+                }
+            }
+            finally
+            {
+                isEditing = false;
+                isInserting = false;
+            }
+
+        }
+
+        private void ItemsDataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
+        {
+            isInserting = true;
+        }
+
+        private void ItemsDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            isEditing = true;
+        }*/
     }
 }

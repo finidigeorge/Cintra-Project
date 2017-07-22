@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Interfaces
 {
-    public interface IBaseController<T> where T: class
+    public interface IBaseController<T>
     {
         Task Update(T entity);
 

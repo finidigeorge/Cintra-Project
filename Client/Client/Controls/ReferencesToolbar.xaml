@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Client.Controls.ReferencesToolbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:interfaces="clr-namespace:Client.ViewModels.Interfaces"
+             mc:Ignorable="d" 
+             d:DesignHeight="32" d:DesignWidth="300">
+    <ToolBar Height="32">
+        <Button Command="{Binding Path=AddItemsCommand}" ToolTip="Add new item to the reference">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/ReferenceNewItem.png" />
+                <TextBlock VerticalAlignment="Center">New</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button Command="{Binding Path=EditItemCommand}" ToolTip="Edit selected item of the reference">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                <TextBlock VerticalAlignment="Center">Edit</TextBlock>
+            </StackPanel>
+        </Button>
+        <Button Command="{Binding Path=DeleteItemsCommand}" ToolTip="Delete selected item from the reference">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/ReferenceDeleteItem.png" />
+                <TextBlock VerticalAlignment="Center">Delete</TextBlock>
+            </StackPanel>
+        </Button>
+    </ToolBar>
+</UserControl>

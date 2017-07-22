@@ -57,6 +57,7 @@ namespace Controllers
 
 
                 _entity.Password = _authRepository.GeneratePassword(entity.Password);
+                _entity.NewPasswordOnLogin = false;
 
                 await repository.Update(_entity);
             }
@@ -74,6 +75,7 @@ namespace Controllers
             try
             {
                 var _entity = await repository.GetByLogin(entity.Login);
+                _entity.NewPasswordOnLogin = true;
                 _entity.Password = _authRepository.GeneratePassword(_entity.Login);
 
                 await repository.Update(_entity);

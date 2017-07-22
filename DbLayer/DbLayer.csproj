@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="linq2db.SQLite" Version="1.8.2" />
+    <PackageReference Include="linq2db.SQLite" Version="1.8.3" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="1.1.1" />
   </ItemGroup>
 

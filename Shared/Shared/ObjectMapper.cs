@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
-using Db = DataModels;
 
-namespace Controllers
+
+namespace Mapping
 {
     public class ObjectMapper
     {
-        private static IMapper _mapper = null;
+        private static readonly IMapper _mapper;
 
         static ObjectMapper()
         {

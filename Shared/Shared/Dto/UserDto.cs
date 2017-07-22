@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using Shared.Attributes;
+using Shared.Dto.Interfaces;
 
 namespace Shared.Dto
 {
-    public class UserDto
+    public class UserDto: IUniqueDto
     {
         public long Id { get; set; }
         public string Login { get; set; }

@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
+using Common.DtoMapping;
 using RestApi;
 using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class UserRolesRefVm : BaseReferenceVm<UserRoleDto>
+    public class UserRolesRefVm : BaseReferenceVm<UserRoleDto, UserRoleDtoUi>
     {
         public UserRolesRefVm()
         {

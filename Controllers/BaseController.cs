@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mapping;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Repositories.Interfaces;
@@ -9,7 +10,7 @@ using Shared.Interfaces;
 
 namespace Controllers
 {
-    public class BaseController<T, T1> : IBaseController<T1> where T : class where T1 : class
+    public class BaseController<T, T1> : IBaseController<T1>
     {
         protected IGenericRepository<T> _repository;
         private readonly ILogger _logger;
@@ -69,7 +70,7 @@ namespace Controllers
         {
             try
             {
-                return (await Task.Run(() => _repository.GetAll())).Select(ObjectMapper.Map<T1>).ToList();
+                return (await Task.Run(() => _repository.GetAll())).Select(x => ObjectMapper.Map<T1>(x)).ToList();
             }
             catch (Exception e)
             {

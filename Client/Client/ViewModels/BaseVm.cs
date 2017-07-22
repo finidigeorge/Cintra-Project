@@ -17,5 +17,14 @@ namespace Client.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected void Set<T>(ref T oldValue, T newValue, string propertyName)
+        {
+            if (!oldValue.Equals(newValue))
+            {
+                oldValue = newValue;
+                OnPropertyChanged(propertyName);
+            }
+        }
     }
 }

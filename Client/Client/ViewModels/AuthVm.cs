@@ -11,6 +11,8 @@ using System.Windows.Input;
 using Client.Commands;
 using Client.Security;
 using Common;
+using Common.DtoMapping;
+using Mapping;
 using Shared;
 using Shared.Dto;
 using Shared.Interfaces;
@@ -92,9 +94,9 @@ namespace Client.ViewModels
             {
                 Mouse.OverrideCursor = Cursors.Wait;
                 //Validate credentials through the authentication service
-                var token = await _authController.Login(new UserDto {Login = Username, Password = clearTextPassword });
+                var token = await _authController.Login(new UserDtoUi {Login = Username, Password = clearTextPassword });
                 AuthProvider.SetToken(token);
-                var roles = await _userRolesController.GetByUser(Username);
+                var roles = (await _userRolesController.GetByUser(Username)).ToList<UserRoleDto, UserRoleDtoUi>();
 
                 //Get the current principal object
                 var principal = Thread.CurrentPrincipal as UserPrincipal;

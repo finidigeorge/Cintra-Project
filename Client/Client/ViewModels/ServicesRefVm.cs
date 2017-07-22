@@ -6,12 +6,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
+using Common.DtoMapping;
 using RestClient;
 using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public class ServicesRefVm : BaseReferenceVm<ServiceDto>
+    public class ServicesRefVm : BaseReferenceVm<ServiceDto, ServiceDtoUi>
     {        
         public ServicesRefVm()
         {

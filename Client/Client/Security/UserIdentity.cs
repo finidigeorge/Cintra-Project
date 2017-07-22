@@ -4,15 +4,16 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Common.DtoMapping;
 using Shared.Dto;
 
 namespace Client.Security
 {
     public class UserIdentity: IIdentity
     {
-        public UserIdentity(string name, IList<UserRoleDto> roles)
+        public UserIdentity(string name, IList<UserRoleDtoUi> roles)
         {
-            Roles = roles ?? new List<UserRoleDto>();
+            Roles = roles ?? new List<UserRoleDtoUi>();
             Name = name;            
         }
 
@@ -20,7 +21,7 @@ namespace Client.Security
         public string AuthenticationType { get => "Custom auth"; }
         public bool IsAuthenticated => !string.IsNullOrEmpty(Name);
 
-        public IList<UserRoleDto> Roles { get; }
+        public IList<UserRoleDtoUi> Roles { get; }
 
     }
 }
