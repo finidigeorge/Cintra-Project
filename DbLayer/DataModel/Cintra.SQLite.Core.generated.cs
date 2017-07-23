@@ -73,15 +73,15 @@ namespace DataModels
 	[Table("horses")]
 	public partial class Hors
 	{
-		[Column("id"),       PrimaryKey, NotNull] public long   Id       { get; set; } // integer
-		[Column("nickname"),             NotNull] public string Nickname { get; set; } // varchar(255)
+		[Column("id"),       PrimaryKey, Identity] public long   Id       { get; set; } // integer
+		[Column("nickname"), NotNull             ] public string Nickname { get; set; } // varchar(255)
 	}
 
 	[Table("services")]
 	public partial class Service
 	{
-		[Column("id"),   PrimaryKey, NotNull] public long   Id   { get; set; } // integer
-		[Column("name"),             NotNull] public string Name { get; set; } // varchar(255)
+		[Column("id"),   PrimaryKey, Identity] public long   Id   { get; set; } // integer
+		[Column("name"), NotNull             ] public string Name { get; set; } // varchar(255)
 	}
 
 	[Table("users")]

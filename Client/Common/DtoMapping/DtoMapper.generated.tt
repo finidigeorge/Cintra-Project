@@ -1,0 +1,78 @@
+﻿<#@ template debug="true" language="C#" hostspecific="true" #>
+<#@ assembly name="System.Core" #>
+<#@ Assembly Name="System.Data" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs"#>
+
+using System.ComponentModel;
+using Shared.Dto;
+using Common.Annotations;
+using System.Runtime.CompilerServices;
+
+namespace Common.DtoMapping
+{
+<#
+var path = this.Host.ResolveAssemblyReference("$(TargetPath)");
+Assembly assembly = Assembly.LoadFrom(path);
+Type[] types = assembly.GetTypes();
+foreach (Type type in types)
+{
+    if (type.IsClass && type.GetInterfaces().Any(x => x.Name =="INotifyPropertyChanged"))
+    {        
+		string baseTypeName = type.BaseType.Name;
+        string className = type.Name;
+        string interfaceName = "IAtomicEditableObject";
+#>		
+		public partial class <#= className #> : <#= interfaceName #>
+		{
+			private readonly EditableAdapter<<#= baseTypeName #>> _adapter;
+			public event ItemEndEditEventHandler ItemEndEdit;
+
+			private bool _isEditing = false;
+
+			public <#= className #>()
+			{
+				_adapter = new EditableAdapter<<#= baseTypeName #>>(this);
+			}
+
+			public void BeginEdit()
+			{
+				_isEditing = true;
+				_adapter.BeginEdit();
+			}
+
+			public void EndEdit()
+			{
+				_adapter.EndEdit();	
+				if (ItemEndEdit != null && _isEditing)
+				{
+					_isEditing = false;
+					ItemEndEdit(this);
+				}
+			}
+
+			public void CancelEdit()
+			{
+				_isEditing = false;
+				_adapter.CancelEdit();
+			}	
+			
+			public virtual void OnPropertyChanged(string propertyName)
+			{
+				var propertyChanged = PropertyChanged;
+				if (propertyChanged != null)
+				{
+					propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				}
+			}
+		}
+
+<#
+    }
+}
+#>
+
+}

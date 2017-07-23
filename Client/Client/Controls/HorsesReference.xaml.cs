@@ -25,14 +25,16 @@ namespace Client.Controls
         public HorsesRefVm Model => (HorsesRefVm)Resources["ViewModel"];
 
         /*private bool isEditing;
-        private bool isInserting;*/
+        private bool isInserting;
+        */
 
         public HorsesReference()
         {
             InitializeComponent();            
         }
 
-        /*private void ItemsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        /*
+        private void ItemsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
             try
             {

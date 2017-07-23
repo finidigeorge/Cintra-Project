@@ -20,9 +20,11 @@
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
             <controls:ReferencesToolbar/>
         </ToolBarPanel>
-        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items, Mode=TwoWay}" Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" CanUserAddRows="True" CanUserDeleteRows="True">
+        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" 
+                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" CanUserAddRows="True" CanUserDeleteRows="True"                  
+                  >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName}"  Width="*" />
+                <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

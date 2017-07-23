@@ -12,6 +12,7 @@ namespace Client.ViewModels
     public class BaseVm: INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -20,11 +21,12 @@ namespace Client.ViewModels
 
         protected void Set<T>(ref T oldValue, T newValue, string propertyName)
         {
-            if (!oldValue.Equals(newValue))
+            if (oldValue == null || !oldValue.Equals(newValue))
             {
                 oldValue = newValue;
                 OnPropertyChanged(propertyName);
             }
         }
+
     }
 }
