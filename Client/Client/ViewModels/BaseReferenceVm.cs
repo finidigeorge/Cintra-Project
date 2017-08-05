@@ -120,8 +120,12 @@ namespace Client.ViewModels
                             UpdateItemCommand.ExecuteAsync(obj);
                     };
 
-                    //handler for tracking changes of particular properties of each item
-                    ((INotifyPropertyChanged) x).PropertyChanged += (obj, args) => { UpdateItemCommand.ExecuteAsync(obj); };
+                    //remove new item on cancel edit
+                    ((IAtomicEditableObject)x).ItemCancelEdit += (obj) =>
+                    {
+                        if (((IUniqueDto) obj).Id == 0)
+                            Items.Remove((T1) obj);                        
+                    };                    
                 }
             }
 

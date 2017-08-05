@@ -18,8 +18,7 @@ namespace Client.ViewModels
 
     public class ChangePasswordVm: BaseVm
     {
-        private readonly UsersClient _client = new UsersClient();
-        private string _errorMessage;
+        private readonly UsersClient _client = new UsersClient();       
 
         public ChangePasswordVm()
         {

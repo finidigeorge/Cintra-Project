@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Shared.Attributes;
 
 namespace Common.DtoMapping
 {
@@ -48,7 +49,7 @@ namespace Common.DtoMapping
             foreach (var p in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 //check if there is set accessor
-                if (null != p.GetSetMethod())
+                if (p.GetSetMethod() != null)
                 {
                     p.SetValue(_observableVm, _props[p.Name]);
                 }
@@ -62,6 +63,29 @@ namespace Common.DtoMapping
         {
             //delete current values
             _props = null;
+        }
+
+
+        public string HandleMetadataValiadations(string propertyName)
+        {
+            var property = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .FirstOrDefault(p => p.Name == propertyName);
+
+            if (property != null)
+            {
+                //get Meta attr
+                var metaAttr = property.CustomAttributes.FirstOrDefault(x => x.AttributeType == typeof(VmMetaAttribute));
+                var isNullable = metaAttr?.NamedArguments?.FirstOrDefault(x => x.MemberName == "IsNullable");
+
+                //do checks
+                if (isNullable != null && !(bool)isNullable.Value.TypedValue.Value)
+                {
+                    if (property.GetValue(_observableVm) == null || string.IsNullOrEmpty(property.GetValue(_observableVm).ToString()))
+                        return $"{propertyName} cannot be null or empty";
+                }
+            }
+
+            return string.Empty;
         }
     }
 }

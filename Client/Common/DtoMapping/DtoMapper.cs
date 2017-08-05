@@ -16,17 +16,74 @@ namespace Common.DtoMapping
     public interface IAtomicEditableObject : IEditableObject 
     {        
         event ItemEndEditEventHandler ItemEndEdit;
+        event ItemEndCancelEventHandler ItemCancelEdit;
+    }
+
+    public interface ICustomDataErrorInfo : IDataErrorInfo
+    {
+        string ApplyObjectLevelValidations();
     }
 
     public delegate void ItemEndEditEventHandler(IAtomicEditableObject sender);
+    public delegate void ItemEndCancelEventHandler(IAtomicEditableObject sender);
 
 #pragma warning disable CS0067
-    public partial class CoachDtoUi : CoachDto, INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; }
+    public partial class CoachDtoUi : CoachDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
 
-    public partial class HorseDtoUi : HorseDto, INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; }
+        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
 
-    public partial class ServiceDtoUi : ServiceDto, INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; }
-    public partial class UserDtoUi : UserDto, INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; }
-    public partial class UserRoleDtoUi : UserRoleDto, INotifyPropertyChanged { public event PropertyChangedEventHandler PropertyChanged; }
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
+    public partial class HorseDtoUi : HorseDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
+    public partial class ServiceDtoUi : ServiceDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
+    public partial class UserDtoUi : UserDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
+    public partial class UserRoleDtoUi : UserRoleDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
 #pragma warning restore CS0067 
 }

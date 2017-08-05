@@ -4,11 +4,15 @@ using System.Text;
 
 namespace Shared.Attributes
 {
-    public class HideOnBrowse : Attribute
+    public class VmMetaAttribute: Attribute
     {
-    }
+        public bool IsReadonly { get; set; }
 
-    public class HideOnEdit : Attribute
-    {
-    }
+        public bool IsNullable { get; set; } = true;
+
+        public int Min { get; set; }
+
+        public int Max { get; set; }
+
+    }    
 }

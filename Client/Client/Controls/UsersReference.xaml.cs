@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using Client.Commands;
+using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
 
@@ -19,34 +20,18 @@ namespace Client.Controls
         public UsersReference()
         {
             InitializeComponent();
-            BeginEditItemCommand = new Command<bool>(() =>
+            Model.BeginEditItemCommand = new Command<object>(() =>
             {
-                EditItemEventHandler(this, null);
-            }, x => true);
-        }
+                ItemsDataGrid.EditItemEventHandler(Model.SelectedItem, null);
+            }, (x) => Model.CanEditSelectedItem);
 
-        public void NewItemEventHandler(object sender, RoutedEventArgs e)
-        {
-            var newItem = new UserDtoUi();
-            Model.Items.Add(newItem);
-            ItemsDataGrid.ScrollIntoView(newItem);
-            ItemsDataGrid.SelectedItem = newItem;
-            var selectedIndex = ItemsDataGrid.SelectedIndex;
+            Model.BeginAddItemCommand = new Command<object>(() =>
+            {
+                ItemsDataGrid.SelectedItem = Model.AddEmptyItem();
+                ItemsDataGrid.ScrollIntoView(ItemsDataGrid.SelectedItem);
 
-            ItemsDataGrid.SelectionUnit = DataGridSelectionUnit.Cell;
-            ItemsDataGrid.CurrentCell = new DataGridCellInfo(ItemsDataGrid.Items[selectedIndex], ItemsDataGrid.Columns[0]);
-            ItemsDataGrid.BeginEdit();            
-        }
-
-        
-
-        public void EditItemEventHandler(object sender, RoutedEventArgs e)
-        {            
-            var selectedIndex = ItemsDataGrid.SelectedIndex;
-
-            ItemsDataGrid.SelectionUnit = DataGridSelectionUnit.Cell;
-            ItemsDataGrid.CurrentCell = new DataGridCellInfo(ItemsDataGrid.Items[selectedIndex], ItemsDataGrid.Columns[0]);
-            ItemsDataGrid.BeginEdit();
+                Model.BeginEditItemCommand.Execute(ItemsDataGrid);
+            }, (x) => Model.CanAddItem);
         }        
     }
 }

@@ -33,9 +33,6 @@ namespace Client.ViewModels
         private readonly IAuthController _authController;
         private readonly IUserRolesController _userRolesController;
 
-        private string _username;
-        private string _status;
-
         public IAsyncCommand LoginCommand { get; }
 
         public IAsyncCommand LogoutCommand { get; }
