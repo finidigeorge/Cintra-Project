@@ -11,7 +11,7 @@ namespace Repositories.Interfaces
 
          Task<long> Insert(T entity);
 
-         Task Delete(T entity);
+         Task Delete(long id);
 
          Task<List<T>> GetAll();
 

@@ -7,11 +7,11 @@ using System.Windows.Input;
 
 namespace Client.Commands
 {
-    class Command : ICommand
+    class Command<T> : ICommand
     {        
         private readonly Action _action;
-        private readonly bool _canExecute;
-        public Command(Action action, bool canExecute)
+        protected readonly Predicate<T> _canExecute;
+        public Command(Action action, Predicate<T> canExecute = null)
         {
             _action = action;
             _canExecute = canExecute;
@@ -19,10 +19,19 @@ namespace Client.Commands
 
         public bool CanExecute(object parameter)
         {
-            return _canExecute;
+            if (_canExecute == null)
+            {
+                return true;
+            }
+
+            return _canExecute((T)parameter);
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
 
         public void Execute(object parameter)
         {

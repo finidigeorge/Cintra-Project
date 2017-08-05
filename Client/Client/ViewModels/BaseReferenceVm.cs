@@ -9,56 +9,49 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 using Client.Annotations;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
 using Common;
 using Common.DtoMapping;
+using Mapping;
+using PropertyChanged;
 using RestClient;
 using Shared;
 using Shared.Dto.Interfaces;
 using Shared.Interfaces;
 
 namespace Client.ViewModels
-{    
-
-    /*public class CustomObservableCollection<T> : ObservableCollection<T> where T : IUniqueDto, IAtomicEditableObject, new()
-    {
-        public CustomObservableCollection()
-        {
-        }
-
-        public CustomObservableCollection(IEnumerable<T> values) : base(values)
-        {
-            foreach (var item in Items)
-            {
-                item.ItemEndEdit += ItemEndEditHandler;
-            }
-        }
-
-        protected override void InsertItem(int index, T item)
-        {
-            base.InsertItem(index, item);
-
-            // handle any EndEdit events relating to this item
-            item.ItemEndEdit += ItemEndEditHandler;
-        }
-
-        void ItemEndEditHandler(IAtomicEditableObject sender)
-        {
-            ItemEndEdit?.Invoke(sender);            
-        }
-
-        public event ItemEndEditEventHandler ItemEndEdit;
-    }*/
-
+{        
     public class BaseReferenceVm<T, T1> : BaseVm, IEditableSelectableReference<T1> 
         where T1 : T, IUniqueDto, INotifyPropertyChanged, IAtomicEditableObject, new()
         where T: IUniqueDto, new()
-    {
+        
+    {                
+
+        public CollectionView ItemsCollectionView { get; private set; }        
+
+        public T1 SelectedItem { get; set; }
+
         private ObservableCollection<T1> _items;
 
-        public CollectionView ItemsCollectionView { get; private set; }
+        //manula implementation of NotifyPropertyChanged
+        [DoNotNotify]
+        public ObservableCollection<T1> Items
+        {
+            get => _items;
+            set
+            {
+                Set(ref _items, value, nameof(Items));
+                _items.CollectionChanged += OnCollectionChanged;
+
+                if (ItemsCollectionView == null)
+                    ItemsCollectionView = new ListCollectionView(_items);
+
+                ItemsCollectionView.Refresh();
+            }
+        }
 
         protected IBaseController<T> Client;
 
@@ -68,26 +61,44 @@ namespace Client.ViewModels
             {
                 Items = new ObservableCollection<T1>();
                 foreach (var item in (await Client.GetAll()).ToList<T, T1>())                
-                    Items.Add(item);                
-                
+                    Items.Add(item);
+
+                ItemsCollectionView?.Refresh();
+
             });
 
-            AddItemCommand = new AsyncCommand<T1>(async (x) =>
+            AddItemCommand = new AsyncCommand<T1>(async (param) =>
             {
-                var id = await Client.Insert(x);
-                var item = await Client.GetById(id);
-                Items[Items.IndexOf(Items.First(v => v.Id == 0))] = (T1) item;
-            });
+                var id = await Client.Insert(param);
+                var item = ObjectMapper.Map<T1>(await Client.GetById(id));
+                Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;                
+            }, (x) => x != null);
 
-            EditItemCommand = new AsyncCommand<T1>(async (x) =>
+            UpdateItemCommand = new AsyncCommand<T1>(async (param) =>
             {
-                await Client.Update(x);                                
-            });
+                await Client.Update(param);                
+            }, (x) => x != null);
 
-            DeleteItemCommand = new AsyncCommand<T1>(async (x) =>
+            DeleteItemCommand = new AsyncCommand<T1>(async (param) =>
             {
-                await Client.Delete(x);                
-            });
+                await Client.Delete(param.Id);                
+            }, (x) => x != null);
+
+            UpdateSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
+            {
+                await UpdateItemCommand.ExecuteAsync(SelectedItem);
+                var idx = Items.IndexOf(Items.First(i => i.Id == SelectedItem.Id));
+                Items[idx] = SelectedItem;
+
+                ItemsCollectionView.Refresh();
+
+            }, (x) => CanEditSelectedItem);
+
+            DeleteSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
+            {
+                await DeleteItemCommand.ExecuteAsync(SelectedItem);
+                Items.Remove(Items.First(i => i.Id == SelectedItem.Id));                
+            }, (x) => CanDeleteSelectedItem);
 
             Items = new ObservableCollection<T1>();            
         }
@@ -106,48 +117,53 @@ namespace Client.ViewModels
                         if (((IUniqueDto)obj).Id == 0)
                             AddItemCommand.ExecuteAsync(obj);
                         else
-                            EditItemCommand.ExecuteAsync(obj);
+                            UpdateItemCommand.ExecuteAsync(obj);
                     };
 
                     //handler for tracking changes of particular properties of each item
-                    ((INotifyPropertyChanged) x).PropertyChanged += (obj, args) => { EditItemCommand.ExecuteAsync(obj); };
+                    ((INotifyPropertyChanged) x).PropertyChanged += (obj, args) => { UpdateItemCommand.ExecuteAsync(obj); };
                 }
             }
 
             //delete from collection handler
             if (action == NotifyCollectionChangedAction.Remove && e.OldItems?.Count > 0)
-            {
-                foreach (var x in e.OldItems)
-                {                    
-                    DeleteItemCommand.ExecuteAsync(x);
-                }
-            }
-
-            ItemsCollectionView.Refresh();
-        }        
-
-        public ObservableCollection<T1> Items
-        {
-            get => _items;
-            set
-            {                 
-                Set(ref _items, value, nameof(Items));
-                _items.CollectionChanged += OnCollectionChanged;                                         
-
-                if (ItemsCollectionView == null)
-                    ItemsCollectionView = new CollectionView(_items);
-
-                ItemsCollectionView.Refresh();                
-            }
+            {                
+                ItemsCollectionView.Refresh();
+            }            
         }
-        
 
+        public T1 AddEmptyItem()
+        {
+            var newItem = new T1();
+            Items.Add(newItem);
+            return newItem;
+        }
+
+
+        //predefined Back end related Commands 
         public IAsyncCommand GetItemsCommand { get; set; }
         public IAsyncCommand AddItemCommand { get; set; }
         public IAsyncCommand DeleteItemCommand { get; set; }
-        public IAsyncCommand EditItemCommand { get; set; }
+        public IAsyncCommand DeleteSelectedItemCommand { get; set; }
+        public IAsyncCommand UpdateItemCommand { get; set; }
+        public IAsyncCommand UpdateSelectedItemCommand { get; set; }
+
+       
+        //UI Event wrappers commands
+        public ICommand BeginEditItemCommand { get; set; }
+        public ICommand BeginAddItemCommand { get; set; }
+
+        
+        public bool IsEditModeEnabled { get; protected set; } = true;
+
+        public bool CanAddItem => IsEditModeEnabled;
+        public bool CanEditSelectedItem => IsEditModeEnabled && SelectedItem != null;
+        public bool CanDeleteSelectedItem => IsEditModeEnabled && SelectedItem != null;
+
+        //not implemented yet
         public IList<T1> SelectedItems { get; protected set; }
-        public bool IsEditModeEnabled { get; protected set; }
+
+       
         public bool IsSelectionModeEnabled { get; protected set; }
         public bool IsMultiSelectionModeEnabled { get; protected set; }
                         

@@ -50,16 +50,16 @@ namespace Controllers
             
         }
 
-        [HttpDelete]
-        public virtual async Task Delete([FromBody]T1 entity)
+        [HttpDelete("{id}")]
+        public virtual async Task Delete(long id)
         {
             try
             {
-                await Task.Run(() => _repository.Delete(ObjectMapper.Map<T>(entity)));
+                await _repository.Delete(id);
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(null, e, e.Message, id);
                 throw;
             }
             

@@ -21,18 +21,18 @@ namespace Client.ViewModels
 
         public MainWindowVm()
         {
-            ShowLoginDialogCommand = new Command(() =>
+            ShowLoginDialogCommand = new Command<object>(() =>
             {
                 new LoginWindow() {DataContext = AuthVm}.ShowDialog(); 
                 
-            }, true);
+            }, x => true);
 
-            ShowChangePasswordDialogCommand = new Command(() =>
+            ShowChangePasswordDialogCommand = new Command<object>(() =>
                 {
                     new ChangePasswordWindow() {DataContext = new ChangePasswordVm()}.ShowDialog();
-                }, true);
+                }, x => true);
 
-            ShowExitDialogCommand = new Command(ExitAppCommandAction, true);            
+            ShowExitDialogCommand = new Command<object>(ExitAppCommandAction, x => true);            
 
 
             AuthVm = new AuthVm(new AuthClient(), new UserRolesClient());

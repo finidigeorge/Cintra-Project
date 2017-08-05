@@ -57,11 +57,7 @@ namespace Client.ViewModels
         }
 
         #region Properties
-        public string Username
-        {
-            get => _username;
-            set { _username = value; OnPropertyChanged(nameof(AuthVmProperties.UserName)); }
-        }
+        public string Username { get; set; }
 
         public string AuthenticatedUser
         {
@@ -75,11 +71,7 @@ namespace Client.ViewModels
             }
         }
 
-        public string Status
-        {
-            get => _status;
-            set { _status = value; OnPropertyChanged(nameof(AuthVmProperties.Status)); }
-        }
+        public string Status { get; set; }
 
         public bool IsAuthenticated => Thread.CurrentPrincipal.Identity.IsAuthenticated;
 

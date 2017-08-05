@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Client.ViewModels"
+             xmlns:controls="clr-namespace:Client.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="320"
              FocusManager.IsFocusScope="True"
@@ -16,15 +17,17 @@
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ToolBarTray DockPanel.Dock="Top" Grid.Row="0">
-            <ToolBar Height="32"/>
-        </ToolBarTray>
-        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" CanUserAddRows="False" CanUserDeleteRows="False">
+        <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
+            
+        </ToolBarPanel>
+        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem}" 
+                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True"
+                  CanUserAddRows="True" CanUserDeleteRows="True" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="User Name" Binding="{Binding Path = Name}"  Width="*" />
-                <DataGridTextColumn Header="User Login" Binding="{Binding Path = Login}"  Width="*" />
-                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="*" />
-                <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="*" />
+                <DataGridTextColumn Header="User Name" Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
+                <DataGridTextColumn Header="User Login" Binding="{Binding Path = Login, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
+                <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -31,7 +31,7 @@ foreach (Type type in types)
 			private readonly EditableAdapter<<#= baseTypeName #>> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 
-			private bool _isEditing = false;
+			public bool IsEditing { get; set; } = false;
 
 			public <#= className #>()
 			{
@@ -40,23 +40,23 @@ foreach (Type type in types)
 
 			public void BeginEdit()
 			{
-				_isEditing = true;
+				IsEditing = true;
 				_adapter.BeginEdit();
 			}
 
 			public void EndEdit()
 			{
 				_adapter.EndEdit();	
-				if (ItemEndEdit != null && _isEditing)
+				if (ItemEndEdit != null && IsEditing)
 				{
-					_isEditing = false;
+					IsEditing = false;
 					ItemEndEdit(this);
 				}
 			}
 
 			public void CancelEdit()
 			{
-				_isEditing = false;
+				IsEditing = false;
 				_adapter.CancelEdit();
 			}	
 			

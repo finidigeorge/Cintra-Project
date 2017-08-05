@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Client.Commands;
+using Client.Extentions;
 using Client.ViewModels;
-using Shared.Dto;
+using Common.DtoMapping;
 
 namespace Client.Controls
 {
@@ -22,46 +14,26 @@ namespace Client.Controls
     /// </summary>
     public partial class HorsesReference : UserControl
     {
-        public HorsesRefVm Model => (HorsesRefVm)Resources["ViewModel"];
-
-        /*private bool isEditing;
-        private bool isInserting;
-        */
+    
+        public HorsesRefVm Model => (HorsesRefVm)Resources["ViewModel"];        
 
         public HorsesReference()
         {
-            InitializeComponent();            
-        }
-
-        /*
-        private void ItemsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            try
+            InitializeComponent();
+            Model.BeginEditItemCommand = new Command<object>(() =>
             {
-                if (e.EditAction == DataGridEditAction.Commit && e.Row.DataContext != null)
-                {
-                    if (isInserting)
-                        Model.AddItemCommand.ExecuteAsync(e.Row.DataContext);
-                    if (isEditing)
-                        Model.EditItemCommand.ExecuteAsync(e.Row.DataContext);
-                }
-            }
-            finally
+                ItemsDataGrid.EditItemEventHandler(Model.SelectedItem, null);
+            }, (x) => Model.CanEditSelectedItem);
+
+            Model.BeginAddItemCommand = new Command<object>(() =>
             {
-                isEditing = false;
-                isInserting = false;
-            }
+                ItemsDataGrid.SelectedItem = Model.AddEmptyItem();                
+                ItemsDataGrid.ScrollIntoView(ItemsDataGrid.SelectedItem);
 
-        }
-
-        private void ItemsDataGrid_AddingNewItem(object sender, AddingNewItemEventArgs e)
-        {
-            isInserting = true;
-        }
-
-        private void ItemsDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            isEditing = true;
-        }*/
+                Model.BeginEditItemCommand.Execute(ItemsDataGrid);
+            }, (x) => Model.CanAddItem);            
+        }        
     }
+
+
 }

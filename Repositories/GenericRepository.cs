@@ -29,11 +29,14 @@ namespace Repositories
             }
         }
 
-        public async Task Delete(T entity)
+        public async Task Delete(long id)
         {
             using (var db = new CintraDB())
             {
-                await Task.FromResult(db.Delete(entity));
+                var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
+                var expression = SimpleComparison(pkName.Name, id);
+
+                await Task.FromResult(db.Delete(db.GetTable<T>().Where(expression).FirstOrDefault()));
             }
         }
 

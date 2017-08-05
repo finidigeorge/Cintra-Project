@@ -6,6 +6,6 @@ namespace Client.ViewModels.Interfaces
     {
         IAsyncCommand AddItemCommand { get; set; }
         IAsyncCommand DeleteItemCommand { get; set; }
-        IAsyncCommand EditItemCommand { get; set; }
+        IAsyncCommand UpdateItemCommand { get; set; }
     }
 }

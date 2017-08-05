@@ -53,9 +53,9 @@ namespace RestClient
             return response.Data;
         }
 
-        public async Task Delete(T entity)
+        public async Task Delete(long id)
         {
-            await SendRequest<T>($"api/{ControllerName}/values", Method.DELETE, entity);
+            await SendRequest<T>($"api/{ControllerName}/values/{id}", Method.DELETE, id);
         }
 
         public async Task<List<T>> GetAll()

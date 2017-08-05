@@ -12,7 +12,7 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<CoachDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 
-			private bool _isEditing = false;
+			public bool IsEditing { get; set; } = false;
 
 			public CoachDtoUi()
 			{
@@ -21,23 +21,23 @@ namespace Common.DtoMapping
 
 			public void BeginEdit()
 			{
-				_isEditing = true;
+				IsEditing = true;
 				_adapter.BeginEdit();
 			}
 
 			public void EndEdit()
 			{
 				_adapter.EndEdit();	
-				if (ItemEndEdit != null && _isEditing)
+				if (ItemEndEdit != null && IsEditing)
 				{
-					_isEditing = false;
+					IsEditing = false;
 					ItemEndEdit(this);
 				}
 			}
 
 			public void CancelEdit()
 			{
-				_isEditing = false;
+				IsEditing = false;
 				_adapter.CancelEdit();
 			}	
 			
@@ -57,7 +57,7 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<HorseDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 
-			private bool _isEditing = false;
+			public bool IsEditing { get; set; } = false;
 
 			public HorseDtoUi()
 			{
@@ -66,23 +66,23 @@ namespace Common.DtoMapping
 
 			public void BeginEdit()
 			{
-				_isEditing = true;
+				IsEditing = true;
 				_adapter.BeginEdit();
 			}
 
 			public void EndEdit()
 			{
 				_adapter.EndEdit();	
-				if (ItemEndEdit != null && _isEditing)
+				if (ItemEndEdit != null && IsEditing)
 				{
-					_isEditing = false;
+					IsEditing = false;
 					ItemEndEdit(this);
 				}
 			}
 
 			public void CancelEdit()
 			{
-				_isEditing = false;
+				IsEditing = false;
 				_adapter.CancelEdit();
 			}	
 			
@@ -102,7 +102,7 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<ServiceDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 
-			private bool _isEditing = false;
+			public bool IsEditing { get; set; } = false;
 
 			public ServiceDtoUi()
 			{
@@ -111,23 +111,23 @@ namespace Common.DtoMapping
 
 			public void BeginEdit()
 			{
-				_isEditing = true;
+				IsEditing = true;
 				_adapter.BeginEdit();
 			}
 
 			public void EndEdit()
 			{
 				_adapter.EndEdit();	
-				if (ItemEndEdit != null && _isEditing)
+				if (ItemEndEdit != null && IsEditing)
 				{
-					_isEditing = false;
+					IsEditing = false;
 					ItemEndEdit(this);
 				}
 			}
 
 			public void CancelEdit()
 			{
-				_isEditing = false;
+				IsEditing = false;
 				_adapter.CancelEdit();
 			}	
 			
@@ -147,7 +147,7 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<UserDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 
-			private bool _isEditing = false;
+			public bool IsEditing { get; set; } = false;
 
 			public UserDtoUi()
 			{
@@ -156,23 +156,23 @@ namespace Common.DtoMapping
 
 			public void BeginEdit()
 			{
-				_isEditing = true;
+				IsEditing = true;
 				_adapter.BeginEdit();
 			}
 
 			public void EndEdit()
 			{
 				_adapter.EndEdit();	
-				if (ItemEndEdit != null && _isEditing)
+				if (ItemEndEdit != null && IsEditing)
 				{
-					_isEditing = false;
+					IsEditing = false;
 					ItemEndEdit(this);
 				}
 			}
 
 			public void CancelEdit()
 			{
-				_isEditing = false;
+				IsEditing = false;
 				_adapter.CancelEdit();
 			}	
 			
@@ -192,7 +192,7 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<UserRoleDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 
-			private bool _isEditing = false;
+			public bool IsEditing { get; set; } = false;
 
 			public UserRoleDtoUi()
 			{
@@ -201,23 +201,23 @@ namespace Common.DtoMapping
 
 			public void BeginEdit()
 			{
-				_isEditing = true;
+				IsEditing = true;
 				_adapter.BeginEdit();
 			}
 
 			public void EndEdit()
 			{
 				_adapter.EndEdit();	
-				if (ItemEndEdit != null && _isEditing)
+				if (ItemEndEdit != null && IsEditing)
 				{
-					_isEditing = false;
+					IsEditing = false;
 					ItemEndEdit(this);
 				}
 			}
 
 			public void CancelEdit()
 			{
-				_isEditing = false;
+				IsEditing = false;
 				_adapter.CancelEdit();
 			}	
 			

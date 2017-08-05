@@ -18,13 +18,31 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
-            <controls:ReferencesToolbar/>
+            <controls:ReferencesToolbar 
+                DeleteCommand="{Binding Path=DeleteSelectedItemCommand}"
+                EditCommand="{Binding Path=BeginEditItemCommand}"
+                NewCommand="{Binding Path=BeginAddItemCommand}"
+            />
         </ToolBarPanel>
-        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" 
-                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" CanUserAddRows="True" CanUserDeleteRows="True"                  
+        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
+                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" 
+                  CanUserAddRows="False" CanUserDeleteRows="True"                
                   >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
+                <DataGridTemplateColumn IsReadOnly="True" Width="32">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate>
+                            <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                              Path=DataContext.DeleteSelectedItemCommand}"
+                                    CommandParameter="{Binding}" ToolTip="Delete current item">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/Images/ReferenceDeleteItem.png" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -31,11 +31,7 @@ namespace Client.ViewModels
 
         public bool IsUpdatePasswordSuccess { get; set; }
 
-        public string ErrorMessage
-        {
-            get => _errorMessage;
-            set { _errorMessage = value; OnPropertyChanged(nameof(ChangePasswordVmProperties.ErrorMessage)); }
-        }
+        public string ErrorMessage { get; set; }
 
         public IAsyncCommand ChangePasswordCommand { get; set; }
     }

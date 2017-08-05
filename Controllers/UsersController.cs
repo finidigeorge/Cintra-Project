@@ -94,11 +94,11 @@ namespace Controllers
             return await base.Insert(entity);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles = enUserRoles.Administrator)]
-        public override async Task Delete([FromBody]UserDto entity)
+        public override async Task Delete(long id)
         {
-            await base.Delete(entity);
+            await base.Delete(id);
         }
 
 
