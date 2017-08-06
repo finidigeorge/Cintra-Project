@@ -8,11 +8,11 @@
              xmlns:extentions="clr-namespace:Client.Extentions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="320"
-             FocusManager.IsFocusScope="True"
-             FocusManager.FocusedElement="{Binding ElementName=ItemsDataGrid}">
+             FocusManager.IsFocusScope="True">
     <UserControl.Resources>
         <viewModels:UsersRefVm x:Key="ViewModel" />
     </UserControl.Resources>
+    
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
@@ -31,11 +31,41 @@
             <DataGrid.RowValidationRules>
                 <extentions:RowDataInfoValidationRule ValidationStep="UpdatedValue" />
             </DataGrid.RowValidationRules>
+            
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="true">
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Red"/>
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="User Name" Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
-                <DataGridTextColumn Header="User Login" Binding="{Binding Path = Login, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
-                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
-                <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
+                <DataGridTextColumn Header="User Name" Binding="{Binding Path = Name}"  Width="*" />
+                <DataGridTextColumn Header="User Login" Binding="{Binding Path = Login}"  Width="*" />
+                <DataGridTemplateColumn Header="User Role" Width="*">
+                    <!-- editing template -->
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox IsEditable="False" Text="{Binding Source={StaticResource ViewModel}, Path=SelectedItem.UserRole.Name}" 
+                                      DisplayMemberPath="Name"
+                                      Height="24"
+                                      ItemsSource="{Binding Source={StaticResource ViewModel}, Path=UserRoles}"
+                                      SelectedItem="{Binding Source={StaticResource ViewModel}, Path=SelectedItem.UserRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    <!-- view template -->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding UserRole.Name}" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="*"/>
+                <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

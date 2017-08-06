@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
+using Shared.Dto;
 
 
 namespace Mapping
@@ -16,11 +17,11 @@ namespace Mapping
             Mapper.Initialize(conf =>
                 {
                     conf.CreateMissingTypeMaps = true;
-                    conf.ReplaceMemberName("_", "");                                   
+                    conf.ReplaceMemberName("_", "");                          
                 }
             );
 
-            _mapper = Mapper.Instance;
+            _mapper = Mapper.Instance;            
         }
 
         public static TDestination Map<TDestination>(object source)

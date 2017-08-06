@@ -8,8 +8,7 @@
              xmlns:extentions="clr-namespace:Client.Extentions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="320"
-             FocusManager.IsFocusScope="True"
-             FocusManager.FocusedElement="{Binding ElementName=ItemsDataGrid}">
+             FocusManager.IsFocusScope="True">
     <UserControl.Resources>
         <viewModels:HorsesRefVm x:Key="ViewModel" />
     </UserControl.Resources>
@@ -32,6 +31,13 @@
             <DataGrid.RowValidationRules>
                 <extentions:RowDataInfoValidationRule ValidationStep="UpdatedValue" />
             </DataGrid.RowValidationRules>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Style.Setters>
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style.Setters>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
@@ -48,6 +54,7 @@
             </DataGrid.RowStyle>
             
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
                 <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
                 <DataGridTemplateColumn IsReadOnly="True" Width="32">
                     <DataGridTemplateColumn.CellTemplate >

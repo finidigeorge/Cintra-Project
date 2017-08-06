@@ -13,7 +13,7 @@ namespace Repositories
 {
     public class GenericRepository<T>: IGenericRepository<T> where T : class
     {
-        public async Task Update(T entity)
+        public virtual async Task Update(T entity)
         {
             using (var db = new CintraDB())
             {
@@ -21,7 +21,7 @@ namespace Repositories
             }
         }
 
-        public async Task<long> Insert(T entity)
+        public virtual async Task<long> Insert(T entity)
         {
             using (var db = new CintraDB())
             {
@@ -29,7 +29,7 @@ namespace Repositories
             }
         }
 
-        public async Task Delete(long id)
+        public virtual async Task Delete(long id)
         {
             using (var db = new CintraDB())
             {
@@ -40,7 +40,7 @@ namespace Repositories
             }
         }
 
-        public async Task<List<T>> GetAll()
+        public virtual async Task<List<T>> GetAll()
         {
             using (var db = new CintraDB())
             {

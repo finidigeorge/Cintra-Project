@@ -36,7 +36,7 @@ namespace Client.ViewModels
 
         private ObservableCollection<T1> _items;
 
-        //manula implementation of NotifyPropertyChanged
+        //manual implementation of NotifyPropertyChanged
         [DoNotNotify]
         public ObservableCollection<T1> Items
         {
@@ -65,6 +65,11 @@ namespace Client.ViewModels
 
                 ItemsCollectionView?.Refresh();
 
+            });
+
+            RefreshDataCommand = new AsyncCommand<object>(async (x) =>
+            {
+                await GetItemsCommand.ExecuteAsync(x);
             });
 
             AddItemCommand = new AsyncCommand<T1>(async (param) =>
@@ -145,6 +150,7 @@ namespace Client.ViewModels
 
 
         //predefined Back end related Commands 
+        public IAsyncCommand RefreshDataCommand { get; set; }
         public IAsyncCommand GetItemsCommand { get; set; }
         public IAsyncCommand AddItemCommand { get; set; }
         public IAsyncCommand DeleteItemCommand { get; set; }

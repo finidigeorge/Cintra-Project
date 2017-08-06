@@ -59,28 +59,28 @@ namespace Client
                     {                        
                         if (item.Name == "UserRoles")
                         {
-                            await UserRolesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
+                            await UserRolesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
                         }
 
                         if (item.Name == "Users")
                         {
-                            await UsersRefView.Model.GetItemsCommand.ExecuteAsync(null);                            
+                            await UsersRefView.Model.RefreshDataCommand.ExecuteAsync(null);                            
                             
                         }
 
                         if (item.Name == "Horses")
                         {
-                            await HorsesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
+                            await HorsesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
                         }
 
                         if (item.Name == "Services")
                         {
-                            await ServicesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
+                            await ServicesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
                         }
 
                         if (item.Name == "Coaches")
                         {
-                            await CoachesRefView.Model.GetItemsCommand.ExecuteAsync(null);                                                        
+                            await CoachesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
                         }
                     }
                 }

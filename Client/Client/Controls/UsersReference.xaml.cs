@@ -31,7 +31,7 @@ namespace Client.Controls
                 ItemsDataGrid.ScrollIntoView(ItemsDataGrid.SelectedItem);
 
                 Model.BeginEditItemCommand.Execute(ItemsDataGrid);
-            }, (x) => Model.CanAddItem);
+            }, (x) => Model.CanAddItem);            
         }        
     }
 }

@@ -24,6 +24,11 @@ namespace Repositories
             }
         }
 
+        public override async Task<List<User>> GetAll()
+        {
+            return (await GetByParamsWithRoles((x) => true)).ToList();
+        }
+
         public async Task<User> GetByLogin(string login)
         {
             using (var db = new CintraDB())
