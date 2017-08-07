@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using Common;
+using Microsoft.Build.Framework;
+using Serilog;
+using WPFCustomMessageBox;
 
 namespace Client.Commands
 {
@@ -16,7 +21,7 @@ namespace Client.Commands
         }
 
         public AsyncCommand(Func<T, Task> asyncExecute, Predicate<T> canExecute = null)
-        {
+        {            
             _asyncExecute = asyncExecute;
             _canExecute = canExecute;
         }
@@ -43,7 +48,15 @@ namespace Client.Commands
 
         protected virtual async Task AsyncRunner(object parameter)
         {
-            await _asyncExecute((T)parameter);
+            try
+            {
+                await _asyncExecute((T) parameter);
+            } catch(Exception e)            
+            {
+                Log.Error(e, $"Messsage: {e.Message} Source: {e.Source}, Trace: {e.StackTrace}");
+                CustomMessageBox.Show($"{Messages.COMMAND_ERROR_MSG} {e.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }        
         }
     }
 

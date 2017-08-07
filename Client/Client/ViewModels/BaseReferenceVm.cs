@@ -53,7 +53,7 @@ namespace Client.ViewModels
             }
         }
 
-        protected IBaseController<T> Client;
+        public IBaseController<T> Client;
 
         protected BaseReferenceVm()
         {
@@ -162,8 +162,9 @@ namespace Client.ViewModels
         //UI Event wrappers commands
         public ICommand BeginEditItemCommand { get; set; }
         public ICommand BeginAddItemCommand { get; set; }
+        public ICommand BeginDeleteItemCommand { get; set; }
 
-        
+
         public bool IsEditModeEnabled { get; protected set; } = true;
 
         public bool CanAddItem => IsEditModeEnabled;
