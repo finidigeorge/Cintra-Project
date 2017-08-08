@@ -35,6 +35,20 @@ namespace Controllers
             _logger = loggerFactory.CreateLogger<UsersController>();
         }
 
+        private string GetDefaultPassword(UserDto entity)
+        {
+            return _authRepository.GeneratePassword(entity.Login);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = enUserRoles.Administrator)]
+        public override async Task<long> Insert([FromBody]UserDto entity)
+        {
+            entity.NewPasswordOnLogin = true;
+            entity.Password = GetDefaultPassword(entity);
+            return await base.Insert(entity);
+        }
+
         [HttpPut]
         [Authorize(Roles = enUserRoles.Administrator)]
         public override async Task Update([FromBody]UserDto entity)
@@ -76,7 +90,7 @@ namespace Controllers
             {
                 var _entity = await repository.GetByLogin(entity.Login);
                 _entity.NewPasswordOnLogin = true;
-                _entity.Password = _authRepository.GeneratePassword(_entity.Login);
+                _entity.Password = GetDefaultPassword(entity);
 
                 await repository.Update(_entity);
             }
@@ -87,14 +101,7 @@ namespace Controllers
             }            
         }
 
-        [HttpPost]
-        [Authorize(Roles = enUserRoles.Administrator)]
-        public override async Task<long> Insert([FromBody]UserDto entity)
-        {
-            return await base.Insert(entity);
-        }
-
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize(Roles = enUserRoles.Administrator)]
         public override async Task Delete(long id)
         {

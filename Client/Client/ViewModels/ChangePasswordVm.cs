@@ -23,8 +23,18 @@ namespace Client.ViewModels
         public ChangePasswordVm()
         {
             ChangePasswordCommand = new AsyncCommand<object>(async (x) =>
-            {                
-                await _client.UpdatePassword(Thread.CurrentPrincipal.Identity.Name, x.ToString());
+            {
+                try
+                {
+                    await _client.UpdatePassword(Thread.CurrentPrincipal.Identity.Name, x.ToString());
+                    IsUpdatePasswordSuccess = true;
+                }
+                catch (Exception e)
+                {
+                    IsUpdatePasswordSuccess = false;
+                    ErrorMessage = e.Message;
+                }
+
             }, x => true);
         }
 
