@@ -74,14 +74,14 @@ namespace Client.ViewModels
 
             AddItemCommand = new AsyncCommand<T1>(async (param) =>
             {
-                var id = await Client.Insert(param);
+                var id = await Client.Create(param);
                 var item = ObjectMapper.Map<T1>(await Client.GetById(id));
                 Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;                
             }, (x) => x != null);
 
             UpdateItemCommand = new AsyncCommand<T1>(async (param) =>
             {
-                await Client.Update(param);                
+                await Client.Create(param);                
             }, (x) => x != null);
 
             DeleteItemCommand = new AsyncCommand<T1>(async (param) =>

@@ -12,9 +12,9 @@ namespace Controllers
 {
     [Authorize]
     [Route("/api/[controller]/values")]
-    public class ServicesController: BaseController<Service, ServiceDto>
+    public class SchedulesDataController : BaseController<SchedulesData, ScheduleDataDto>
     {
-        public ServicesController(IGenericRepository<Service> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public SchedulesDataController(IGenericRepository<SchedulesData> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
         }
     }

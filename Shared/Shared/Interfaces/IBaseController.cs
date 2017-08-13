@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 namespace Shared.Interfaces
 {
     public interface IBaseController<T>
-    {
-        Task Update(T entity);
-
-        Task<long> Insert(T entity);
+    {        
+        Task<long> Create(T entity);
 
         Task Delete(long id);
 

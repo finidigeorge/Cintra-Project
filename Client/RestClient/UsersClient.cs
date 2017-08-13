@@ -5,13 +5,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using RestSharp;
+using Shared;
 using Shared.Dto;
 
 namespace RestClient
 {
     public class UsersClient: BaseRestApiClient<UserDto>
     {
-        public UsersClient() : base("users")
+        public UsersClient() : base(enKnownControllers.UsersController)
         {            
         }
 

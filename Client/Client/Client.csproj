@@ -127,6 +127,8 @@
     <Compile Include="Extentions\DataGridExtension.cs" />
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
+    <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
+    <Compile Include="ViewModels\SchedulesRefVm.cs" />
     <Compile Include="Windows\InputDialogWindow.xaml.cs">
       <DependentUpon>InputDialogWindow.xaml</DependentUpon>
     </Compile>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AutoMapper;
 using DataModels;
@@ -26,6 +27,15 @@ namespace Mapping
                     conf.CreateMap<UserDto, User>().AfterMap((vm, db) =>
                     {
                         db.RoleId = vm.UserRole.Id;
+                    });
+
+                    conf.CreateMap<Schedule, ScheduleDto>().AfterMap((db, vm) =>
+                    {
+                        vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);
+                    });
+                    conf.CreateMap<ScheduleDto, Schedule>().AfterMap((vm, db) =>
+                    {
+                        db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);
                     });
                 }
             );

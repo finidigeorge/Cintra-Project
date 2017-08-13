@@ -5,13 +5,14 @@ using Shared.Dto.Interfaces;
 
 namespace Shared.Dto
 {
-    public class CoachDto: IUniqueDto
-    {        
+    public class ScheduleDto : IUniqueDto
+    {
         public long Id { get; set; }
+        public long IntervalId { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public bool IsActive { get; set; }
 
-        public List<ScheduleDto> CoachSchedules { get; set; }
+        public List<ScheduleDataDto> ScheduleData { get; set; }
+
     }
 }

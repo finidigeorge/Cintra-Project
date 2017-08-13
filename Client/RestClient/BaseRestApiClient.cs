@@ -46,8 +46,7 @@ namespace RestClient
 
             if (response.StatusCode != HttpStatusCode.OK)
             {                
-                var error = JsonConvert.DeserializeObject<ErrorMessageDto>(response.Content);
-                throw new Exception(string.IsNullOrEmpty(response.ErrorMessage) ? error?.Error : response.ErrorMessage);
+                throw new Exception($"{response.ErrorMessage} {response.Content}");
             }
 
             return response.Data;
@@ -68,14 +67,9 @@ namespace RestClient
             return await SendRequest<T>($"api/{ControllerName}/values/{id}");
         }
 
-        public async Task<long> Insert(T entity)
+        public async Task<long> Create(T entity)
         {
             return await SendRequest<long>($"api/{ControllerName}/values", Method.POST, entity);
-        }
-
-        public async Task Update(T entity)
-        {
-            await SendRequest<T>($"api/{ControllerName}/values", Method.PUT, entity);
-        }
+        }        
     }
 }

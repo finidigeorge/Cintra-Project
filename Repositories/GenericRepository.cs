@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,47 +9,75 @@ using DataModels;
 using LinqToDB;
 using LinqToDB.Mapping;
 using Repositories.Interfaces;
+using Shared.Dto.Interfaces;
 
 namespace Repositories
 {
-    public class GenericRepository<T>: IGenericRepository<T> where T : class
+    public class GenericRepository<T>: IGenericRepository<T> where T : class, IUniqueDto
     {
-        public virtual async Task Update(T entity)
+        public dynamic RunWithinTransaction(Func<CintraDB, Task<dynamic>> fetcher, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            var isTransactional = dbContext == null;
+            bool isSuccess = true;
+            var db = dbContext ?? new CintraDB();
+
+            try
             {
+                if (isTransactional)
+                    db.BeginTransaction();
+
+                return fetcher(db);
+            }
+            catch (Exception e)
+            {
+                if (isTransactional)
+                {
+                    db.RollbackTransaction();
+                    isSuccess = false;
+                }
+                throw;
+            }
+            finally
+            {
+                if (isTransactional && isSuccess)
+                    db.CommitTransaction();
+
+                if (isTransactional)
+                    db.Dispose();
+            }
+        }
+
+        public virtual async Task<long> Create(T entity, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {               
+                if (entity.Id == 0)
+                    return await Task.FromResult((long) db.InsertWithIdentity(entity));
+
                 await Task.FromResult(db.Update(entity));
-            }
+                return entity.Id;
+            }, dbContext);
         }
 
-        public virtual async Task<long> Insert(T entity)
+        public virtual async Task Delete(long id, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
-            {
-                return await Task.FromResult((long)db.InsertWithIdentity(entity));
-            }
-        }
-
-        public virtual async Task Delete(long id)
-        {
-            using (var db = new CintraDB())
+            await RunWithinTransaction(async (db) =>
             {
                 var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
                 var expression = SimpleComparison(pkName.Name, id);
 
                 await Task.FromResult(db.Delete(db.GetTable<T>().Where(expression).FirstOrDefault()));
-            }
+
+                return null;
+            }, dbContext);
         }
 
         public virtual async Task<List<T>> GetAll()
         {
-            using (var db = new CintraDB())
-            {
-                return await db.GetTable<T>().ToListAsync();
-            }
+            return (await GetByParams((x) => true)).ToList();
         }
 
-        public async Task<List<T>> GetByParams(Func<T, bool> where)
+        public virtual async Task<List<T>> GetByParams(Func<T, bool> where)
         {
             using (var db = new CintraDB())
             {
@@ -62,14 +91,14 @@ namespace Repositories
         /// <typeparam name="T">linqToDb Table mapped</typeparam>
         /// <param name="id"> Have to be of the same type of primary key atribute of T table mapped</param>
         /// <returns>T linqToDb mapped class</returns>
-        public async Task<T> GetById(long id)
+        public virtual async Task<T> GetById(long id)
         {
             using (var db = new CintraDB())
             {
                 var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
                 var expression = SimpleComparison(pkName.Name, id);
 
-                return await Task.FromResult(db.GetTable<T>().Where(expression).FirstOrDefault());
+                return (await GetByParams(expression)).FirstOrDefault();
             }
         }
 

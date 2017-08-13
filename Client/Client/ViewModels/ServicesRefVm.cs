@@ -16,7 +16,7 @@ namespace Client.ViewModels
     {        
         public ServicesRefVm()
         {
-            Client = new ServicesClient();
+            Client = RestClientFactory.GetClient<ServiceDto>();
         }
     }
 

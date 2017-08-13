@@ -14,7 +14,7 @@ namespace Controllers
     [Route("/api/[controller]/values")]
     public class CoachesController: BaseController<Coach, CoachDto>
     {
-        public CoachesController(ICoachesRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public CoachesController(IGenericRepository<Coach> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {            
         }
     }

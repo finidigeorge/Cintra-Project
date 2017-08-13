@@ -42,7 +42,7 @@ namespace Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = enUserRoles.Administrator)]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         [Route("/api/auth/password/{password}")]
         public string GetPassword(string password)
         {
@@ -53,7 +53,7 @@ namespace Controllers
         {
             try
             {
-                var user = (await _userRepository.GetByParamsWithRoles(x => x.Login == userDto.Login)).FirstOrDefault();
+                var user = (await _userRepository.GetByParams(x => x.Login == userDto.Login)).FirstOrDefault();
                 if (user != null && _authRepository.IsPasswordValid(user, userDto.Password))
                 {
                     return new ClaimsIdentity(
@@ -119,9 +119,7 @@ namespace Controllers
             {
                 _logger.LogError(null, e, e.Message, applicationUser);
                 throw;
-            }
-
-            
+            }            
         }
                 
         private static void ThrowIfInvalidOptions(JwtTokenOptions options)

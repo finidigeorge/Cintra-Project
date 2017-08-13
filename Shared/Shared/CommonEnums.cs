@@ -10,20 +10,16 @@ namespace Shared
         User
     }
 
+    public enum ScheduleIntervalEnum
+    {
+        Weekly = 10,
+        Daily = 20,       
+    }
+
     public static class enUserRoles
     {
         public const string Administrator = "Administrator";
         public const string User = "User";
-    }
-
-    public static class enKnownControllers
-    {
-        public const string AuthController = "auth";
-        public const string CoachesController = "coaches";
-        public const string HorsesController = "horses";
-        public const string ServicesController = "services";
-        public const string UserRolesController = "userRoles";
-        public const string UsersController = "users";        
     }
 
     public static class EnumTools
@@ -38,5 +34,19 @@ namespace Shared
 
             throw new Exception($"Can't parse string value {value} as a enum {typeof(T).Name}");
         }
+    }
+
+
+
+    public static class enKnownControllers
+    {
+        public const string AuthController = "auth";
+        public const string CoachesController = "coaches";
+        public const string HorsesController = "horses";
+        public const string SchedulesController = "schedules";
+        public const string SchedulesDataController = "schedulesData";        
+        public const string ServicesController = "services";
+        public const string UserRolesController = "userRoles";
+        public const string UsersController = "users";
     }
 }

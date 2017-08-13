@@ -17,7 +17,7 @@ namespace Client.ViewModels
 
         public CoachesRefVm()
         {
-            Client = new CoachesClient();          
+            Client = RestClientFactory.GetClient<CoachDto>();          
         }
     }
 

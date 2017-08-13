@@ -38,23 +38,20 @@ namespace Controllers
         private string GetDefaultPassword(UserDto entity)
         {
             return _authRepository.GeneratePassword(entity.Login);
-        }
+        }        
 
         [HttpPost]
-        [Authorize(Roles = enUserRoles.Administrator)]
-        public override async Task<long> Insert([FromBody]UserDto entity)
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
+        public override async Task<long> Create([FromBody]UserDto entity)
         {
-            entity.NewPasswordOnLogin = true;
-            entity.Password = GetDefaultPassword(entity);
-            return await base.Insert(entity);
-        }
+            if (entity.Id == 0)
+            {
+                entity.NewPasswordOnLogin = true;
+                entity.Password = GetDefaultPassword(entity);
+            } else
+                entity.Password = (await base.GetById(entity.Id)).Password;
 
-        [HttpPut]
-        [Authorize(Roles = enUserRoles.Administrator)]
-        public override async Task Update([FromBody]UserDto entity)
-        {            
-            entity.Password = (await base.GetById(entity.Id)).Password;
-            await base.Update(entity);
+            return await base.Create(entity);
         }
 
         [HttpPut("/api/[controller]/updatePassword")]        
@@ -73,7 +70,7 @@ namespace Controllers
                 _entity.Password = _authRepository.GeneratePassword(entity.Password);
                 _entity.NewPasswordOnLogin = false;
 
-                await repository.Update(_entity);
+                await repository.Create(_entity);
             }
             catch (Exception e)
             {
@@ -83,7 +80,7 @@ namespace Controllers
         }
 
         [HttpPut("/api/[controller]/resetPassword")]
-        [Authorize(Roles = enUserRoles.Administrator)]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         public async Task ResetPassword([FromBody]UserDto entity)
         {
             try
@@ -92,7 +89,7 @@ namespace Controllers
                 _entity.NewPasswordOnLogin = true;
                 _entity.Password = GetDefaultPassword(entity);
 
-                await repository.Update(_entity);
+                await repository.Create(_entity);
             }
             catch (Exception e)
             {
@@ -102,7 +99,7 @@ namespace Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = enUserRoles.Administrator)]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         public override async Task Delete(long id)
         {
             await base.Delete(id);
@@ -110,7 +107,7 @@ namespace Controllers
 
 
         [HttpGet]
-        [Authorize(Roles = enUserRoles.Administrator)]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         public override async Task<List<UserDto>> GetAll()
         {
             var res = await base.GetAll();
@@ -119,7 +116,7 @@ namespace Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = enUserRoles.Administrator)]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         public override async Task<UserDto> GetById(long id)
         {
             var res = await base.GetById(id);

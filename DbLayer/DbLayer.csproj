@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="DataModel\Cintra.SQLite.Core.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Cintra.SQLite.Core.generated.cs</LastGenOutput>

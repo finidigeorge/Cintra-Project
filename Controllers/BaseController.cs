@@ -18,29 +18,14 @@ namespace Controllers
         {
             _repository = repository;
             _logger = loggerFactory.CreateLogger<BaseController<T, T1>>();
-        }        
-
-        [HttpPut]
-        public virtual async Task Update([FromBody] T1 entity)
-        {
-            try
-            {
-                await Task.Run(() => _repository.Update(ObjectMapper.Map<T>(entity)));
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(null, e, e.Message, entity);
-                throw;
-            }
-           
-        }
+        }                
 
         [HttpPost]
-        public virtual async Task<long> Insert([FromBody] T1 entity)
+        public virtual async Task<long> Create([FromBody] T1 entity)
         {
             try
             {
-                return await Task.Run(() => _repository.Insert(ObjectMapper.Map<T>(entity)));
+                return await Task.Run(() => _repository.Create(ObjectMapper.Map<T>(entity)));
             }
             catch (Exception e)
             {

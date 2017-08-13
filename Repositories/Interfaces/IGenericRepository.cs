@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using DataModels;
 
 namespace Repositories.Interfaces
 {
      public interface IGenericRepository<T>
      {
-         Task Update(T entity);
+         Task<long> Create(T entity, CintraDB dbContext = null);
 
-         Task<long> Insert(T entity);
-
-         Task Delete(long id);
+         Task Delete(long id, CintraDB dbContext = null);
 
          Task<List<T>> GetAll();
 

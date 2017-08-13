@@ -14,7 +14,7 @@ namespace Controllers
     [Route("/api/[controller]/values")]
     public class HorsesController: BaseController<Hors, HorseDto>
     {
-        public HorsesController(IHorsesRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public HorsesController(IGenericRepository<Hors> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
         }
     }

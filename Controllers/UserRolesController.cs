@@ -29,7 +29,7 @@ namespace Controllers
             return (await ((IUserRolesRepository) _repository).GetByParamsWithUsers(x => x.users.Any(u => u.Login == login))).Select(ObjectMapper.Map<UserRoleDto>).ToList();              
         }
 
-        [Authorize(Roles = enUserRoles.Administrator)]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         [HttpGet]
         public override async Task<List<UserRoleDto>> GetAll()
         {

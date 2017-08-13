@@ -28,11 +28,9 @@ namespace Common.DtoMapping
     public delegate void ItemEndCancelEventHandler(IAtomicEditableObject sender);
 
 #pragma warning disable CS0067
-    public partial class CoachDtoUi : CoachDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    public partial class CoachDtoUi : CoachDto, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+        public event PropertyChangedEventHandler PropertyChanged;        
 
         public string ApplyObjectLevelValidations()
         {
@@ -40,11 +38,9 @@ namespace Common.DtoMapping
         }
     }
 
-    public partial class HorseDtoUi : HorseDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    public partial class ScheduleDtoUi : ScheduleDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
 
         public string ApplyObjectLevelValidations()
         {
@@ -52,10 +48,9 @@ namespace Common.DtoMapping
         }
     }
 
-    public partial class ServiceDtoUi : ServiceDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    public partial class ScheduleDataDtoUi : ScheduleDataDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
 
         public string ApplyObjectLevelValidations()
         {
@@ -63,11 +58,9 @@ namespace Common.DtoMapping
         }
     }
 
-    public partial class UserDtoUi : UserDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    public partial class HorseDtoUi : HorseDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
 
         public string ApplyObjectLevelValidations()
         {
@@ -75,11 +68,28 @@ namespace Common.DtoMapping
         }
     }
 
-    public partial class UserRoleDtoUi : UserRoleDto, INotifyPropertyChanged, ICustomDataErrorInfo
+    public partial class ServiceDtoUi : ServiceDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
 
+    public partial class UserDtoUi : UserDto, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
+    public partial class UserRoleDtoUi : UserRoleDto, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
         public string ApplyObjectLevelValidations()
         {
             return string.Empty;

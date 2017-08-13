@@ -16,7 +16,7 @@ namespace Client.ViewModels
     {        
         public HorsesRefVm()
         {
-            Client = new HorsesClient();
+            Client = RestClientFactory.GetClient<HorseDto>();
         }
     }
 
