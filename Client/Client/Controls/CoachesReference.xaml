@@ -23,6 +23,19 @@
                 <DataGridTextColumn Header="Coach Name" Binding="{Binding Path = Name}"  Width="*" />
                 <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="*" />
                 <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="*" />
+                <DataGridTemplateColumn IsReadOnly="True" Width="32">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate>
+                            <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                              Path=DataContext.DisplayEditItemScheduleCommand}"
+                                    CommandParameter="{Binding}" ToolTip="Edit schedule">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

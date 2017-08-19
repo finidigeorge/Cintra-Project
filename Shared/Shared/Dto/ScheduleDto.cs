@@ -8,7 +8,7 @@ namespace Shared.Dto
     public class ScheduleDto : IUniqueDto
     {
         public long Id { get; set; }
-        public long IntervalId { get; set; }
+        public ScheduleIntervalEnum IntervalId { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
 

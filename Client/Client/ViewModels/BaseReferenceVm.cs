@@ -55,12 +55,17 @@ namespace Client.ViewModels
 
         public IBaseController<T> Client;
 
+        protected virtual async Task<IList<T>> GetItems()
+        {
+            return await Client.GetAll();
+        }
+
         protected BaseReferenceVm()
         {
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
                 Items = new ObservableCollection<T1>();
-                foreach (var item in (await Client.GetAll()).ToList<T, T1>())                
+                foreach (var item in (await GetItems()).ToList<T, T1>())                
                     Items.Add(item);
 
                 ItemsCollectionView?.Refresh();

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Shared;
 using Shared.Dto;
 using Shared.Dto.Interfaces;
+using Shared.Interfaces;
 
 namespace RestClient
 {
@@ -21,7 +19,7 @@ namespace RestClient
 
         };
 
-        public static BaseRestApiClient<T> GetClient<T>() where T: class, IUniqueDto
+        public static IBaseController<T> GetClient<T>() where T: class, IUniqueDto
         {
             return new BaseRestApiClient<T>(_controllers[typeof(T)]);
         }

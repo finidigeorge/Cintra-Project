@@ -24,7 +24,12 @@ namespace Repositories
             using (var db = new CintraDB())
             {
                 return await Task.FromResult(
-                    db.Coaches.LoadWith(x => LoadSchedules(x.Id, db)).Where(where).ToList()
+                    db.Coaches.Where(where).Select(x =>
+                    {
+                        var res = x;
+                        res.schedules = LoadSchedules(x.Id, db).ToList();
+                        return res;
+                    }).ToList()
                 );
             }
         }

@@ -37,6 +37,15 @@ namespace Mapping
                     {
                         db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);
                     });
+
+                    conf.CreateMap<Coach, CoachDto>().AfterMap((db, vm) =>
+                    {
+                        vm.Schedules = _mapper.Map<List<ScheduleDto>>(db.schedules);
+                    });
+                    conf.CreateMap<CoachDto, Coach>().AfterMap((vm, db) =>
+                    {
+                        db.schedules = _mapper.Map<List<Schedule>>(vm.Schedules);
+                    });
                 }
             );
 

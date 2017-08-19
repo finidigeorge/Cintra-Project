@@ -173,6 +173,9 @@
     <Compile Include="ViewModels\HorsesRefVm.cs" />
     <Compile Include="ViewModels\CoachesRefVm.cs" />
     <Compile Include="ViewModels\UsersRefVm.cs" />
+    <Compile Include="Windows\ScheduleEditor.xaml.cs">
+      <DependentUpon>ScheduleEditor.xaml</DependentUpon>
+    </Compile>
     <Page Include="Windows\InputDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -221,6 +224,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\ScheduleEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

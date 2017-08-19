@@ -12,5 +12,7 @@ namespace Shared.Dto
 
         [VmMeta(IsNullable = false)]
         public string NickName { get; set; }
+
+        public List<ScheduleDto> Schedules { get; set; }
     }
 }

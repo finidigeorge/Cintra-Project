@@ -13,9 +13,7 @@ namespace Client.Controls
     /// </summary>
     public partial class UsersReference : UserControl
     {
-        public UsersRefVm Model => (UsersRefVm)Resources["ViewModel"];
-
-        public ICommand BeginEditItemCommand { get; set; }
+        public UsersRefVm Model => (UsersRefVm)Resources["ViewModel"];        
 
         public UsersReference()
         {
