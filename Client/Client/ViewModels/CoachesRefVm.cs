@@ -22,13 +22,10 @@ namespace Client.ViewModels
         {
             Client = RestClientFactory.GetClient<CoachDto>();
             DisplayEditItemScheduleCommand = new Command<object>(() =>
-            {
+            {                
                 new ScheduleEditor()
                 {
                     DataContext = new SchedulesRefVm()
-                    {
-                        DataSource = SelectedItem.Schedules
-                    }
                 }.ShowDialog();
 
             }, (x) => CanEditSelectedItem);

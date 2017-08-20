@@ -20,18 +20,7 @@ namespace Client.Controls
         public HorsesReference()
         {
             InitializeComponent();
-            Model.BeginEditItemCommand = new Command<object>(() =>
-            {
-                ItemsDataGrid.EditItemEventHandler(Model.SelectedItem, null);
-            }, (x) => Model.CanEditSelectedItem);
-
-            Model.BeginAddItemCommand = new Command<object>(() =>
-            {
-                ItemsDataGrid.SelectedItem = Model.AddEmptyItem();                
-                ItemsDataGrid.ScrollIntoView(ItemsDataGrid.SelectedItem);
-
-                Model.BeginEditItemCommand.Execute(ItemsDataGrid);
-            }, (x) => Model.CanAddItem);            
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
         }        
     }
 

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Client.Extentions;
 using Client.ViewModels;
 
 namespace Client.Controls
@@ -10,7 +11,8 @@ namespace Client.Controls
 
         public CoachesReference()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
         }        
     }
 }
