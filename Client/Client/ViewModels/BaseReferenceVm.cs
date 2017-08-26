@@ -79,6 +79,7 @@ namespace Client.ViewModels
 
             AddItemCommand = new AsyncCommand<T1>(async (param) =>
             {
+                BeforeAddItemHandler(param);
                 var id = await Client.Create(param);
                 var item = ObjectMapper.Map<T1>(await Client.GetById(id));
                 Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;                
@@ -86,6 +87,7 @@ namespace Client.ViewModels
 
             UpdateItemCommand = new AsyncCommand<T1>(async (param) =>
             {
+                BeforeEditItemHandler(param);
                 await Client.Create(param);                
             }, (x) => x != null);
 
@@ -153,8 +155,16 @@ namespace Client.ViewModels
             return newItem;
         }
 
+        //command-related event handlers
+        protected virtual void BeforeAddItemHandler(T1 item)
+        {
+        }
 
-        //predefined Back end related Commands 
+        protected virtual void BeforeEditItemHandler(T1 item)
+        {
+        }
+
+        //predefined back end related Commands 
         public IAsyncCommand RefreshDataCommand { get; set; }
         public IAsyncCommand GetItemsCommand { get; set; }
         public IAsyncCommand AddItemCommand { get; set; }

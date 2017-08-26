@@ -26,7 +26,7 @@ namespace Client.Windows
         public ScheduleEditor()
         {
             InitializeComponent();            
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);            
         }
     }
 }

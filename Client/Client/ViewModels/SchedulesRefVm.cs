@@ -12,10 +12,16 @@ namespace Client.ViewModels
     public class SchedulesRefVm : BaseReferenceVm<ScheduleDto, ScheduleDtoUi>
     {
         public IList<ScheduleDto> DataSource { get; set; } = new List<ScheduleDto>();
+        public CoachDtoUi Coach { get; set; }
 
         protected override async Task<IList<ScheduleDto>> GetItems()
         {
             return await Task.FromResult(DataSource);
+        }
+
+        protected override void BeforeAddItemHandler(ScheduleDtoUi item)
+        {
+            item.CoachId = Coach.Id;
         }
 
         public SchedulesRefVm()

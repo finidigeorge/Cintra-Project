@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Client.Commands;
 using Client.ViewModels.Interfaces;
@@ -22,14 +23,20 @@ namespace Client.ViewModels
         {
             Client = RestClientFactory.GetClient<CoachDto>();
             DisplayEditItemScheduleCommand = new Command<object>(() =>
-            {                
-                new ScheduleEditor()
+            {
+                var editor = new ScheduleEditor()
                 {
-                    DataContext = new SchedulesRefVm()
-                }.ShowDialog();
+                    Owner = Application.Current.MainWindow,                    
+                };
+
+                editor.Model.Coach = SelectedItem;
+                editor.Model.DataSource = SelectedItem.Schedules;
+                editor.Model.RefreshDataCommand.ExecuteAsync(null);
+
+                editor.ShowDialog();
 
             }, (x) => CanEditSelectedItem);
-        }
+        }        
 
         public ICommand DisplayEditItemScheduleCommand { get; set; }
     }

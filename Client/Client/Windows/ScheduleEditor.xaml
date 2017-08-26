@@ -9,7 +9,8 @@
         xmlns:extentions="clr-namespace:Client.Extentions"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="ScheduleEditor" Height="600" Width="800">
+        Title="ScheduleEditor" Height="600" Width="800"
+        FontSize="14">
     <Window.Resources>
         <viewModels:SchedulesRefVm x:Key="ViewModel" />
     </Window.Resources>
@@ -50,7 +51,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Schedule Name" Binding="{Binding Path = Name}"  Width="*" />
                 <DataGridTextColumn Header="Schedule Interval" Binding="{Binding Path = IntervalId}"  Width="*" />
-                <DataGridTextColumn Header="Is Active" Binding="{Binding Path = IsActive}"  Width="*" />
+                <DataGridCheckBoxColumn Header="Is Active" Binding="{Binding Path = IsActive}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

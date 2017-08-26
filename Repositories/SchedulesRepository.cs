@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using DataModels;
 using LinqToDB;
+using Shared.Attributes;
 using Shared.Dto.Interfaces;
 
 namespace Repositories
 {
+    [PerScope]
     public class SchedulesRepository: GenericRepository<Schedule>
     {
         public override async Task<List<Schedule>> GetByParams(Func<Schedule, bool> where)

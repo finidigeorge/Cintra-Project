@@ -11,7 +11,7 @@ namespace Shared.Dto
         public ScheduleIntervalEnum IntervalId { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
-
+        public long CoachId { get; set; }
         public List<ScheduleDataDto> ScheduleData { get; set; }
 
     }
