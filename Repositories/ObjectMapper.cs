@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using DataModels;
+using Shared;
 using Shared.Dto;
 
 
@@ -32,10 +33,12 @@ namespace Mapping
                     conf.CreateMap<Schedule, ScheduleDto>().AfterMap((db, vm) =>
                     {
                         vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);
+                        vm.IntervalId = (ScheduleIntervalEnum) db.IntervalId;
                     });
                     conf.CreateMap<ScheduleDto, Schedule>().AfterMap((vm, db) =>
                     {
                         db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);
+                        db.IntervalId = (int)vm.IntervalId;
                     });
 
                     conf.CreateMap<Coach, CoachDto>().AfterMap((db, vm) =>

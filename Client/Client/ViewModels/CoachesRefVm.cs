@@ -17,28 +17,28 @@ using Shared.Dto;
 namespace Client.ViewModels
 {
     public class CoachesRefVm : BaseReferenceVm<CoachDto, CoachDtoUi>
-    {        
+    {
+        public ICommand DisplayEditItemScheduleCommand { get; set; }
 
         public CoachesRefVm()
         {
             Client = RestClientFactory.GetClient<CoachDto>();
-            DisplayEditItemScheduleCommand = new Command<object>(() =>
+            DisplayEditItemScheduleCommand = new Command<object>(ShowScheduleEditor, (x) => CanEditSelectedItem);
+        }
+
+        private void ShowScheduleEditor()
+        {
+            var editor = new ScheduleEditor()
             {
-                var editor = new ScheduleEditor()
-                {
-                    Owner = Application.Current.MainWindow,                    
-                };
+                Owner = Application.Current.MainWindow,
+            };
 
-                editor.Model.Coach = SelectedItem;
-                editor.Model.DataSource = SelectedItem.Schedules;
-                editor.Model.RefreshDataCommand.ExecuteAsync(null);
+            editor.Model.Coach = SelectedItem;
+            editor.Model.DataSource = SelectedItem.Schedules;
+            editor.Model.RefreshDataCommand.ExecuteAsync(null);
 
-                editor.ShowDialog();
-
-            }, (x) => CanEditSelectedItem);
+            editor.ShowDialog();
         }        
-
-        public ICommand DisplayEditItemScheduleCommand { get; set; }
     }
 
 }
