@@ -32,12 +32,19 @@ namespace Mapping
 
                     conf.CreateMap<Schedule, ScheduleDto>().AfterMap((db, vm) =>
                     {
-                        vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);
-                        vm.IntervalId = (ScheduleIntervalEnum) db.IntervalId;
+                        vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);                        
                     });
                     conf.CreateMap<ScheduleDto, Schedule>().AfterMap((vm, db) =>
                     {
-                        db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);
+                        db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
+                    });
+
+                    conf.CreateMap<SchedulesData, ScheduleDataDto>().AfterMap((db, vm) =>
+                    {
+                        vm.IntervalId = (ScheduleIntervalEnum) db.IntervalId;
+                    });
+                    conf.CreateMap<ScheduleDataDto, SchedulesData>().AfterMap((vm, db) =>
+                    {
                         db.IntervalId = (int)vm.IntervalId;
                     });
 

@@ -9,6 +9,7 @@ namespace Shared.Dto
     {
         public long Id { get; set; }
         public long ScheduleId { get; set; }
+        public ScheduleIntervalEnum IntervalId { get; set; }
         public bool IsAvialable { get; set; }
         public string AvailabilityDescription { get; set; }
         public long? DayNumber { get; set; }

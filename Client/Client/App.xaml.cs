@@ -9,6 +9,7 @@ using System.Windows;
 using Client.Security;
 using Serilog;
 
+
 namespace Client
 {
     /// <summary>

@@ -9,23 +9,19 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:Client"
         xmlns:shared="clr-namespace:Shared;assembly=Shared"
+        xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="ScheduleEditor" Height="600" Width="800"
+        Title="ScheduleEditor" Height="768" Width="1024"
         FontSize="14">
     <Window.Resources>
         <viewModels:SchedulesRefVm x:Key="ViewModel" />
-        <ObjectDataProvider x:Key="ScheduleIntervalEnum" MethodName="GetValues" ObjectType="{x:Type shared:ScheduleIntervalEnum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type Type="shared:ScheduleIntervalEnum"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="320"/>
+            <RowDefinition Height="480"/>
         </Grid.RowDefinitions>
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
             <controls:ReferencesToolbar 
@@ -57,10 +53,58 @@
             </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Schedule Name" Binding="{Binding Path = Name}"  Width="*" />
-                <DataGridComboBoxColumn Header="Schedule Interval" ItemsSource="{Binding Source={StaticResource ScheduleIntervalEnum}}" Width="150"
-                                        SelectedItemBinding="{Binding IntervalId}"/>
+                <!--DataGridComboBoxColumn Header="Schedule Interval" ItemsSource="{Binding Source={StaticResource ScheduleIntervalEnum}}" Width="150"
+                                        SelectedItemBinding="{Binding IntervalId}"/-->
                 <DataGridCheckBoxColumn Header="Is Active" Binding="{Binding Path = IsActive}"  Width="100" />
             </DataGrid.Columns>
         </DataGrid>
+        <TabControl HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch">
+            <TabItem Header="Weekly Schedule">
+                <Grid Background="#FFE5E5E5">
+                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" StartJourney="6:00" EndJourney="20:00"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Daily Schedule">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="96"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="96"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Command="{Binding PrevDayCommand}"                                   
+                                ToolTip="Previous day">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                                <TextBlock VerticalAlignment="Center">Previous Day</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1"
+                                Command="{Binding AddScheduledIntervalCommand}"                                   
+                                ToolTip="Add Working Hours">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center">Add Working Hours</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="2"
+                                Command="{Binding NextDayCommand}"                                   
+                                ToolTip="Next day">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center">Next Day</TextBlock>
+                                <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="20:00" 
+                                            OnScheduleDoubleClick="DailyScheduler_OnOnScheduleDoubleClick"
+                                            OnEventDoubleClick="DailyScheduler_OnOnEventDoubleClick"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

@@ -5,11 +5,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Client.Annotations;
 
 namespace Client.ViewModels
 {
-    public class BaseVm: INotifyPropertyChanged
+    public class BaseVm:  INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

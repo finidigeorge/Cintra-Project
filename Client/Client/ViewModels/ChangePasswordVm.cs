@@ -11,11 +11,6 @@ using Shared.Dto;
 
 namespace Client.ViewModels
 {
-    public enum ChangePasswordVmProperties
-    {
-        ErrorMessage
-    }
-
     public class ChangePasswordVm: BaseVm
     {
         private readonly UsersClient _client = new UsersClient();       

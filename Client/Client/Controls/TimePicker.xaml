@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="Client.Controls.TimePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <Grid>
+        <Border BorderBrush="Black" BorderThickness=".25" />
+        <StackPanel Orientation="Horizontal" Margin="1,1,1,1">
+            <TextBox x:Name="AddHoursTextBox"
+                       MinWidth="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"                       
+                       Text="{Binding DisplayTimeHours,
+                                      Mode=TwoWay}"
+                       TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddHoursTextBox_OnKeyDown"/>
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Vertical">
+                <Button x:Name="HourUpButton" Click="HourUpButton_OnClick" FontFamily="Marlett" FontSize="9" Content="5">
+                </Button>
+
+                <Button x:Name="HourDownButton"
+                        FontFamily="Marlett" FontSize="9" Content="6"
+                        Click="HourDownButton_OnClick">
+                </Button>
+            </StackPanel>
+            <TextBox x:Name="AddMinutesTextBox"
+                       MinWidth="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Text="{Binding DisplayTimeMinutes,
+                                      Mode=TwoWay}"
+                       TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddMinutesTextBox_OnKeyDown"/>
+
+
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Vertical">
+                <Button x:Name="MinutesUpButton" Click="MinutesUpButton_OnClick" FontFamily="Marlett" FontSize="9" Content="5">
+                </Button>
+
+                <Button x:Name="MinutesDownButton"                        
+                        Click="MinutesDownButton_OnClick"
+                        FontFamily="Marlett" FontSize="9" Content="6">
+                </Button>
+            </StackPanel>
+
+            <ComboBox x:Name="AmPmComboBox"
+                      MinWidth="45"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      BorderThickness=".25"
+                      FontSize="12"
+                      ItemsSource="{Binding AmPmTypes}"
+                      SelectedItem="{Binding DisplayAmPm}" />
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>

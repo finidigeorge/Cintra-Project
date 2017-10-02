@@ -55,7 +55,7 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
-		/// FK_schedules_2_0_BackReference
+		/// FK_schedules_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Schedule> schedules { get; set; }
@@ -76,53 +76,29 @@ namespace DataModels
 	{
 		[Column("id"),       PrimaryKey, Identity] public long   Id       { get; set; } // integer
 		[Column("nickname"), NotNull             ] public string Nickname { get; set; } // varchar(255)
-
-		#region Associations
-
-		/// <summary>
-		/// FK_schedules_1_0_BackReference
-		/// </summary>
-		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Schedule> schedules { get; set; }
-
-		#endregion
 	}
 
 	[Table("schedules")]
 	public partial class Schedule
 	{
-		[Column("id"),          PrimaryKey,  Identity] public long   Id         { get; set; } // integer
-		[Column("coach_id"),       Nullable          ] public long?  CoachId    { get; set; } // integer
-		[Column("horse_id"),       Nullable          ] public long?  HorseId    { get; set; } // integer
-		[Column("interval_id"), NotNull              ] public long   IntervalId { get; set; } // integer
-		[Column("name"),        NotNull              ] public string Name       { get; set; } // varchar(50)
-		[Column("is_active"),   NotNull              ] public bool   IsActive   { get; set; } // boolean
+		[Column("id"),        PrimaryKey, Identity] public long   Id       { get; set; } // integer
+		[Column("coach_id"),  NotNull             ] public long   CoachId  { get; set; } // integer
+		[Column("name"),      NotNull             ] public string Name     { get; set; } // varchar(50)
+		[Column("is_active"), NotNull             ] public bool   IsActive { get; set; } // boolean
 
 		#region Associations
 
 		/// <summary>
-		/// FK_schedules_2_0
+		/// FK_schedules_0_0
 		/// </summary>
-		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_2_0", BackReferenceName="schedules")]
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_0_0", BackReferenceName="schedules")]
 		public Coach coach { get; set; }
 
 		/// <summary>
-		/// FK_schedules_data_0_0_BackReference
+		/// FK_schedules_data_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ScheduleId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<SchedulesData> data { get; set; }
-
-		/// <summary>
-		/// FK_schedules_1_0
-		/// </summary>
-		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_1_0", BackReferenceName="schedules")]
-		public Hors hors { get; set; }
-
-		/// <summary>
-		/// FK_schedules_0_0
-		/// </summary>
-		[Association(ThisKey="IntervalId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_0_0", BackReferenceName="schedules")]
-		public SchedulesInterval schedules_interval { get; set; }
 
 		#endregion
 	}
@@ -132,6 +108,7 @@ namespace DataModels
 	{
 		[Column("id"),                       PrimaryKey,  Identity] public long      Id                      { get; set; } // integer
 		[Column("schedule_id"),              NotNull              ] public long      ScheduleId              { get; set; } // integer
+		[Column("interval_id"),              NotNull              ] public long      IntervalId              { get; set; } // integer
 		[Column("is_avialable"),             NotNull              ] public bool      IsAvialable             { get; set; } // boolean
 		[Column("availability_description"), NotNull              ] public string    AvailabilityDescription { get; set; } // varchar(50)
 		[Column("day_number"),                  Nullable          ] public long?     DayNumber               { get; set; } // integer
@@ -142,10 +119,16 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
+		/// FK_schedules_data_1_0
+		/// </summary>
+		[Association(ThisKey="ScheduleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_1_0", BackReferenceName="data")]
+		public Schedule FK_schedules_data_1_0 { get; set; }
+
+		/// <summary>
 		/// FK_schedules_data_0_0
 		/// </summary>
-		[Association(ThisKey="ScheduleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_0_0", BackReferenceName="data")]
-		public Schedule schedulesdata { get; set; }
+		[Association(ThisKey="IntervalId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_0_0", BackReferenceName="schedulesdatas")]
+		public SchedulesInterval schedulesdata { get; set; }
 
 		#endregion
 	}
@@ -159,10 +142,10 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
-		/// FK_schedules_0_0_BackReference
+		/// FK_schedules_data_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="IntervalId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Schedule> schedules { get; set; }
+		public IEnumerable<SchedulesData> schedulesdatas { get; set; }
 
 		#endregion
 	}

@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Client.Commands;
+using Client.Controls.WpfScheduler;
 using Client.Extentions;
 using Client.ViewModels;
 
@@ -26,7 +28,46 @@ namespace Client.Windows
         public ScheduleEditor()
         {
             InitializeComponent();            
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);            
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
+
+            Model.NextDayCommand = new Command<object>(() =>
+            {
+                DailyScheduler.NextPage();                
+            }, (x) => true);
+
+            Model.PrevDayCommand = new Command<object>(() =>
+            {
+                DailyScheduler.PrevPage();
+            }, (x) => true);
+
+            Model.AddScheduledIntervalCommand = new Command<object>(() =>
+            {
+                if (ShowScheduleEditor())
+                {
+                    ///
+                }
+
+            }, (x) => true);
+        }
+
+        private bool ShowScheduleEditor()
+        {
+            var editor = new SchedulerIntervalEditWindow()
+            {
+                Owner = this,
+            };            
+
+            return editor.ShowDialog() ?? false;
+        }
+
+        private void DailyScheduler_OnOnScheduleDoubleClick(object sender, DateTime e)
+        {
+            DailyScheduler.AddEvent(new Event() {Start = e + new TimeSpan(10, 0, 0), End = e + new TimeSpan(11, 30, 0), Subject = "Test !!!!", Color = new SolidColorBrush(Color.FromRgb(52, 168, 255))});
+        }
+
+        private void DailyScheduler_OnOnEventDoubleClick(object sender, Event e)
+        {
+            DailyScheduler.DeleteEvent(e.Id);
         }
     }
 }
