@@ -85,7 +85,7 @@
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="1"
-                                Command="{Binding AddScheduledIntervalCommand}"                                   
+                                Command="{Binding AddDailyScheduledIntervalCommand}"                                   
                                 ToolTip="Add Working Hours">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center">Add Working Hours</TextBlock>

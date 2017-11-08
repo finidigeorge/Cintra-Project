@@ -7,6 +7,12 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs"#>
 
+<#
+var path = this.Host.ResolveAssemblyReference("$(TargetPath)");
+Assembly assembly = Assembly.LoadFrom(path);
+Type[] types = assembly.GetTypes();
+#>
+
 using System.ComponentModel;
 using Shared.Dto;
 using Common.Annotations;
@@ -15,15 +21,14 @@ using System.Text;
 
 namespace Common.DtoMapping
 {
+
 <#
-var path = this.Host.ResolveAssemblyReference("$(TargetPath)");
-Assembly assembly = Assembly.LoadFrom(path);
-Type[] types = assembly.GetTypes();
 foreach (Type type in types)
 {
     if (type.IsClass && type.GetInterfaces().Any(x => x.Name =="INotifyPropertyChanged"))
     {        
 		string baseTypeName = type.BaseType.Name;
+		var baseProperties = type.BaseType.GetProperties(); 
         string className = type.Name;
         string interfaceName = "IAtomicEditableObject, ICustomDataErrorInfo";
 #>		
@@ -32,6 +37,15 @@ foreach (Type type in types)
 			private readonly EditableAdapter<<#= baseTypeName #>> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			<# foreach (var p in baseProperties) 
+			{
+				var propertyTypeName = p.PropertyType.Name;
+			#>	
+				public new <#= propertyTypeName #> <#= p.Name #> { get; set; }
+			<#
+			}
+			#>
 
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -68,13 +82,10 @@ foreach (Type type in types)
 			        ItemCancelEdit(this);
 			}	
 			
-			public virtual void OnPropertyChanged(string propertyName)
+			[NotifyPropertyChangedInvocator]
+			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
-				var propertyChanged = PropertyChanged;
-				if (propertyChanged != null)
-				{
-					propertyChanged(this, new PropertyChangedEventArgs(propertyName));
-				}
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 			}
 			
 			public string Error

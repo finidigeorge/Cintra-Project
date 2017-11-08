@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using PropertyChanged;
 using Shared.Dto.Interfaces;
 
 namespace Shared.Dto

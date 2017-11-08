@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Client.ViewModels;
+using Common.DtoMapping;
 using RestApi;
 using RestClient;
 
@@ -28,16 +29,12 @@ namespace Client
             InitializeComponent();                       
         }
 
-        public ScheduleIntervalEditWindowVm Model => (ScheduleIntervalEditWindowVm)Resources["ViewModel"];
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        public SchedulerIntervalEditWindow(ScheduleDataDtoUi dataContext) : this()
         {
-            Model.ErrorMessage = String.Empty;                       
+            Model.AvailabilityDescription = dataContext.AvailabilityDescription;
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
+        public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)Resources["ViewModel"];
+        
     }
 }

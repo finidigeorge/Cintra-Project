@@ -15,6 +15,7 @@ using Client.Commands;
 using Client.Controls.WpfScheduler;
 using Client.Extentions;
 using Client.ViewModels;
+using Common.DtoMapping;
 
 namespace Client.Windows
 {
@@ -40,9 +41,9 @@ namespace Client.Windows
                 DailyScheduler.PrevPage();
             }, (x) => true);
 
-            Model.AddScheduledIntervalCommand = new Command<object>(() =>
+            Model.AddDailyScheduledIntervalCommand = new Command<object>(() =>
             {
-                if (ShowScheduleEditor())
+                if (ShowDailyScheduleEditor())
                 {
                     ///
                 }
@@ -50,12 +51,19 @@ namespace Client.Windows
             }, (x) => true);
         }
 
-        private bool ShowScheduleEditor()
+        private bool ShowDailyScheduleEditor()
         {
-            var editor = new SchedulerIntervalEditWindow()
+            var editor = new SchedulerIntervalEditWindow(new ScheduleDataDtoUi()
             {
-                Owner = this,
-            };            
+                DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),
+                BeginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6),
+                EndTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21),
+                IsAvialable = true,
+                AvailabilityDescription = "Coaching"
+            })
+            {
+                Owner = this
+            };
 
             return editor.ShowDialog() ?? false;
         }
