@@ -42,6 +42,8 @@ namespace Common.DtoMapping
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public new List<ScheduleDataDto> ScheduleData { get; set; }
+
         public string ApplyObjectLevelValidations()
         {
             return string.Empty;

@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Common;
-using Microsoft.Build.Framework;
 using Serilog;
-//using Serilog;
 using WPFCustomMessageBox;
 
 namespace Client.Commands

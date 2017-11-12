@@ -13,7 +13,9 @@ Assembly assembly = Assembly.LoadFrom(path);
 Type[] types = assembly.GetTypes();
 #>
 
+using System;
 using System.ComponentModel;
+using Shared;
 using Shared.Dto;
 using Common.Annotations;
 using System.Runtime.CompilerServices;
@@ -25,7 +27,7 @@ namespace Common.DtoMapping
 <#
 foreach (Type type in types)
 {
-    if (type.IsClass && type.GetInterfaces().Any(x => x.Name =="INotifyPropertyChanged"))
+    if (type.IsClass && type.Namespace == "Common.DtoMapping" && type.GetInterfaces().Any(x => x.Name =="INotifyPropertyChanged"))
     {        
 		string baseTypeName = type.BaseType.Name;
 		var baseProperties = type.BaseType.GetProperties(); 
@@ -41,9 +43,17 @@ foreach (Type type in types)
 			<# foreach (var p in baseProperties) 
 			{
 				var propertyTypeName = p.PropertyType.Name;
-			#>	
-				public new <#= propertyTypeName #> <#= p.Name #> { get; set; }
+				if (Nullable.GetUnderlyingType(p.PropertyType) != null)
+				{
+					propertyTypeName = Nullable.GetUnderlyingType(p.PropertyType).Name;
+			#>		
+			public new <#= propertyTypeName #> <#= p.Name #> { get; set; }
 			<#
+				} else if (!p.PropertyType.IsGenericType) {
+			#>	
+			public new <#= propertyTypeName #> <#= p.Name #> { get; set; }
+			<#
+				}
 			}
 			#>
 
