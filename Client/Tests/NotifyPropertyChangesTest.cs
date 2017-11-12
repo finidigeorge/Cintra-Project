@@ -2,8 +2,7 @@
 using Client.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Common.DtoMapping;
-using RestApi;
-using RestClient;
+
 
 namespace Tests
 {

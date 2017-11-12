@@ -119,13 +119,6 @@
     <Compile Include="Extentions\EnumBooleanConverter.cs" />
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
-    <Compile Include="ViewModels\DtoMapping\DtoMapper.cs" />
-    <Compile Include="ViewModels\DtoMapping\DtoMapper.generated.cs">
-      <DependentUpon>DtoMapper.generated.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="ViewModels\DtoMapping\EditableAdapter.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
     <Compile Include="Windows\ScheduleIntervalEditWindow.xaml.cs">
@@ -312,12 +305,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ViewModels\DtoMapping\DtoMapper.generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DtoMapper.generated.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
