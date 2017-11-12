@@ -47,11 +47,11 @@ foreach (Type type in types)
 				{
 					propertyTypeName = Nullable.GetUnderlyingType(p.PropertyType).Name;
 			#>		
-			public new <#= propertyTypeName #> <#= p.Name #> { get; set; }
+			public override <#= propertyTypeName #>? <#= p.Name #> { get; set; }
 			<#
 				} else if (!p.PropertyType.IsGenericType) {
 			#>	
-			public new <#= propertyTypeName #> <#= p.Name #> { get; set; }
+			public override <#= propertyTypeName #> <#= p.Name #> { get; set; }
 			<#
 				}
 			}

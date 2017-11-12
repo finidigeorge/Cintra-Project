@@ -7,11 +7,11 @@ namespace Shared.Dto
 {
     public class ScheduleDto : IUniqueDto
     {
-        public long Id { get; set; }        
-        public string Name { get; set; }
-        public bool IsActive { get; set; }
-        public long CoachId { get; set; }
-        public List<ScheduleDataDto> ScheduleData { get; set; }
+        public virtual long Id { get; set; }        
+        public virtual string Name { get; set; }
+        public virtual bool IsActive { get; set; }
+        public virtual long CoachId { get; set; }
+        public virtual List<ScheduleDataDto> ScheduleData { get; set; }
 
     }
 }

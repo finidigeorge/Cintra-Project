@@ -19,13 +19,13 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new String Name { get; set; }
+			public override String Name { get; set; }
 				
-			public new String Email { get; set; }
+			public override String Email { get; set; }
 				
-			public new String Phone { get; set; }
+			public override String Phone { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -105,13 +105,13 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new String Name { get; set; }
+			public override String Name { get; set; }
 				
-			public new Boolean IsActive { get; set; }
+			public override Boolean IsActive { get; set; }
 				
-			public new Int64 CoachId { get; set; }
+			public override Int64 CoachId { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -191,23 +191,23 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new Int64 ScheduleId { get; set; }
+			public override Int64 ScheduleId { get; set; }
 				
-			public new ScheduleIntervalEnum IntervalId { get; set; }
+			public override ScheduleIntervalEnum IntervalId { get; set; }
 				
-			public new Boolean IsAvialable { get; set; }
+			public override Boolean IsAvialable { get; set; }
 				
-			public new String AvailabilityDescription { get; set; }
+			public override String AvailabilityDescription { get; set; }
 					
-			public new Int64 DayNumber { get; set; }
+			public override Int64? DayNumber { get; set; }
 					
-			public new DateTime DateOn { get; set; }
+			public override DateTime? DateOn { get; set; }
 				
-			public new DateTime BeginTime { get; set; }
+			public override DateTime BeginTime { get; set; }
 				
-			public new DateTime EndTime { get; set; }
+			public override DateTime EndTime { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -287,9 +287,9 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new String NickName { get; set; }
+			public override String NickName { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -369,9 +369,9 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new String Name { get; set; }
+			public override String Name { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -451,23 +451,23 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new String Login { get; set; }
+			public override String Login { get; set; }
 				
-			public new String Password { get; set; }
+			public override String Password { get; set; }
 				
-			public new String Name { get; set; }
+			public override String Name { get; set; }
 				
-			public new String Email { get; set; }
+			public override String Email { get; set; }
 				
-			public new String Phone { get; set; }
+			public override String Phone { get; set; }
 				
-			public new Boolean NewPasswordOnLogin { get; set; }
+			public override Boolean NewPasswordOnLogin { get; set; }
 				
-			public new UserRoleDto UserRole { get; set; }
+			public override UserRoleDto UserRole { get; set; }
 				
-			public new Boolean IsLocked { get; set; }
+			public override Boolean IsLocked { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -547,9 +547,9 @@ namespace Common.DtoMapping
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
 				
-			public new Int64 Id { get; set; }
+			public override Int64 Id { get; set; }
 				
-			public new String Name { get; set; }
+			public override String Name { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);

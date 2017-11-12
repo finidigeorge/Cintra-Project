@@ -8,18 +8,18 @@ namespace Shared.Dto
 {
     public class UserDto: IUniqueDto
     {
-        public long Id { get; set; }
+        public virtual long Id { get; set; }
         [VmMeta(IsNullable = false)]
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public virtual string Login { get; set; }
+        public virtual string Password { get; set; }
         [VmMeta(IsNullable = false)]
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public Boolean NewPasswordOnLogin { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Email { get; set; }
+        public virtual string Phone { get; set; }
+        public virtual Boolean NewPasswordOnLogin { get; set; }
         [VmMeta(IsNullable = false)]
-        public UserRoleDto UserRole { get; set; }
-        public Boolean IsLocked { get; set; }
+        public virtual UserRoleDto UserRole { get; set; }
+        public virtual Boolean IsLocked { get; set; }
 
     }
 }

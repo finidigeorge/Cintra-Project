@@ -28,12 +28,12 @@ namespace Client.Windows
 
         public ScheduleEditor()
         {
-            InitializeComponent();            
+            InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
 
             Model.NextDayCommand = new Command<object>(() =>
             {
-                DailyScheduler.NextPage();                
+                DailyScheduler.NextPage();
             }, (x) => true);
 
             Model.PrevDayCommand = new Command<object>(() =>
@@ -53,15 +53,16 @@ namespace Client.Windows
 
         private bool ShowDailyScheduleEditor()
         {
-            var editor = new SchedulerIntervalEditWindow(new ScheduleDataDtoUi()
+            var editor = new SchedulerIntervalEditWindow()
             {
-                DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),
-                BeginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6),
-                EndTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21),
-                IsAvialable = true,
-                AvailabilityDescription = "Coaching"
-            })
-            {
+                DataContext = new ScheduleDataDtoUi()
+                {
+                    DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),
+                    BeginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6),
+                    EndTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21),
+                    IsAvialable = true,
+                    AvailabilityDescription = "Coaching"
+                },
                 Owner = this
             };
 
@@ -70,7 +71,7 @@ namespace Client.Windows
 
         private void DailyScheduler_OnOnScheduleDoubleClick(object sender, DateTime e)
         {
-            DailyScheduler.AddEvent(new Event() {Start = e + new TimeSpan(10, 0, 0), End = e + new TimeSpan(11, 30, 0), Subject = "Test !!!!", Color = new SolidColorBrush(Color.FromRgb(52, 168, 255))});
+            DailyScheduler.AddEvent(new Event() { Start = e + new TimeSpan(10, 0, 0), End = e + new TimeSpan(11, 30, 0), Subject = "Test !!!!", Color = new SolidColorBrush(Color.FromRgb(52, 168, 255)) });
         }
 
         private void DailyScheduler_OnOnEventDoubleClick(object sender, Event e)

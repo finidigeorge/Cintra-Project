@@ -8,14 +8,14 @@ namespace Shared.Dto
 {
     public class ScheduleDataDto: IUniqueDto
     {
-        public long Id { get; set; }
-        public long ScheduleId { get; set; }
-        public ScheduleIntervalEnum IntervalId { get; set; }
-        public bool IsAvialable { get; set; }
-        public string AvailabilityDescription { get; set; }
-        public long? DayNumber { get; set; }
-        public DateTime? DateOn { get; set; }
-        public DateTime BeginTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public virtual long Id { get; set; }
+        public virtual long ScheduleId { get; set; }
+        public virtual ScheduleIntervalEnum IntervalId { get; set; }
+        public virtual bool IsAvialable { get; set; }
+        public virtual string AvailabilityDescription { get; set; }
+        public virtual long? DayNumber { get; set; }
+        public virtual DateTime? DateOn { get; set; }
+        public virtual DateTime BeginTime { get; set; }
+        public virtual DateTime EndTime { get; set; }
     }
 }

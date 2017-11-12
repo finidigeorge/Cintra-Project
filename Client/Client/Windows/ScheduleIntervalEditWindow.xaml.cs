@@ -29,12 +29,6 @@ namespace Client
             InitializeComponent();                       
         }
 
-        public SchedulerIntervalEditWindow(ScheduleDataDtoUi dataContext) : this()
-        {
-            Model.AvailabilityDescription = dataContext.AvailabilityDescription;
-        }
-
-        public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)Resources["ViewModel"];
-        
+        public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
     }
 }

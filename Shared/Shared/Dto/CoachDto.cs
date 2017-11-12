@@ -7,11 +7,11 @@ namespace Shared.Dto
 {
     public class CoachDto: IUniqueDto
     {        
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public virtual long Id { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Email { get; set; }
+        public virtual string Phone { get; set; }
 
-        public List<ScheduleDto> Schedules { get; set; }
+        public virtual List<ScheduleDto> Schedules { get; set; }
     }
 }
