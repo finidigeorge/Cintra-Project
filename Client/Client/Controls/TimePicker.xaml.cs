@@ -28,7 +28,7 @@ namespace Client.Controls
         public TimePicker()
         {
             InitializeComponent();
-            this.DataContext = this;
+            DataContext = this;
             AmPmTypes.Add("AM");
             AmPmTypes.Add("PM");
             CurrentTime = DateTime.UtcNow.ToLocalTime();            
@@ -91,8 +91,7 @@ namespace Client.Controls
             }
             set
             {
-                var hour = 0;
-                Int32.TryParse(value, out hour);
+                Int32.TryParse(value, out int hour);
                 CurrentTime = CurrentTime.ToLocalTime().AddHours(hour);
                 OnPropertyChanged("DisplayTime");
                 OnPropertyChanged("DisplayTimeHours");
@@ -105,8 +104,7 @@ namespace Client.Controls
             get { return _currentTime.ToLocalTime().Minute.ToString("00"); }
             set
             {
-                var minutes = 0;
-                Int32.TryParse(value, out minutes);
+                Int32.TryParse(value, out int minutes);
                 CurrentTime = CurrentTime.ToLocalTime().AddMinutes(minutes);
                 OnPropertyChanged("DisplayTime");
                 OnPropertyChanged("DisplayTimeHours");
@@ -168,10 +166,7 @@ namespace Client.Controls
 
         public void OnPropertyChanged(string propertyName)
         {
-            if (null != PropertyChanged)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

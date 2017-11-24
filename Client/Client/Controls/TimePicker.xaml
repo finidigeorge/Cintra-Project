@@ -13,7 +13,7 @@
                        VerticalAlignment="Center"                       
                        Text="{Binding DisplayTimeHours,
                                       Mode=TwoWay}"
-                       TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddHoursTextBox_OnKeyDown"/>
+                       TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddHoursTextBox_OnKeyDown" Height="26"/>
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Vertical">
@@ -31,7 +31,7 @@
                        VerticalAlignment="Center"
                        Text="{Binding DisplayTimeMinutes,
                                       Mode=TwoWay}"
-                       TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddMinutesTextBox_OnKeyDown"/>
+                       TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddMinutesTextBox_OnKeyDown" Height="26"/>
 
 
             <StackPanel HorizontalAlignment="Center"
@@ -48,12 +48,12 @@
 
             <ComboBox x:Name="AmPmComboBox"
                       MinWidth="45"
-                      HorizontalAlignment="Center"
+                      HorizontalAlignment="Stretch"
                       VerticalAlignment="Center"
-                      BorderThickness=".25"
+                      BorderThickness="1"
                       FontSize="12"
                       ItemsSource="{Binding AmPmTypes}"
-                      SelectedItem="{Binding DisplayAmPm}" />
+                      SelectedItem="{Binding DisplayAmPm}" Height="26" Width="40" />
         </StackPanel>
 
 
