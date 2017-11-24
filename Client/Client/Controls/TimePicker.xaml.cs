@@ -1,10 +1,12 @@
 ﻿using Bindables;
+using Client.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Client.Controls
@@ -15,147 +17,35 @@ namespace Client.Controls
     /// </summary>    
     public partial class TimePicker : UserControl, INotifyPropertyChanged
     {
-        #region Private Member variable
-
-        private DateTime _currentTime = DateTime.UtcNow;
-        private ObservableCollection<string> _amPmTypes = new ObservableCollection<string>();
-        private string _displayAmPm;
-
-        #endregion
-
-        #region Constructors
-
         public TimePicker()
         {
             InitializeComponent();
-            DataContext = this;
-            AmPmTypes.Add("AM");
-            AmPmTypes.Add("PM");
-            CurrentTime = DateTime.UtcNow.ToLocalTime();            
+            Model.AmPmTypes.Add("AM");
+            Model.AmPmTypes.Add("PM");            
         }
 
-        #endregion
-
-        #region Public Properties
-
-        public ObservableCollection<string> AmPmTypes
-        {
-            get => _amPmTypes;
-            set => _amPmTypes = value;
-        }
-
-        public int MinsInterval { get; set; } = 15;
-
-        public int HoursInterval { get; set; } = 1;
-
-
-        public string DisplayTime => _currentTime.ToLocalTime().ToString("t");
-
-        public string DisplayAmPm
-        {
-            get
-            {
-                if (_currentTime.ToLocalTime().Hour >= 0 && _currentTime.ToLocalTime().Hour < 12)
-                    _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("AM"));
-                else
-                {
-                    if (_currentTime.ToLocalTime().Hour >= 12)
-                    {
-                        _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("PM"));
-                    }
-                }
-
-                return _displayAmPm;
-            }
-            set
-            {
-                if (!value.Equals(_displayAmPm))
-                {
-                    if (value.Equals("PM"))
-                        CurrentTime = CurrentTime.ToLocalTime().AddHours(12);
-                    else
-                    {
-                        CurrentTime = CurrentTime.ToLocalTime().AddHours(-12);
-                    }
-                }
-                _displayAmPm = value;
-            }
-        }
-
-        public string DisplayTimeHours
-        {
-            get
-            {
-                var hours = _currentTime.ToLocalTime().Hour;
-                return hours > 12 ? (hours - 12).ToString("00") : hours.ToString("00");                
-            }
-            set
-            {
-                Int32.TryParse(value, out int hour);
-                CurrentTime = CurrentTime.ToLocalTime().AddHours(hour);
-                OnPropertyChanged("DisplayTime");
-                OnPropertyChanged("DisplayTimeHours");
-                OnPropertyChanged("DisplayTimeMinutes");
-            }
-        }
-
-        public string DisplayTimeMinutes
-        {
-            get { return _currentTime.ToLocalTime().Minute.ToString("00"); }
-            set
-            {
-                Int32.TryParse(value, out int minutes);
-                CurrentTime = CurrentTime.ToLocalTime().AddMinutes(minutes);
-                OnPropertyChanged("DisplayTime");
-                OnPropertyChanged("DisplayTimeHours");
-                OnPropertyChanged("DisplayTimeMinutes");
-            }
-        }
-
-        public DateTime CurrentTime
-        {
-            get { return _currentTime; }
-            set
-            {
-                _currentTime = value;
-
-                OnPropertyChanged("CurrentTime");
-                OnPropertyChanged("DisplayTime");
-                OnPropertyChanged("DisplayTimeHours");
-                OnPropertyChanged("DisplayTimeMinutes");
-                OnPropertyChanged("DisplayAmPm");                
-            }
-        }
-
-        #endregion
-
-        #region Dependency Properties
-
-        public static readonly DependencyProperty SelectedTimeProperty = DependencyProperty.Register(
-          "CurrentTime", typeof(DateTime), typeof(TimePicker), new PropertyMetadata(default(DateTime)));
-
-        #endregion
+        public TimePickerVm Model => (TimePickerVm) Resources["ViewModel"];        
 
         #region Methods
 
         private void MinutesUpButton_OnClick(object sender, RoutedEventArgs e)
         {
-            CurrentTime = CurrentTime.AddMinutes(MinsInterval);            
+            Model.CurrentTime = Model.CurrentTime.AddMinutes(Model.MinsInterval);            
         }
 
         private void MinutesDownButton_OnClick(object sender, RoutedEventArgs e)
         {
-            CurrentTime = CurrentTime.AddMinutes(-MinsInterval);            
+            Model.CurrentTime = Model.CurrentTime.AddMinutes(-Model.MinsInterval);            
         }
 
         private void HourUpButton_OnClick(object sender, RoutedEventArgs e)
         {
-            CurrentTime = CurrentTime.AddHours(HoursInterval);            
+            Model.CurrentTime = Model.CurrentTime.AddHours(Model.HoursInterval);            
         }
 
         private void HourDownButton_OnClick(object sender, RoutedEventArgs e)
         {
-            CurrentTime = CurrentTime.AddHours(-HoursInterval);            
+            Model.CurrentTime = Model.CurrentTime.AddHours(-Model.HoursInterval);            
         }
 
         #endregion
@@ -183,11 +73,11 @@ namespace Client.Controls
         {
             if (e.Key == Key.OemPlus)
             {
-                CurrentTime = CurrentTime.AddHours(HoursInterval);
+                Model.CurrentTime = Model.CurrentTime.AddHours(Model.HoursInterval);
             }
             if (e.Key == Key.OemMinus)
             {
-                CurrentTime = CurrentTime.AddHours(-HoursInterval);
+                Model.CurrentTime = Model.CurrentTime.AddHours(-Model.HoursInterval);
             }
         }
 
@@ -195,11 +85,11 @@ namespace Client.Controls
         {
             if (e.Key == Key.OemPlus)
             {
-                CurrentTime = CurrentTime.AddMinutes(MinsInterval);
+                Model.CurrentTime = Model.CurrentTime.AddMinutes(Model.MinsInterval);
             }
             if (e.Key == Key.OemMinus)
             {
-                CurrentTime = CurrentTime.AddMinutes(-MinsInterval);
+                Model.CurrentTime = Model.CurrentTime.AddMinutes(-Model.MinsInterval);
             }
         }
     }

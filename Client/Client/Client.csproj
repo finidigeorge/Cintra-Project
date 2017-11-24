@@ -121,6 +121,7 @@
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
+    <Compile Include="ViewModels\TimePickerVm.cs" />
     <Compile Include="Windows\ScheduleIntervalEditWindow.xaml.cs">
       <DependentUpon>ScheduleIntervalEditWindow.xaml</DependentUpon>
     </Compile>

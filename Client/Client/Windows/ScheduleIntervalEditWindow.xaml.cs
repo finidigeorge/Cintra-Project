@@ -16,6 +16,7 @@ using Client.ViewModels;
 using Common.DtoMapping;
 using RestApi;
 using RestClient;
+using System.ComponentModel;
 
 namespace Client
 {
@@ -26,9 +27,25 @@ namespace Client
     {
         public SchedulerIntervalEditWindow()
         {
-            InitializeComponent();                       
+            InitializeComponent();            
+        }
+
+        public SchedulerIntervalEditWindow(DateTime beginTime, DateTime endTime)
+        {
+            InitializeComponent();
+            BeginTimePicker.Model.CurrentTime = beginTime;
+            EndTimePicker.Model.CurrentTime = endTime;            
         }
 
         public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Model.BeginTime = BeginTimePicker.Model.CurrentTime;
+            Model.EndTime = EndTimePicker.Model.CurrentTime;
+
+            DialogResult = true;
+            Close();
+        }
     }
 }

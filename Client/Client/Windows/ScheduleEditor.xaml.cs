@@ -53,20 +53,21 @@ namespace Client.Windows
 
         private bool ShowDailyScheduleEditor()
         {
-            var editor = new SchedulerIntervalEditWindow()
+            var beginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6);
+            var endTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21);
+            var editor = new SchedulerIntervalEditWindow(beginTime, endTime)
             {
                 DataContext = new ScheduleDataDtoUi()
                 {
-                    DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),
-                    BeginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6),
-                    EndTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21),
+                    DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),                    
                     IsAvialable = true,
                     AvailabilityDescription = "Coaching"
                 },
                 Owner = this
             };
 
-            return editor.ShowDialog() ?? false;
+            var res = editor.ShowDialog() ?? false;
+            return res;
         }
 
         private void DailyScheduler_OnOnScheduleDoubleClick(object sender, DateTime e)

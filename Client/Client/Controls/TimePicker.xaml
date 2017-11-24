@@ -3,16 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Client.ViewModels"
              mc:Ignorable="d">
-    <Grid>
+    <UserControl.Resources>
+        <viewModels:TimePickerVm x:Key="ViewModel" />
+    </UserControl.Resources>
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}">
         <Border BorderBrush="Black" BorderThickness=".25" />
         <StackPanel Orientation="Horizontal" Margin="1,1,1,1">
             <TextBox x:Name="AddHoursTextBox"
                        MinWidth="20"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"                       
-                       Text="{Binding DisplayTimeHours,
-                                      Mode=TwoWay}"
+                       VerticalAlignment="Center"   
+                       VerticalContentAlignment="Center"
+                       Text="{Binding DisplayTimeHours, Mode=TwoWay}"
                        TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddHoursTextBox_OnKeyDown" Height="26"/>
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
@@ -29,6 +33,7 @@
                        MinWidth="20"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
+                       VerticalContentAlignment="Center"
                        Text="{Binding DisplayTimeMinutes,
                                       Mode=TwoWay}"
                        TextAlignment="Center" TextChanged="TextBox_TextChanged" KeyDown="AddMinutesTextBox_OnKeyDown" Height="26"/>
