@@ -146,10 +146,10 @@ namespace Client.Controls.WpfScheduler
 
             switch (mode)
             {
-                case Mode.Day:
+                case Mode.Week:
                     sc.DayScheduler.CurrentDay = sc.WeekScheduler.FirstDay;
                     break;
-                case Mode.Week:
+                case Mode.Day:
                     sc.WeekScheduler.FirstDay = sc.DayScheduler.CurrentDay;
                     break;
             }

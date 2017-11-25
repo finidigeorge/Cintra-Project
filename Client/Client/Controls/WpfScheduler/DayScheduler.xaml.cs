@@ -169,12 +169,14 @@ namespace Client.Controls.WpfScheduler
 
                 double marginTop = oneHourHeight * (e.Start.Hour + (e.Start.Minute / 60.0));
                 double width = columnWidth / (concurrentEvents.Count());
-                double marginLeft = width * getIndex(e, concurrentEvents.ToList());
+                double marginLeft = width * GetIndex(e, concurrentEvents.ToList());
 
-                EventUserControl wEvent = new EventUserControl(e, true);
-                wEvent.Width = width;
-                wEvent.Height = e.End.Subtract(e.Start).TotalHours * oneHourHeight;
-                wEvent.Margin = new Thickness(marginLeft, marginTop, 0, 0);
+                EventUserControl wEvent = new EventUserControl(e, true)
+                {
+                    Width = width,
+                    Height = e.End.Subtract(e.Start).TotalHours * oneHourHeight,
+                    Margin = new Thickness(marginLeft, marginTop, 0, 0)
+                };
                 wEvent.MouseLeftButtonUp += ((object sender, MouseButtonEventArgs ea) =>
                 {
                     if (_doubleClicked)
@@ -211,7 +213,7 @@ namespace Client.Controls.WpfScheduler
             }
         }
 
-        private int getIndex(Event e, List<Event> list)
+        private int GetIndex(Event e, List<Event> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -230,9 +232,11 @@ namespace Client.Controls.WpfScheduler
 
             foreach (Event e in TodayEvents.Where(ev => ev.End.Date > ev.Start.Date || ev.AllDay))
             {
-                EventUserControl wEvent = new EventUserControl(e, false);
-                wEvent.Width = columnWidth;
-                wEvent.Margin = new Thickness(0, 0, 0, 0);
+                EventUserControl wEvent = new EventUserControl(e, false)
+                {
+                    Width = columnWidth,
+                    Margin = new Thickness(0, 0, 0, 0)
+                };
                 wEvent.MouseDoubleClick += ((object sender, MouseButtonEventArgs ea) =>
                 {
                     ea.Handled = true;

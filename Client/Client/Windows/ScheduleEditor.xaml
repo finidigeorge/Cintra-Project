@@ -84,7 +84,7 @@
                                 Command="{Binding PrevDayCommand}"                                   
                                 ToolTip="Previous day">
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                                <Image Source="/Resources/Images/LeftArrow.png" />
                                 <TextBlock VerticalAlignment="Center">Previous Day</TextBlock>
                             </StackPanel>
                         </Button>
@@ -93,13 +93,15 @@
                                 ToolTip="Next day">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center">Next Day</TextBlock>
-                                <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                                <Image Source="/Resources/Images/RightArrow.png" />
                             </StackPanel>
                         </Button>
                         <ToolBarPanel DockPanel.Dock="Top" Grid.Column="2">
                             <controls:ReferencesToolbar 
+                                EditCommand="{Binding Path=UpdateDailyScheduledIntervalCommand}"
                                 DeleteCommand="{Binding Path=DeleteDailyScheduledIntervalCommand}"  
-                                DeleteTooltip="Delete selected event"
+                                DeleteTooltip="Delete selected event from schedule"
+                                AddTooltip="Create new event in the schedule"
                                 NewCommand="{Binding Path=AddDailyScheduledIntervalCommand}"                                
                             />      
                         </ToolBarPanel>

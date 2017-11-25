@@ -58,6 +58,8 @@ namespace Client.Windows
 
             }, (x) => Model.SelectedItem != null);
 
+            Model.UpdateDailyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
+
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
                 await Model.ScheduleDataModel.DeleteItemCommand.ExecuteAsync(Model.ScheduleDataModel.SelectedItem);

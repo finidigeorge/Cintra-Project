@@ -8,7 +8,7 @@
              d:DesignHeight="32" d:DesignWidth="300"
              Name="referencesToolbar">
     <ToolBar Height="32">
-        <Button Command="{Binding NewCommand, ElementName=referencesToolbar}" ToolTip="Add new item to the reference">
+        <Button Command="{Binding NewCommand, ElementName=referencesToolbar}" ToolTip="{Binding AddTooltip, ElementName=referencesToolbar}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/ReferenceNewItem.png" />
                 <TextBlock VerticalAlignment="Center">New</TextBlock>
@@ -16,7 +16,7 @@
         </Button>
         <Button Command="{Binding EditCommand, ElementName=referencesToolbar}" 
                 CommandParameter="{Binding EditCommandParam, ElementName=referencesToolbar}"  
-                ToolTip="Edit selected item of the reference">
+                ToolTip="{Binding EditTooltip, ElementName=referencesToolbar}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/ReferenceEditItem.png" />
                 <TextBlock VerticalAlignment="Center">Edit</TextBlock>
