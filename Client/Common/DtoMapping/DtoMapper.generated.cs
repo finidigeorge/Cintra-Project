@@ -197,6 +197,8 @@ namespace Common.DtoMapping
 				
 			public override ScheduleIntervalEnum IntervalId { get; set; }
 				
+			public override Guid EventGuid { get; set; }
+				
 			public override Boolean IsAvialable { get; set; }
 				
 			public override String AvailabilityDescription { get; set; }

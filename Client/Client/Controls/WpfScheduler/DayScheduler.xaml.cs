@@ -15,6 +15,7 @@ namespace Client.Controls.WpfScheduler
     {
         private Scheduler _scheduler;
 
+        internal event EventHandler<Event> OnEventClick;
         internal event EventHandler<Event> OnEventDoubleClick;
         internal event EventHandler<DateTime> OnScheduleDoubleClick;
 
@@ -146,6 +147,8 @@ namespace Client.Controls.WpfScheduler
             }
         }
 
+        bool _doubleClicked = false;
+
         private void PaintAllEvents()
         {
             if (_scheduler == null || _scheduler.Events == null) return;
@@ -157,9 +160,7 @@ namespace Client.Controls.WpfScheduler
             double columnWidth = EventsGrid.ColumnDefinitions[1].Width.Value;
 
             foreach (Event e in eventList)
-            {
-                //column.Width = columnWidth;
-
+            {                
                 double oneHourHeight = 50;// column.ActualHeight / 46;
 
                 var concurrentEvents = TodayEvents.Where(e1 => ((e1.Start <= e.Start && e1.End > e.Start) ||
@@ -174,11 +175,37 @@ namespace Client.Controls.WpfScheduler
                 wEvent.Width = width;
                 wEvent.Height = e.End.Subtract(e.Start).TotalHours * oneHourHeight;
                 wEvent.Margin = new Thickness(marginLeft, marginTop, 0, 0);
+                wEvent.MouseLeftButtonUp += ((object sender, MouseButtonEventArgs ea) =>
+                {
+                    if (_doubleClicked)
+                    {
+                        _doubleClicked = false;
+                        return;
+                    }
+
+                    foreach (var ev in eventList)
+                        ev.IsSelected = false;
+
+                    wEvent.Event.IsSelected = true;
+                    PaintAllEvents();
+
+                    ea.Handled = true;
+                    OnEventClick(sender, wEvent.Event);
+                });
+
                 wEvent.MouseDoubleClick += ((object sender, MouseButtonEventArgs ea) =>
                 {
-                    ea.Handled = true;
+                    _doubleClicked = true;
+
+                    foreach (var ev in eventList)
+                        ev.IsSelected = false;
+                    wEvent.Event.IsSelected = true;
+                    PaintAllEvents();
+
+                    ea.Handled = true;                    
                     OnEventDoubleClick(sender, wEvent.Event);
                 });
+
 
                 column.Children.Add(wEvent);
             }

@@ -24,7 +24,7 @@
         </Button>
         <Button Command="{Binding DeleteCommand, ElementName=referencesToolbar}" 
                 CommandParameter="{Binding DeleteCommandParam, ElementName=referencesToolbar}" 
-                ToolTip="Delete selected item from the reference">
+                ToolTip="{Binding DeleteTooltip, ElementName=referencesToolbar}">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/ReferenceDeleteItem.png" />
                 <TextBlock VerticalAlignment="Center">Delete</TextBlock>

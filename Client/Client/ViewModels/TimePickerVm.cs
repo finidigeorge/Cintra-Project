@@ -36,17 +36,17 @@ namespace Client.ViewModels
         public int HoursInterval { get; set; } = 1;
 
 
-        public string DisplayTime => _currentTime.ToLocalTime().ToString("t");
+        public string DisplayTime => _currentTime.ToString("t");
 
         public string DisplayAmPm
         {
             get
             {
-                if (_currentTime.ToLocalTime().Hour >= 0 && _currentTime.ToLocalTime().Hour < 12)
+                if (_currentTime.Hour >= 0 && _currentTime.Hour < 12)
                     _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("AM"));
                 else
                 {
-                    if (_currentTime.ToLocalTime().Hour >= 12)
+                    if (_currentTime.Hour >= 12)
                     {
                         _displayAmPm = AmPmTypes.FirstOrDefault(s => s.Equals("PM"));
                     }
@@ -59,10 +59,10 @@ namespace Client.ViewModels
                 if (!value.Equals(_displayAmPm))
                 {
                     if (value.Equals("PM"))
-                        CurrentTime = CurrentTime.ToLocalTime().AddHours(12);
+                        CurrentTime = CurrentTime.AddHours(12);
                     else
                     {
-                        CurrentTime = CurrentTime.ToLocalTime().AddHours(-12);
+                        CurrentTime = CurrentTime.AddHours(-12);
                     }
                 }
                 _displayAmPm = value;
@@ -73,13 +73,13 @@ namespace Client.ViewModels
         {
             get
             {
-                var hours = _currentTime.ToLocalTime().Hour;
+                var hours = _currentTime.Hour;
                 return hours > 12 ? (hours - 12).ToString("00") : hours.ToString("00");
             }
             set
             {
                 Int32.TryParse(value, out int hour);
-                CurrentTime = CurrentTime.ToLocalTime().AddHours(hour);
+                CurrentTime = CurrentTime.AddHours(hour);
                 OnPropertyChanged("DisplayTime");
                 OnPropertyChanged("DisplayTimeHours");
                 OnPropertyChanged("DisplayTimeMinutes");
@@ -88,11 +88,11 @@ namespace Client.ViewModels
 
         public string DisplayTimeMinutes
         {
-            get { return _currentTime.ToLocalTime().Minute.ToString("00"); }
+            get { return _currentTime.Minute.ToString("00"); }
             set
             {
                 Int32.TryParse(value, out int minutes);
-                CurrentTime = CurrentTime.ToLocalTime().AddMinutes(minutes);
+                CurrentTime = CurrentTime.AddMinutes(minutes);
                 OnPropertyChanged("DisplayTime");
                 OnPropertyChanged("DisplayTimeHours");
                 OnPropertyChanged("DisplayTimeMinutes");

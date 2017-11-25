@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Client.Controls.WpfScheduler
 {
@@ -32,6 +33,12 @@ namespace Client.Controls.WpfScheduler
                 this.DisplayDateText.Text = String.Format("{0} - {1}", e.Start.ToString("HH:mm"), e.End.ToString("HH:mm"));
             }
             this.BorderElement.ToolTip = this.DisplayDateText.Text + System.Environment.NewLine + this.DisplayText.Text;
+
+            if (e.IsSelected)
+            {
+                this.BorderElement.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                this.BorderElement.BorderThickness = new Thickness() { Bottom = 2, Left = 2, Right = 2, Top = 2};
+            }
         }
 
         public Event Event {

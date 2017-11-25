@@ -13,7 +13,12 @@ namespace Client.ViewModels
     {
         public SchedulesDataRefVm()
         {
-            Client = RestClientFactory.GetClient<ScheduleDataDto>();
+            Client = RestClientFactory.GetClient<ScheduleDataDto>();            
+        }
+
+        protected override void BeforeAddItemHandler(ScheduleDataDtoUi item)
+        {
+            Items.Add(item);
         }
     }
 }

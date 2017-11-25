@@ -25,6 +25,7 @@ CREATE TABLE schedules_data(
 	id INTEGER PRIMARY KEY AUTOINCREMENT not null,
 	schedule_id integer not null, 	
 	interval_id integer not null,
+	event_guid guid not null,
 	is_avialable BOOLEAN not null,
 	availability_description varchar(50) not null,
 	day_number integer,

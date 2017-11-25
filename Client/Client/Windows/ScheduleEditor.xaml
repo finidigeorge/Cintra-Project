@@ -61,7 +61,11 @@
         <TabControl HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch">
             <TabItem Header="Weekly Schedule">
                 <Grid Background="#FFE5E5E5">
-                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" StartJourney="6:00" EndJourney="20:00"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="139*"/>
+                        <ColumnDefinition Width="871*"/>
+                    </Grid.ColumnDefinitions>
+                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" StartJourney="6:00" EndJourney="20:00" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Daily Schedule">
@@ -72,9 +76,9 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="96"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="96"/>
                         </Grid.ColumnDefinitions>
                         <Button Grid.Column="0"
                                 Command="{Binding PrevDayCommand}"                                   
@@ -85,13 +89,6 @@
                             </StackPanel>
                         </Button>
                         <Button Grid.Column="1"
-                                Command="{Binding AddDailyScheduledIntervalCommand}"                                   
-                                ToolTip="Add Working Hours">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center">Add Working Hours</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Grid.Column="2"
                                 Command="{Binding NextDayCommand}"                                   
                                 ToolTip="Next day">
                             <StackPanel Orientation="Horizontal">
@@ -99,10 +96,20 @@
                                 <Image Source="/Resources/Images/ReferenceEditItem.png" />
                             </StackPanel>
                         </Button>
+                        <ToolBarPanel DockPanel.Dock="Top" Grid.Column="2">
+                            <controls:ReferencesToolbar 
+                                DeleteCommand="{Binding Path=DeleteDailyScheduledIntervalCommand}"  
+                                DeleteTooltip="Delete selected event"
+                                NewCommand="{Binding Path=AddDailyScheduledIntervalCommand}"                                
+                            />      
+                        </ToolBarPanel>
+                        
                     </Grid>
                     <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="20:00" 
                                             OnScheduleDoubleClick="DailyScheduler_OnOnScheduleDoubleClick"
-                                            OnEventDoubleClick="DailyScheduler_OnOnEventDoubleClick"/>
+                                            OnEventClick="DailyScheduler_OnEventClick"
+                                            OnEventDoubleClick="DailyScheduler_OnOnEventDoubleClick"
+                                            />
                 </Grid>
             </TabItem>
         </TabControl>

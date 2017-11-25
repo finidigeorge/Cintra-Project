@@ -11,6 +11,7 @@ namespace Shared.Dto
         public virtual long Id { get; set; }
         public virtual long ScheduleId { get; set; }
         public virtual ScheduleIntervalEnum IntervalId { get; set; }
+        public virtual Guid EventGuid { get; set; }
         public virtual bool IsAvialable { get; set; }
         public virtual string AvailabilityDescription { get; set; }
         public virtual long? DayNumber { get; set; }

@@ -38,6 +38,8 @@ namespace Client.Controls
         public ICommand EditCommand { get; set; }
 
         public object EditCommandParam { get; set; }
-        
+
+        public string DeleteTooltip { get; set; } = "Delete selected item from the reference";
+
     }
 }

@@ -70,7 +70,7 @@ namespace Mapping
                     conf.CreateMap<ScheduleDto, ScheduleDtoUi>();
                     conf.CreateMap<ServiceDto, ServiceDtoUi>();
                     conf.CreateMap<UserDto, UserDtoUi>();
-                    conf.CreateMap<UserRoleDto, UserRoleDtoUi>();
+                    conf.CreateMap<UserRoleDto, UserRoleDtoUi>();                    
                     conf.IgnoreUnmapped();
                 }
             );            

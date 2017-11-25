@@ -10,6 +10,7 @@ using Shared.Dto;
 
 namespace Mapping
 {
+
     public class ObjectMapper
     {
         private static readonly IMapper _mapper;
@@ -30,6 +31,19 @@ namespace Mapping
                         db.RoleId = vm.UserRole.Id;
                     });
 
+                    conf.CreateMap<SchedulesData, ScheduleDataDto>()
+                        .ForMember(x => x.IntervalId, opt => opt.Ignore())
+                        .AfterMap((db, vm) =>
+                        {
+                            vm.IntervalId = (ScheduleIntervalEnum)db.IntervalId;
+                        });
+                    conf.CreateMap<ScheduleDataDto, SchedulesData>()
+                        .ForMember(x => x.IntervalId, opt => opt.Ignore())
+                        .AfterMap((vm, db) =>
+                        {
+                            db.IntervalId = (int)vm.IntervalId;
+                        });
+
                     conf.CreateMap<Schedule, ScheduleDto>().AfterMap((db, vm) =>
                     {
                         vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);                        
@@ -39,14 +53,7 @@ namespace Mapping
                         db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
                     });
 
-                    conf.CreateMap<SchedulesData, ScheduleDataDto>().AfterMap((db, vm) =>
-                    {
-                        vm.IntervalId = (ScheduleIntervalEnum) db.IntervalId;
-                    });
-                    conf.CreateMap<ScheduleDataDto, SchedulesData>().AfterMap((vm, db) =>
-                    {
-                        db.IntervalId = (int)vm.IntervalId;
-                    });
+                    
 
                     conf.CreateMap<Coach, CoachDto>().AfterMap((db, vm) =>
                     {

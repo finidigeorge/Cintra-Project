@@ -15,6 +15,7 @@ namespace Client.Controls.WpfScheduler
     {
         private Scheduler _scheduler;
 
+        internal event EventHandler<Event> OnEventClick;
         internal event EventHandler<Event> OnEventDoubleClick;
         internal event EventHandler<DateTime> OnScheduleDoubleClick;
 
@@ -225,6 +226,8 @@ namespace Client.Controls.WpfScheduler
             return -1;
         }
 
+        bool _doubleClicked = false;
+
         private void PaintAllDayEvents()
         {
 
@@ -251,8 +254,22 @@ namespace Client.Controls.WpfScheduler
                     EventUserControl wEvent = new EventUserControl(e, false);
                     wEvent.Width = columnWidth * (numEndColumn - numColumn);
                     wEvent.Margin = new Thickness(marginLeft, 0, 0, 0);
+
+                    wEvent.MouseLeftButtonUp += ((object sender, MouseButtonEventArgs ea) =>
+                    {
+                        if (_doubleClicked)
+                        {
+                            _doubleClicked = false;
+                            return;
+                        }
+
+                        ea.Handled = true;
+                        OnEventClick(sender, wEvent.Event);
+                    });
+
                     wEvent.MouseDoubleClick += ((sender, ea) =>
                     {
+                        _doubleClicked = true;
                         ea.Handled = true;
                         OnEventDoubleClick?.Invoke(sender, wEvent.Event);
                     });

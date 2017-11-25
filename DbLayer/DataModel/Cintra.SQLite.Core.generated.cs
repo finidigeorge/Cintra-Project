@@ -109,6 +109,7 @@ namespace DataModels
 		[Column("id"),                       PrimaryKey,  Identity] public long      Id                      { get; set; } // integer
 		[Column("schedule_id"),              NotNull              ] public long      ScheduleId              { get; set; } // integer
 		[Column("interval_id"),              NotNull              ] public long      IntervalId              { get; set; } // integer
+		[Column("event_guid"),               NotNull              ] public Guid      EventGuid               { get; set; } // guid
 		[Column("is_avialable"),             NotNull              ] public bool      IsAvialable             { get; set; } // boolean
 		[Column("availability_description"), NotNull              ] public string    AvailabilityDescription { get; set; } // varchar(50)
 		[Column("day_number"),                  Nullable          ] public long?     DayNumber               { get; set; } // integer

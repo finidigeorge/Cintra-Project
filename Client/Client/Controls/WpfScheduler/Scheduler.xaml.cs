@@ -18,6 +18,7 @@ namespace Client.Controls.WpfScheduler
     /// </summary>
     public partial class Scheduler : UserControl
     {
+        public event EventHandler<Event> OnEventClick;
         public event EventHandler<Event> OnEventDoubleClick;
         public event EventHandler<DateTime> OnScheduleDoubleClick;
 
@@ -163,6 +164,9 @@ namespace Client.Controls.WpfScheduler
             Events = new ObservableCollection<Event>();
             SelectedDate = DateTime.Now;
 
+            WeekScheduler.OnEventClick += InnerScheduler_OnEventClick;
+            DayScheduler.OnEventClick += InnerScheduler_OnEventClick;
+
             WeekScheduler.OnEventDoubleClick += InnerScheduler_OnEventDoubleClick;
             DayScheduler.OnEventDoubleClick += InnerScheduler_OnEventDoubleClick;
 
@@ -178,6 +182,11 @@ namespace Client.Controls.WpfScheduler
         void InnerScheduler_OnEventDoubleClick(object sender, Event e)
         {
             OnEventDoubleClick?.Invoke(sender, e);
+        }
+
+        void InnerScheduler_OnEventClick(object sender, Event e)
+        {
+            OnEventClick?.Invoke(sender, e);
         }
 
         public void AddEvent(Event e)
