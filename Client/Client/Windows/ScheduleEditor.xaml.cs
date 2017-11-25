@@ -17,6 +17,7 @@ using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
 using Shared.Dto;
+using Shared;
 
 namespace Client.Windows
 {
@@ -48,13 +49,13 @@ namespace Client.Windows
 
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async  () =>
             {
-                var editorResult = ShowDailyScheduleEditor();
+                var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Daily);
                 if (editorResult.Item1)
                 {
                     var e = new Event() { Color = dailyEventBrush };
                     e.UpdateFromScheduleDtoData(editorResult.Item2);                   
                     e.MergeToScheduleDtoData(ref editorResult.Item2);
-                    editorResult.Item2.IntervalId = Shared.ScheduleIntervalEnum.Daily;
+                    editorResult.Item2.IntervalId = ScheduleIntervalEnum.Daily;
                     await Model.ScheduleDailyDataModel.AddItemCommand.ExecuteAsync(editorResult.Item2);                                        
                     
                     DailyScheduler.AddEvent(e);
@@ -89,17 +90,19 @@ namespace Client.Windows
 
             Model.AddWeeklyScheduledIntervalCommand = new Command<object>(async () =>
             {
-                var editorResult = ShowDailyScheduleEditor();
+                var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly);
                 if (editorResult.Item1)
                 {
                     var e = new Event() { Color = weeklyEventBrush };
                     e.UpdateFromScheduleDtoData(editorResult.Item2);
                     e.MergeToScheduleDtoData(ref editorResult.Item2);
-                    editorResult.Item2.DayNumber = (int)editorResult.Item2.DateOn.Value.DayOfWeek;
-                    editorResult.Item2.IntervalId = Shared.ScheduleIntervalEnum.Weekly;
+
+                    editorResult.Item2.DayNumber = editorResult.Item2.DayNumber;
+                    editorResult.Item2.DateOn = null;
+                    editorResult.Item2.IntervalId = ScheduleIntervalEnum.Weekly;
                     await Model.ScheduleWeeklyDataModel.AddItemCommand.ExecuteAsync(editorResult.Item2);
 
-                    WeeklyScheduler.AddEvent(e);
+                    AddWeeklyEvent(editorResult.Item2, e);
                 }
 
             }, (x) => Model.SelectedItem != null);
@@ -127,32 +130,40 @@ namespace Client.Windows
             WeeklyScheduler.DeleteAllEvents();
 
             await Model.ScheduleDailyDataModel.RefreshDataCommand.ExecuteAsync(s);
+            await Model.ScheduleWeeklyDataModel.RefreshDataCommand.ExecuteAsync(s);
+
             Model.ScheduleDailyDataModel.SelectedItem = null;
             Model.ScheduleWeeklyDataModel.SelectedItem = null;
 
-            foreach (var item in Model.ScheduleDailyDataModel.Items.Where(x => x.IntervalId == Shared.ScheduleIntervalEnum.Daily))
+            foreach (var item in Model.ScheduleDailyDataModel.Items.Where(x => x.IntervalId == ScheduleIntervalEnum.Daily))
             {
                 var e = new Event() { Color = dailyEventBrush };
                 e.UpdateFromScheduleDtoData(item);
                 DailyScheduler.AddEvent(e);
             }
 
-            foreach (var item in Model.ScheduleWeeklyDataModel.Items.Where(x => x.IntervalId == Shared.ScheduleIntervalEnum.Weekly))
+            foreach (var item in Model.ScheduleWeeklyDataModel.Items.Where(x => x.IntervalId == ScheduleIntervalEnum.Weekly))
             {
-                var e = new Event() { Color = dailyEventBrush };
-                e.UpdateFromScheduleDtoData(item);
-                e.Start = WeeklyScheduler.WeekScheduler.FirstDay.AddDays((double)item.DayNumber);
-                WeeklyScheduler.AddEvent(e);
+                var e = new Event() { Color = weeklyEventBrush };
+                AddWeeklyEvent(item, e);
             }
 
 
         }
 
-        private (bool, ScheduleDataDtoUi) ShowDailyScheduleEditor()
+        private void AddWeeklyEvent(ScheduleDataDtoUi item, Event e)
+        {
+            e.UpdateFromScheduleDtoData(item);
+            e.Start = WeeklyScheduler.WeekScheduler.FirstDay.TruncateToDayStart().AddDays((double)item.DayNumber) + item.BeginTime.TimeOfDay;
+            e.End = WeeklyScheduler.WeekScheduler.FirstDay.TruncateToDayStart().AddDays((double)item.DayNumber) + item.EndTime.TimeOfDay;
+            WeeklyScheduler.AddEvent(e);
+        }
+
+        private (bool, ScheduleDataDtoUi) ShowScheduleEditor(ScheduleIntervalEnum mode)
         {
             var beginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6);
             var endTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21);
-            var editor = new SchedulerIntervalEditWindow(beginTime, endTime)
+            var editor = new SchedulerIntervalEditWindow(beginTime, endTime, mode)
             {
                 DataContext = new ScheduleDataDtoUi()
                 {
@@ -171,6 +182,11 @@ namespace Client.Windows
         private void DailyScheduler_OnEventClick(object sender, Event e)
         {
             Model.ScheduleDailyDataModel.SelectedItem = Model.ScheduleDailyDataModel.Items.FirstOrDefault(x => x.EventGuid == e.Id);
+        }
+
+        private void WeeklyScheduler_OnEventClick(object sender, Event e)
+        {
+            Model.ScheduleWeeklyDataModel.SelectedItem = Model.ScheduleWeeklyDataModel.Items.FirstOrDefault(x => x.EventGuid == e.Id);
         }
     }
 }

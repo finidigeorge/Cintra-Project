@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Extentions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -27,7 +28,7 @@ namespace Client.Controls.WpfScheduler
             set {
                 while (value.DayOfWeek != DayOfWeek.Monday)
                     value = value.AddDays(-1);
-                _firstDay = value;
+                _firstDay = value.TruncateToDayStart();
                 AdjustFirstDay(value);
             }
         }
@@ -176,7 +177,7 @@ namespace Client.Controls.WpfScheduler
             }
             else
             {
-                int numColumn = (int)date.Value.Date.Subtract(FirstDay.Date).TotalDays + 1;
+                int numColumn = (int)date.Value.Date.TruncateToDayStart().Subtract(FirstDay.Date).TotalDays + 1;
                 ((Canvas)FindName("column" + numColumn))?.Children.Clear();
 
                 eventList = eventList.Where(ev => ev.Start.Date == date.Value.Date).OrderBy(ev => ev.Start);
@@ -187,7 +188,8 @@ namespace Client.Controls.WpfScheduler
             foreach (Event e in eventList)
             {
                 int numColumn = (int)e.Start.Date.Subtract(FirstDay.Date).TotalDays + 1;
-                if (numColumn >= 0 && numColumn < 7)
+
+                if (numColumn >= 0 && numColumn <= 7)
                 {
                     Canvas sp = (Canvas)FindName("column" + numColumn);
                     sp.Width = columnWidth;
@@ -208,8 +210,34 @@ namespace Client.Controls.WpfScheduler
                         Height = e.End.Subtract(e.Start).TotalHours * oneHourHeight,
                         Margin = new Thickness(marginLeft, marginTop, 0, 0)
                     };
+
+                    wEvent.MouseLeftButtonUp += ((object sender, MouseButtonEventArgs ea) =>
+                    {
+                        if (_doubleClicked)
+                        {
+                            _doubleClicked = false;
+                            return;
+                        }
+
+                        foreach (var ev in eventList)
+                            ev.IsSelected = false;
+
+                        wEvent.Event.IsSelected = true;
+                        PaintAllEvents(date);
+
+                        ea.Handled = true;
+                        OnEventClick(sender, wEvent.Event);
+                    });
+
                     wEvent.MouseDoubleClick += ((sender, ea) =>
                     {
+                        _doubleClicked = true;
+
+                        foreach (var ev in eventList)
+                            ev.IsSelected = false;
+                        wEvent.Event.IsSelected = true;
+                        PaintAllEvents(date);
+
                         ea.Handled = true;
                         OnEventDoubleClick?.Invoke(sender, wEvent.Event);
                     });

@@ -66,29 +66,6 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0"
-                                Command="{Binding PrevWeekCommand}"                                   
-                                ToolTip="Previous Week"
-                                IsEnabled="False">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Resources/Images/LeftArrow.png" />
-                                <TextBlock VerticalAlignment="Center">Previous Week</TextBlock>
-                            </StackPanel>
-                        </Button>
-                        <Button Grid.Column="1"
-                                Command="{Binding NextWeekCommand}"                                   
-                                ToolTip="Next Week"
-                                IsEnabled="False">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center">Next Week</TextBlock>
-                                <Image Source="/Resources/Images/RightArrow.png" />
-                            </StackPanel>
-                        </Button>
                         <ToolBarPanel DockPanel.Dock="Top" Grid.Column="2">
                             <controls:ReferencesToolbar 
                                 EditCommand="{Binding Path=UpdateWeeklyScheduledIntervalCommand}"
@@ -100,7 +77,9 @@
                         </ToolBarPanel>
 
                     </Grid>
-                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" Grid.Row="1" StartJourney="6:00" EndJourney="21:00" Grid.ColumnSpan="2"/>
+                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" Grid.Row="1" StartJourney="6:00" EndJourney="21:00" Grid.ColumnSpan="2"
+                                            OnEventClick="WeeklyScheduler_OnEventClick"
+                                            />
                 </Grid>
             </TabItem>
             <TabItem Header="Daily Schedule">

@@ -6,6 +6,9 @@
         WindowStartupLocation="CenterScreen"
         FontSize="16" ResizeMode="NoResize"
         >
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter" />
+    </Window.Resources>
     <Grid Margin="0,0,0,12" FocusManager.FocusedElement="{Binding ElementName=datePicker}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="160"/>
@@ -21,8 +24,24 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Date" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-        <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,137,10" SelectedDate="{Binding DateOn}" DisplayDateStart="{Binding DateOn}"/>
+
+        <TextBlock Name="datePickerLabel" Text="Date" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                   />
+        <TextBlock Name="dayPickerLabel" Text="Day of week" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                   />
+        <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,137,10" SelectedDate="{Binding DateOn}" DisplayDateStart="{Binding DateOn}"
+                    />
+        <ComboBox Name="dayPicker" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,137,10" Width="120"
+                  SelectedIndex="{Binding DayNumber}"
+                  >
+            <ComboBoxItem>Monday</ComboBoxItem>
+            <ComboBoxItem>Tuesday</ComboBoxItem>
+            <ComboBoxItem>Wednesday</ComboBoxItem>
+            <ComboBoxItem>Thursday</ComboBoxItem>
+            <ComboBoxItem>Friday</ComboBoxItem>
+            <ComboBoxItem>Saturday</ComboBoxItem>
+            <ComboBoxItem>Sunday</ComboBoxItem>
+        </ComboBox>
 
         <TextBlock Text="Start time" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
         <controls:TimePicker Grid.Row="2" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,137,10"                             

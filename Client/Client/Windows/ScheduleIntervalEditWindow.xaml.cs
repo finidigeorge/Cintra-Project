@@ -17,6 +17,7 @@ using Common.DtoMapping;
 using RestApi;
 using RestClient;
 using System.ComponentModel;
+using Shared;
 
 namespace Client
 {
@@ -25,18 +26,39 @@ namespace Client
     /// </summary>
     public partial class SchedulerIntervalEditWindow : Window
     {
+        private ScheduleIntervalEnum mode = ScheduleIntervalEnum.Weekly;
+
+        public bool IsDatePickerVisible => mode == ScheduleIntervalEnum.Daily;
+        public bool IsWeekDropdownVisible => mode == ScheduleIntervalEnum.Weekly;
+
         public SchedulerIntervalEditWindow()
         {
             InitializeComponent();            
         }
 
-        public SchedulerIntervalEditWindow(DateTime beginTime, DateTime endTime)
+        public SchedulerIntervalEditWindow(DateTime beginTime, DateTime endTime, ScheduleIntervalEnum mode)
         {
             InitializeComponent();
             BeginTimePicker.Model.CurrentTime = beginTime;
-            EndTimePicker.Model.CurrentTime = endTime;            
+            EndTimePicker.Model.CurrentTime = endTime;
+            this.mode = mode;
+            SetVisibility();
         }
 
+        private void SetVisibility()
+        {
+            if (!IsDatePickerVisible)
+            {
+                datePickerLabel.Visibility = Visibility.Hidden;
+                datePicker.Visibility = Visibility.Hidden;
+            }
+
+            if (!IsWeekDropdownVisible)
+            {
+                dayPickerLabel.Visibility = Visibility.Hidden;
+                dayPicker.Visibility = Visibility.Hidden;
+            }
+        }
         public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
 
         private void Button_Click(object sender, RoutedEventArgs e)
