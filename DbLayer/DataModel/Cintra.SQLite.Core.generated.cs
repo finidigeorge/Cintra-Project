@@ -20,6 +20,7 @@ namespace DataModels
 	/// </summary>
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
+		public ITable<Client>            Clients           { get { return this.GetTable<Client>(); } }
 		public ITable<Coach>             Coaches           { get { return this.GetTable<Coach>(); } }
 		public ITable<DbUpdatesLog>      DbUpdatesLog      { get { return this.GetTable<DbUpdatesLog>(); } }
 		public ITable<Hors>              Horses            { get { return this.GetTable<Hors>(); } }
@@ -42,6 +43,19 @@ namespace DataModels
 		}
 
 		partial void InitDataContext();
+	}
+
+	[Table("clients")]
+	public partial class Client
+	{
+		[Column("id"),              PrimaryKey,  NotNull] public long   Id             { get; set; } // integer
+		[Column("name"),                         NotNull] public string Name           { get; set; } // varchar(50)
+		[Column("email"),              Nullable         ] public string Email          { get; set; } // varchar(50)
+		[Column("phone"),              Nullable         ] public string Phone          { get; set; } // varchar(50)
+		[Column("age"),                          NotNull] public object Age            { get; set; } // number
+		[Column("weight"),             Nullable         ] public object Weight         { get; set; } // number
+		[Column("height"),             Nullable         ] public object Height         { get; set; } // number
+		[Column("contact_details"),    Nullable         ] public string ContactDetails { get; set; } // varchar(200)
 	}
 
 	[Table("coaches")]
@@ -201,6 +215,12 @@ namespace DataModels
 
 	public static partial class TableExtensions
 	{
+		public static Client Find(this ITable<Client> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
 		public static Coach Find(this ITable<Coach> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
