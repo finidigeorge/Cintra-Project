@@ -53,12 +53,17 @@
                     <controls:CoachesReference x:Name="CoachesRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Users" Name="Users" TabIndex="3" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Header="Clients" Name="Clients" TabIndex="3">
+                <Grid>
+                    <controls:ClientsReference x:Name="ClientsRefView"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Users" Name="Users" TabIndex="4" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UsersReference x:Name="UsersRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="User Roles" Name="UserRoles" TabIndex="4" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Header="User Roles" Name="UserRoles" TabIndex="5" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UserRolesReference x:Name="UserRolesRefView"/>
                 </Grid>

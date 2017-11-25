@@ -96,6 +96,9 @@
     </ApplicationDefinition>
     <Compile Include="Commands\AsyncCommand.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Controls\ClientsReference.xaml.cs">
+      <DependentUpon>ClientsReference.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TimePicker.xaml.cs">
       <DependentUpon>TimePicker.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,7 @@
     <Compile Include="Extentions\EnumBooleanConverter.cs" />
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
+    <Compile Include="ViewModels\ClientsRefVm.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
     <Compile Include="ViewModels\TimePickerVm.cs" />
@@ -172,6 +176,10 @@
     <Compile Include="Windows\ScheduleEditor.xaml.cs">
       <DependentUpon>ScheduleEditor.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\ClientsReference.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\TimePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

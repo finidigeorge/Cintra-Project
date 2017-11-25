@@ -53,8 +53,8 @@ namespace DataModels
 		[Column("email"),              Nullable         ] public string Email          { get; set; } // varchar(50)
 		[Column("phone"),              Nullable         ] public string Phone          { get; set; } // varchar(50)
 		[Column("age"),                          NotNull] public object Age            { get; set; } // number
-		[Column("weight"),             Nullable         ] public object Weight         { get; set; } // number
-		[Column("height"),             Nullable         ] public object Height         { get; set; } // number
+		[Column("weight"),             Nullable         ] public string Weight         { get; set; } // varchar(10)
+		[Column("height"),             Nullable         ] public string Height         { get; set; } // varchar(10)
 		[Column("contact_details"),    Nullable         ] public string ContactDetails { get; set; } // varchar(200)
 	}
 

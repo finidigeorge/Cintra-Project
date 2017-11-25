@@ -26,8 +26,7 @@ namespace Shared
     {
         public static T ToEnumValue<T>(string value) where T : struct
         {
-            T result;
-            var isSuccess = Enum.TryParse(value, out result);
+            var isSuccess = Enum.TryParse(value, out T result);
 
             if (isSuccess)
                 return result;
@@ -42,6 +41,7 @@ namespace Shared
     {
         public const string AuthController = "auth";
         public const string CoachesController = "coaches";
+        public const string ClientsController = "clients";
         public const string HorsesController = "horses";
         public const string SchedulesController = "schedules";
         public const string SchedulesDataController = "schedulesData";        

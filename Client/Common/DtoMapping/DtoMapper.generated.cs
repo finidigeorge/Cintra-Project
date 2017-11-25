@@ -98,6 +98,100 @@ namespace Common.DtoMapping
 		}
 
 		
+		public partial class ClientDtoUi : IAtomicEditableObject, ICustomDataErrorInfo
+		{
+			private readonly EditableAdapter<ClientDto> _adapter;
+			public event ItemEndEditEventHandler ItemEndEdit;
+			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+				
+			public override Int64 Id { get; set; }
+				
+			public override String Name { get; set; }
+				
+			public override String Email { get; set; }
+				
+			public override String Phone { get; set; }
+				
+			public override Int32 Age { get; set; }
+				
+			public override String Weight { get; set; }
+				
+			public override String Height { get; set; }
+				
+			public override String ContactDetails { get; set; }
+			
+			public bool IsEditing { get; set; } = false;
+			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+			public ClientDtoUi()
+			{
+				_adapter = new EditableAdapter<ClientDto>(this);
+			}
+
+			public void BeginEdit()
+			{
+				if(!IsEditing) 
+				{
+					IsEditing = true;
+					_adapter.BeginEdit();
+				}
+			}
+
+			public void EndEdit()
+			{
+				_adapter.EndEdit();	
+				if (ItemEndEdit != null && IsEditing)
+				{
+					IsEditing = false;
+					ItemEndEdit(this);
+				}
+			}
+
+			public void CancelEdit()
+			{
+				IsEditing = false;
+				_adapter.CancelEdit();
+				if (ItemCancelEdit != null)
+			        ItemCancelEdit(this);
+			}	
+			
+			[NotifyPropertyChangedInvocator]
+			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+			{
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
+			
+			public string Error
+			{
+				get
+				{
+					StringBuilder error = new StringBuilder();
+
+					// iterate over all of the properties
+					// of this object - aggregating any validation errors
+					PropertyDescriptorCollection props = TypeDescriptor.GetProperties(this);
+					foreach (PropertyDescriptor prop in props)
+					{
+						string propertyError = this[prop.Name];
+						if (!string.IsNullOrEmpty(propertyError))
+						{
+							error.Append((error.Length!=0  ? ", " : "") + propertyError);
+						}
+					}
+
+					// apply object level validation rules
+					var objectError = ApplyObjectLevelValidations();
+					if (!string.IsNullOrEmpty(objectError))
+						error.Append((error.Length != 0 ? ", " : "") + objectError);
+					
+					return error.ToString();
+				}
+			}
+									
+		}
+
+		
 		public partial class ScheduleDtoUi : IAtomicEditableObject, ICustomDataErrorInfo
 		{
 			private readonly EditableAdapter<ScheduleDto> _adapter;

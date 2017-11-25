@@ -38,6 +38,16 @@ namespace Common.DtoMapping
         }
     }
 
+    public partial class ClientDtoUi : ClientDto, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
     public partial class ScheduleDtoUi : ScheduleDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

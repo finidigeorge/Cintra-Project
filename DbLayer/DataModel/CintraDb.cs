@@ -6,6 +6,7 @@ using Shared.Dto.Interfaces;
 namespace DataModels
 {
     public partial class Coach : IUniqueDto {}
+    public partial class Client : IUniqueDto { }
     public partial class Hors : IUniqueDto { }
     public partial class Schedule : IUniqueDto { }
     public partial class SchedulesData : IUniqueDto { }
