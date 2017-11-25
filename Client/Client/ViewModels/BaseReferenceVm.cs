@@ -23,17 +23,18 @@ using Shared.Dto.Interfaces;
 using Shared.Interfaces;
 
 namespace Client.ViewModels
-{        
+{    
     public class BaseReferenceVm<T, T1> : BaseVm, IEditableSelectableReference<T1> 
         where T1 : T, IUniqueDto, INotifyPropertyChanged, IAtomicEditableObject, new()
         where T: IUniqueDto, new()
         
     {                
 
-        public CollectionView ItemsCollectionView { get; private set; }        
+        public CollectionView ItemsCollectionView { get; private set; }
 
+        public event EventHandler<T1> OnSelectedItemChanged;
         public T1 SelectedItem { get; set; }
-
+       
         private ObservableCollection<T1> _items;
 
         //manual implementation of NotifyPropertyChanged
@@ -112,7 +113,15 @@ namespace Client.ViewModels
                 Items.Remove(Items.First(i => i.Id == SelectedItem.Id));                
             }, (x) => CanDeleteSelectedItem);
 
-            Items = new ObservableCollection<T1>();            
+            Items = new ObservableCollection<T1>();
+
+            PropertyChanged += (o, args) =>
+            {
+                if (args.PropertyName == "SelectedItem")
+                {
+                    OnSelectedItemChanged?.Invoke(o, SelectedItem);
+                }
+            };
         }
 
         protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

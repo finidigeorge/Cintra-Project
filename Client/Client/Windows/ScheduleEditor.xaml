@@ -107,10 +107,8 @@
                         </ToolBarPanel>
                         
                     </Grid>
-                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="20:00" 
-                                            OnScheduleDoubleClick="DailyScheduler_OnOnScheduleDoubleClick"
-                                            OnEventClick="DailyScheduler_OnEventClick"
-                                            OnEventDoubleClick="DailyScheduler_OnOnEventDoubleClick"
+                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="20:00"                                             
+                                            OnEventClick="DailyScheduler_OnEventClick"                                            
                                             />
                 </Grid>
             </TabItem>

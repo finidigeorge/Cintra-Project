@@ -1,4 +1,5 @@
 ﻿using Common.DtoMapping;
+using Shared.Dto;
 using System;
 using System.Windows.Media;
 
@@ -20,7 +21,7 @@ namespace Client.Controls.WpfScheduler
             Id = Guid.NewGuid();
         }
 
-        public void UpdateFromScheduleDtoData(ScheduleDataDtoUi scheduleData) 
+        public void UpdateFromScheduleDtoData(ScheduleDataDto scheduleData) 
         {
             if (scheduleData.EventGuid != Guid.Empty)
                 Id = scheduleData.EventGuid;
@@ -32,12 +33,20 @@ namespace Client.Controls.WpfScheduler
             Subject = scheduleData.AvailabilityDescription;            
         }
 
-        public void MergeToScheduleDtoData(ref ScheduleDataDtoUi scheduleData)
+        public void MergeToScheduleDtoData(ref ScheduleDataDto scheduleData)
         {
             scheduleData.EventGuid = Id;
             scheduleData.AvailabilityDescription = Description;
             scheduleData.BeginTime = Start;
             scheduleData.EndTime = End;                                            
+        }
+
+        public void MergeToScheduleDtoData(ref ScheduleDataDtoUi scheduleData)
+        {
+            scheduleData.EventGuid = Id;
+            scheduleData.AvailabilityDescription = Description;
+            scheduleData.BeginTime = Start;
+            scheduleData.EndTime = End;
         }
     }
 }

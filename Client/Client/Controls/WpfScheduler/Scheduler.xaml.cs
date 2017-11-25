@@ -209,6 +209,15 @@ namespace Client.Controls.WpfScheduler
             }
         }
 
+        public void DeleteAllEvents()
+        {
+            foreach (var e in Events.ToList())
+            {
+                Events.Remove(e);
+                OnEventDeleted?.Invoke(this, e);
+            }
+        }
+
         public void NextPage()
         {
             switch (Mode)

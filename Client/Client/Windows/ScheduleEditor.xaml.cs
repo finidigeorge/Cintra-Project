@@ -16,6 +16,7 @@ using Client.Controls.WpfScheduler;
 using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
+using Shared.Dto;
 
 namespace Client.Windows
 {
@@ -49,7 +50,7 @@ namespace Client.Windows
                 if (editorResult.Item1)
                 {
                     var e = new Event() { Color = dailyEventBrush };
-                    e.UpdateFromScheduleDtoData(editorResult.Item2);
+                    e.UpdateFromScheduleDtoData(editorResult.Item2);                   
                     e.MergeToScheduleDtoData(ref editorResult.Item2);
                     Model.ScheduleDataModel.AddItemCommand.Execute(editorResult.Item2);
                                         
@@ -67,6 +68,25 @@ namespace Client.Windows
                 Model.ScheduleDataModel.SelectedItem = null;
 
             }, (x) => Model.ScheduleDataModel.SelectedItem != null);
+
+            Model.OnSelectedItemChanged += OnSelectedScheduleChanged;
+            
+        }
+
+        private async void OnSelectedScheduleChanged(object sender, ScheduleDtoUi s)
+        {
+            DailyScheduler.DeleteAllEvents();
+            await Model.ScheduleDataModel.RefreshDataCommand.ExecuteAsync(s);
+            Model.ScheduleDataModel.SelectedItem = null;
+
+            foreach (var item in Model.ScheduleDataModel.Items)
+            {
+                var e = new Event() { Color = dailyEventBrush };
+                e.UpdateFromScheduleDtoData(item);
+                DailyScheduler.AddEvent(e);
+            }
+
+
         }
 
         private (bool, ScheduleDataDtoUi) ShowDailyScheduleEditor()
@@ -87,20 +107,7 @@ namespace Client.Windows
             var res = editor.ShowDialog() ?? false;
             editor.Model.ScheduleId = Model.SelectedItem.Id;
             return (res, editor.Model);
-        }
-
-        private void DailyScheduler_OnOnScheduleDoubleClick(object sender, DateTime e)
-        {
-            //DailyScheduler.AddEvent(new Event() { Start = e + new TimeSpan(10, 0, 0), End = e + new TimeSpan(11, 30, 0), Subject = "Test !!!!", Color = new SolidColorBrush(Color.FromRgb(52, 168, 255)) });
-        }
-
-        private void DailyScheduler_OnOnEventDoubleClick(object sender, Event e)
-        {
-            /*
-            Model.DeleteDailyScheduledIntervalCommand.Execute(Model.ScheduleDataModel.Items.First(x => x.EventGuid == e.Id));
-            DailyScheduler.DeleteEvent(e.Id);
-            */
-        }
+        }        
 
         private void DailyScheduler_OnEventClick(object sender, Event e)
         {
