@@ -13,8 +13,7 @@ namespace RestClient
         {
             { typeof(CoachDto), enKnownControllers.CoachesController },
             { typeof(HorseDto), enKnownControllers.HorsesController },
-            { typeof(ScheduleDto), enKnownControllers.SchedulesController },
-            { typeof(ScheduleDataDto), enKnownControllers.SchedulesDataController},
+            { typeof(ScheduleDto), enKnownControllers.SchedulesController },            
             { typeof(ServiceDto), enKnownControllers.ServicesController},            
 
         };

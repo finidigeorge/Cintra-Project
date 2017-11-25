@@ -61,11 +61,46 @@
         <TabControl HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch">
             <TabItem Header="Weekly Schedule">
                 <Grid Background="#FFE5E5E5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="139*"/>
-                        <ColumnDefinition Width="871*"/>
-                    </Grid.ColumnDefinitions>
-                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" StartJourney="6:00" EndJourney="20:00" Grid.ColumnSpan="2"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Command="{Binding PrevWeekCommand}"                                   
+                                ToolTip="Previous Week"
+                                IsEnabled="False">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Resources/Images/LeftArrow.png" />
+                                <TextBlock VerticalAlignment="Center">Previous Week</TextBlock>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="1"
+                                Command="{Binding NextWeekCommand}"                                   
+                                ToolTip="Next Week"
+                                IsEnabled="False">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center">Next Week</TextBlock>
+                                <Image Source="/Resources/Images/RightArrow.png" />
+                            </StackPanel>
+                        </Button>
+                        <ToolBarPanel DockPanel.Dock="Top" Grid.Column="2">
+                            <controls:ReferencesToolbar 
+                                EditCommand="{Binding Path=UpdateWeeklyScheduledIntervalCommand}"
+                                DeleteCommand="{Binding Path=DeleteWeeklyScheduledIntervalCommand}"  
+                                DeleteTooltip="Delete selected event from schedule"
+                                AddTooltip="Create new event in the schedule"
+                                NewCommand="{Binding Path=AddWeeklyScheduledIntervalCommand}"                                
+                            />
+                        </ToolBarPanel>
+
+                    </Grid>
+                    <wpfScheduler:Scheduler x:Name="WeeklyScheduler" Mode="Week" Grid.Row="1" StartJourney="6:00" EndJourney="21:00" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Daily Schedule">
@@ -107,7 +142,7 @@
                         </ToolBarPanel>
                         
                     </Grid>
-                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="20:00"                                             
+                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="21:00"                                             
                                             OnEventClick="DailyScheduler_OnEventClick"                                            
                                             />
                 </Grid>

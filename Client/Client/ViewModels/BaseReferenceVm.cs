@@ -21,6 +21,7 @@ using RestClient;
 using Shared;
 using Shared.Dto.Interfaces;
 using Shared.Interfaces;
+using WPFCustomMessageBox;
 
 namespace Client.ViewModels
 {    
@@ -110,7 +111,18 @@ namespace Client.ViewModels
             DeleteSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
             {
                 await DeleteItemCommand.ExecuteAsync(SelectedItem);
-                Items.Remove(Items.First(i => i.Id == SelectedItem.Id));                
+                if (SelectedItem != null)
+                    Items.Remove(Items.First(i => i.Id == SelectedItem.Id));                
+            }, (x) => CanDeleteSelectedItem);
+
+
+            BeginDeleteItemCommand = new Command<object>(() =>
+            {
+                if (CustomMessageBox.Show(Messages.DELETE_RECODRD_CONFIRM_MSG, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    DeleteSelectedItemCommand.Execute(SelectedItem);
+                }
+
             }, (x) => CanDeleteSelectedItem);
 
             Items = new ObservableCollection<T1>();

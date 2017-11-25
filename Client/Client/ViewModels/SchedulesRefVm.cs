@@ -20,10 +20,17 @@ namespace Client.ViewModels
         public ICommand UpdateDailyScheduledIntervalCommand { get; set; }
         public ICommand DeleteDailyScheduledIntervalCommand { get; set; }
 
+        public ICommand NextWeekCommand { get; set; }
+        public ICommand PrevWeekCommand { get; set; }
+        public ICommand AddWeeklyScheduledIntervalCommand { get; set; }
+        public ICommand UpdateWeeklyScheduledIntervalCommand { get; set; }
+        public ICommand DeleteWeeklyScheduledIntervalCommand { get; set; }
+
         public IList<ScheduleDto> DataSource { get; set; } = new List<ScheduleDto>();
         public CoachDtoUi Coach { get; set; }
 
-        public SchedulesDataRefVm ScheduleDataModel { get; set; } = new SchedulesDataRefVm();
+        public SchedulesDataRefVm ScheduleDailyDataModel { get; set; } = new SchedulesDataRefVm();
+        public SchedulesDataRefVm ScheduleWeeklyDataModel { get; set; } = new SchedulesDataRefVm();
 
         protected override async Task<IList<ScheduleDto>> GetItems()
         {

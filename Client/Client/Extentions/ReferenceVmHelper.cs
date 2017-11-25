@@ -32,16 +32,7 @@ namespace Client.Extentions
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
 
                 vm.BeginEditItemCommand.Execute(dataGrid);
-            }, (x) => vm.CanAddItem);
-
-            vm.BeginDeleteItemCommand = new Command<object>(() =>
-            {
-                if (CustomMessageBox.Show(Messages.DELETE_RECODRD_CONFIRM_MSG, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    vm.DeleteSelectedItemCommand.ExecuteAsync(vm.SelectedItem);
-                }
-
-            }, (x) => vm.CanDeleteSelectedItem);
+            }, (x) => vm.CanAddItem);            
         }
     }
 }

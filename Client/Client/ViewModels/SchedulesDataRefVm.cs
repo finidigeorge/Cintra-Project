@@ -14,6 +14,7 @@ namespace Client.ViewModels
 {
     public class SchedulesDataRefVm : BaseReferenceVm<ScheduleDataDto, ScheduleDataDtoUi>
     {
+        private ScheduleDataDtoClient _client => (ScheduleDataDtoClient)Client;
         public SchedulesDataRefVm()
         {
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
@@ -26,13 +27,12 @@ namespace Client.ViewModels
 
             });
 
-            Client = RestClientFactory.GetClient<ScheduleDataDto>();            
+            Client = new ScheduleDataDtoClient();            
         }
 
         protected virtual async Task<IList<ScheduleDataDto>> GetItems(ScheduleDto schedule)
         {
-            var result = await Client.GetAll();
-            return result.Where(x => x.ScheduleId == schedule.Id).ToList();
+            return await _client.GetBySchedule(schedule.Id);            
         }
 
         protected override void BeforeAddItemHandler(ScheduleDataDtoUi item)
