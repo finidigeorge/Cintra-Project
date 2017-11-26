@@ -46,6 +46,7 @@
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
                 <DataGridTextColumn Header="User Name" Binding="{Binding Path = Name}"  Width="*" />
                 <DataGridTextColumn Header="User Login" Binding="{Binding Path = Login}"  Width="*" />
                 <DataGridTemplateColumn Header="User Role" Width="*">

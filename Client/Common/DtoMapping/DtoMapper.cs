@@ -28,6 +28,27 @@ namespace Common.DtoMapping
     public delegate void ItemEndCancelEventHandler(IAtomicEditableObject sender);
 
 #pragma warning disable CS0067
+
+    public partial class BookingDtoUi : BookingDto, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
+    public partial class BookingPaymentDtoUi : BookingPaymentDto, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+    }
+
     public partial class CoachDtoUi : CoachDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;        

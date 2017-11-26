@@ -57,17 +57,16 @@ namespace Client
                     { "Clients", ClientsRefView.Model.RefreshDataCommand },
                 };
 
-            var tc = sender as TabControl;
-            if (tc != null)
+            if (sender is TabControl tc)
             {
                 var item = (TabItem)tc.SelectedItem;
                 if (item.IsSelected && selectedTab != item.Name)
                 {
                     selectedTab = ((TabItem)tc.SelectedItem).Name;
-                    
+
                     if (CheckAndWarnAuth())
-                    {                        
-                        await tabCommands[selectedTab].ExecuteAsync(null);                                                                                
+                    {
+                        await tabCommands[selectedTab].ExecuteAsync(null);
                     }
                 }
             }

@@ -26,8 +26,8 @@ namespace Client.Windows
     /// </summary>
     public partial class ScheduleEditor : Window
     {
-        private SolidColorBrush dailyEventBrush = new SolidColorBrush(Color.FromRgb(52, 168, 255));
-        private SolidColorBrush weeklyEventBrush = new SolidColorBrush(Colors.LightSeaGreen);
+        private SolidColorBrush dailyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
+        private SolidColorBrush weeklyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
 
         public SchedulesRefVm Model => (SchedulesRefVm)Resources["ViewModel"];
 

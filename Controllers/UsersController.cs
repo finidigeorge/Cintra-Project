@@ -25,14 +25,12 @@ namespace Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthRepository _authRepository;
         private readonly IUsersRepository repository;
-        private readonly ILogger _logger;
 
         public UsersController(IHttpContextAccessor httpContextAccessor, IUsersRepository repository, IAuthRepository authRepository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
             _httpContextAccessor = httpContextAccessor;
             _authRepository = authRepository;
             this.repository = (IUsersRepository) _repository;
-            _logger = loggerFactory.CreateLogger<UsersController>();
         }
 
         private string GetDefaultPassword(UserDto entity)

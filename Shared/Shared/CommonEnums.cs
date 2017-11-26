@@ -40,6 +40,7 @@ namespace Shared
     public static class enKnownControllers
     {
         public const string AuthController = "auth";
+        public const string BookingsController = "bookings";
         public const string CoachesController = "coaches";
         public const string ClientsController = "clients";
         public const string HorsesController = "horses";

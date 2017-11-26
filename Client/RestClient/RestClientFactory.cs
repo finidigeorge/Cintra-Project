@@ -11,6 +11,7 @@ namespace RestClient
     {
         private static readonly Dictionary<Type, string> _controllers = new Dictionary<Type, string>()
         {
+            { typeof(BookingDto), enKnownControllers.BookingsController },
             { typeof(CoachDto), enKnownControllers.CoachesController },
             { typeof(ClientDto), enKnownControllers.ClientsController},
             { typeof(HorseDto), enKnownControllers.HorsesController },

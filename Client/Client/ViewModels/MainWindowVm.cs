@@ -7,11 +7,14 @@ using Common;
 using RestApi;
 using RestClient;
 using WPFCustomMessageBox;
+using Client.Windows;
 
 namespace Client.ViewModels
 {
     public class MainWindowVm
     {
+        private BookingWindow bookingWindow;
+        public ICommand ShowBookingWindowCommand { get; }
         public ICommand ShowLoginDialogCommand { get; }
         public ICommand ShowChangePasswordDialogCommand { get; }
         public ICommand ShowExitDialogCommand { get; }
@@ -21,6 +24,17 @@ namespace Client.ViewModels
 
         public MainWindowVm()
         {
+            ShowBookingWindowCommand = new Command<object>(() =>
+            {
+                if (bookingWindow == null)
+                {
+                    bookingWindow = new BookingWindow();                    
+                }
+                bookingWindow.Show();
+                bookingWindow.Activate();
+
+            }, x => AuthVm.IsAuthenticated);
+
             ShowLoginDialogCommand = new Command<object>(() =>
             {
                 new LoginWindow() {DataContext = AuthVm}.ShowDialog(); 

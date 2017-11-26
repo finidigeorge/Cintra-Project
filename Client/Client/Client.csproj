@@ -122,6 +122,7 @@
     <Compile Include="Extentions\EnumBooleanConverter.cs" />
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
+    <Compile Include="ViewModels\BookingRefVm.cs" />
     <Compile Include="ViewModels\ClientsRefVm.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />

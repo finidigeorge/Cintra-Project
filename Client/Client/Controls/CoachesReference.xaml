@@ -29,6 +29,7 @@
                   SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" 
                   CanUserAddRows="False" CanUserDeleteRows="true">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
                 <DataGridTextColumn Header="Coach Name" Binding="{Binding Path = Name}"  Width="*" />
                 <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="*" />
                 <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="*" />

@@ -12,6 +12,190 @@ namespace Common.DtoMapping
 {
 
 		
+		public partial class BookingDtoUi : IAtomicEditableObject, ICustomDataErrorInfo
+		{
+			private readonly EditableAdapter<BookingDto> _adapter;
+			public event ItemEndEditEventHandler ItemEndEdit;
+			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+				
+			public override Int64 Id { get; set; }
+				
+			public override Guid EventGuid { get; set; }
+				
+			public override DateTime DateOn { get; set; }
+				
+			public override DateTime BeginTime { get; set; }
+				
+			public override DateTime EndTime { get; set; }
+				
+			public override HorseDto Horse { get; set; }
+				
+			public override ClientDto Client { get; set; }
+				
+			public override CoachDto Coach { get; set; }
+				
+			public override ServiceDto Service { get; set; }
+				
+			public override BookingPaymentDto BookingPayment { get; set; }
+			
+			public bool IsEditing { get; set; } = false;
+			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+			public BookingDtoUi()
+			{
+				_adapter = new EditableAdapter<BookingDto>(this);
+			}
+
+			public void BeginEdit()
+			{
+				if(!IsEditing) 
+				{
+					IsEditing = true;
+					_adapter.BeginEdit();
+				}
+			}
+
+			public void EndEdit()
+			{
+				_adapter.EndEdit();	
+				if (ItemEndEdit != null && IsEditing)
+				{
+					IsEditing = false;
+					ItemEndEdit(this);
+				}
+			}
+
+			public void CancelEdit()
+			{
+				IsEditing = false;
+				_adapter.CancelEdit();
+				if (ItemCancelEdit != null)
+			        ItemCancelEdit(this);
+			}	
+			
+			[NotifyPropertyChangedInvocator]
+			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+			{
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
+			
+			public string Error
+			{
+				get
+				{
+					StringBuilder error = new StringBuilder();
+
+					// iterate over all of the properties
+					// of this object - aggregating any validation errors
+					PropertyDescriptorCollection props = TypeDescriptor.GetProperties(this);
+					foreach (PropertyDescriptor prop in props)
+					{
+						string propertyError = this[prop.Name];
+						if (!string.IsNullOrEmpty(propertyError))
+						{
+							error.Append((error.Length!=0  ? ", " : "") + propertyError);
+						}
+					}
+
+					// apply object level validation rules
+					var objectError = ApplyObjectLevelValidations();
+					if (!string.IsNullOrEmpty(objectError))
+						error.Append((error.Length != 0 ? ", " : "") + objectError);
+					
+					return error.ToString();
+				}
+			}
+									
+		}
+
+		
+		public partial class BookingPaymentDtoUi : IAtomicEditableObject, ICustomDataErrorInfo
+		{
+			private readonly EditableAdapter<BookingPaymentDto> _adapter;
+			public event ItemEndEditEventHandler ItemEndEdit;
+			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+				
+			public override Int64 Id { get; set; }
+				
+			public override Int64 BookingId { get; set; }
+				
+			public override Boolean IsPaid { get; set; }
+				
+			public override String PaymentOptions { get; set; }
+			
+			public bool IsEditing { get; set; } = false;
+			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+			public BookingPaymentDtoUi()
+			{
+				_adapter = new EditableAdapter<BookingPaymentDto>(this);
+			}
+
+			public void BeginEdit()
+			{
+				if(!IsEditing) 
+				{
+					IsEditing = true;
+					_adapter.BeginEdit();
+				}
+			}
+
+			public void EndEdit()
+			{
+				_adapter.EndEdit();	
+				if (ItemEndEdit != null && IsEditing)
+				{
+					IsEditing = false;
+					ItemEndEdit(this);
+				}
+			}
+
+			public void CancelEdit()
+			{
+				IsEditing = false;
+				_adapter.CancelEdit();
+				if (ItemCancelEdit != null)
+			        ItemCancelEdit(this);
+			}	
+			
+			[NotifyPropertyChangedInvocator]
+			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+			{
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			}
+			
+			public string Error
+			{
+				get
+				{
+					StringBuilder error = new StringBuilder();
+
+					// iterate over all of the properties
+					// of this object - aggregating any validation errors
+					PropertyDescriptorCollection props = TypeDescriptor.GetProperties(this);
+					foreach (PropertyDescriptor prop in props)
+					{
+						string propertyError = this[prop.Name];
+						if (!string.IsNullOrEmpty(propertyError))
+						{
+							error.Append((error.Length!=0  ? ", " : "") + propertyError);
+						}
+					}
+
+					// apply object level validation rules
+					var objectError = ApplyObjectLevelValidations();
+					if (!string.IsNullOrEmpty(objectError))
+						error.Append((error.Length != 0 ? ", " : "") + objectError);
+					
+					return error.ToString();
+				}
+			}
+									
+		}
+
+		
 		public partial class CoachDtoUi : IAtomicEditableObject, ICustomDataErrorInfo
 		{
 			private readonly EditableAdapter<CoachDto> _adapter;

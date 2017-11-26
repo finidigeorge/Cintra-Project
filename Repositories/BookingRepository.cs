@@ -1,5 +1,6 @@
 ﻿using DataModels;
 using LinqToDB;
+using Repositories.Interfaces;
 using Shared.Attributes;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,12 @@ namespace Repositories
     [PerScope]
     public class BookingRepository: GenericPreservableRepository<Booking>
     {
-        private readonly BookingPaymentsRepository _paymentsRepository = new BookingPaymentsRepository();
+        private readonly IBookingPaymentsRepository _paymentsRepository;
+
+        public BookingRepository(IBookingPaymentsRepository paymentsRepository)
+        {
+            _paymentsRepository = paymentsRepository;
+        }
 
         public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where)
         {

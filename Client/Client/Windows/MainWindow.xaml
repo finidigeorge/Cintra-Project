@@ -29,6 +29,9 @@
                 <Separator />
                 <MenuItem Header="Exit" Command="{Binding ShowExitDialogCommand}"/>
             </MenuItem>
+            <MenuItem Header="Booking">
+                <MenuItem Header="Open Booking Window" Command="{Binding ShowBookingWindowCommand}"/>
+            </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About"/>
             </MenuItem>
