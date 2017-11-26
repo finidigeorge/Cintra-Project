@@ -22,14 +22,20 @@ namespace Mapping
                 {
                     conf.CreateMissingTypeMaps = true;
                     conf.ReplaceMemberName("_", "");
-                    conf.CreateMap<User, UserDto>().AfterMap((db, vm) =>
+                    conf.CreateMap<User, UserDto>()                    
+                    .AfterMap((db, vm) =>
                     {
                         vm.UserRole = _mapper.Map<UserRoleDto>(db.user_roles);
                     });
-                    conf.CreateMap<UserDto, User>().AfterMap((vm, db) =>
-                    {
-                        db.RoleId = vm.UserRole.Id;
-                    });
+                    conf.CreateMap<UserDto, User>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                        .AfterMap((vm, db) =>
+                        {
+                            db.RoleId = vm.UserRole.Id;                        
+                        });
+
+                    conf.CreateMap<UserRoleDto, UserRoles>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
 
                     conf.CreateMap<SchedulesData, ScheduleDataDto>()
                         .ForMember(x => x.IntervalId, opt => opt.Ignore())
@@ -39,6 +45,7 @@ namespace Mapping
                         });
                     conf.CreateMap<ScheduleDataDto, SchedulesData>()
                         .ForMember(x => x.IntervalId, opt => opt.Ignore())
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) =>
                         {
                             db.IntervalId = (int)vm.IntervalId;
@@ -48,10 +55,12 @@ namespace Mapping
                     {
                         vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);                        
                     });
-                    conf.CreateMap<ScheduleDto, Schedule>().AfterMap((vm, db) =>
-                    {
-                        db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
-                    });
+                    conf.CreateMap<ScheduleDto, Schedule>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                        .AfterMap((vm, db) =>
+                        {
+                            db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
+                        });
 
                     
 
@@ -59,10 +68,21 @@ namespace Mapping
                     {
                         vm.Schedules = _mapper.Map<List<ScheduleDto>>(db.schedules);
                     });
-                    conf.CreateMap<CoachDto, Coach>().AfterMap((vm, db) =>
-                    {
-                        db.schedules = _mapper.Map<List<Schedule>>(vm.Schedules);
-                    });
+                    conf.CreateMap<CoachDto, Coach>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                        .AfterMap((vm, db) =>
+                        {
+                            db.schedules = _mapper.Map<List<Schedule>>(vm.Schedules);
+                        });
+
+                    conf.CreateMap<HorseDto, Hors>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+
+                    conf.CreateMap<ServiceDto, Service>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+
+                    conf.CreateMap<ClientDto, Client>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
                 }
             );
 

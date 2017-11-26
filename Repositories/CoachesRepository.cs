@@ -11,11 +11,11 @@ using System.Linq;
 namespace Repositories
 {
     [PerScope]
-    public class CoachesRepository: GenericRepository<Coach>
+    public class CoachesRepository: GenericPreservableRepository<Coach>
     {
         private IEnumerable<Schedule> LoadSchedules(long coachId, CintraDB db)
         {
-            return db.Schedules.LoadWith(x => x.data).Where(x => x.CoachId == coachId);            
+            return db.Schedules.LoadWith(x => x.data).Where(x => x.CoachId == coachId && x.IsDeleted == false);            
         }
 
 
@@ -24,7 +24,7 @@ namespace Repositories
             using (var db = new CintraDB())
             {
                 return await Task.FromResult(
-                    db.Coaches.Where(where).Select(x =>
+                    db.Coaches.Where(where).Where(x => x.IsDeleted == false).Select(x =>
                     {
                         var res = x;
                         res.schedules = LoadSchedules(x.Id, db).ToList();

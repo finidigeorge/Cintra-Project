@@ -33,7 +33,7 @@ CREATE TABLE schedules_data(
 	begin_time time NOT NULL,
 	end_time time NOT NULL,
 	CHECK(begin_time < end_time),		
-	CHECK((day_number is not null) OR (date_on is not null))
+	CHECK((day_number is not null) OR (date_on is not null)),
 	foreign key (schedule_id) REFERENCES schedules(id),
 	foreign key (interval_id) REFERENCES schedules_interval(id)
 );

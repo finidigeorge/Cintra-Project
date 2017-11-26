@@ -11,7 +11,7 @@ using Shared.Attributes;
 namespace Repositories
 {
     [PerScope]
-    public class HorsesRepository: GenericRepository<Hors>
+    public class HorsesRepository: GenericPreservableRepository<Hors>
     {        
     }
 }

@@ -126,6 +126,9 @@
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
     <Compile Include="ViewModels\TimePickerVm.cs" />
+    <Compile Include="Windows\BookingWindow.xaml.cs">
+      <DependentUpon>BookingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ScheduleIntervalEditWindow.xaml.cs">
       <DependentUpon>ScheduleIntervalEditWindow.xaml</DependentUpon>
     </Compile>
@@ -199,6 +202,10 @@
     <Page Include="Controls\WpfScheduler\WeekScheduler.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\BookingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ScheduleIntervalEditWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

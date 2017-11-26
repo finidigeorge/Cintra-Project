@@ -12,14 +12,14 @@ using Shared.Dto;
 namespace Repositories
 {
     [PerScope]
-    public class UserRepository : GenericRepository<User>, IUsersRepository
+    public class UserRepository : GenericPreservableRepository<User>, IUsersRepository
     {
         public override async Task<List<User>> GetByParams(Func<User, bool> where)
         {            
             using (var db = new CintraDB())
             {                
                 return await Task.FromResult(
-                    db.Users.LoadWith(x => x.user_roles).Where(where).ToList()
+                    db.Users.LoadWith(x => x.user_roles).Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
             }
         }
@@ -28,13 +28,13 @@ namespace Repositories
         {
             using (var db = new CintraDB())
             {
-                return await db.Users.FirstOrDefaultAsync(x => x.Login == login);                
+                return (await GetByParams(x => x.Login == login)).FirstOrDefault();
             }
         }
 
         public async Task<bool> HasAdminAccess(string login)
         {
-            var user = (await GetByParams(x => x.Login == login)).FirstOrDefault();
+            var user = await GetByLogin(login);
             return user?.user_roles.Name == nameof(UserRolesEnum.Administrator);
         }
     }

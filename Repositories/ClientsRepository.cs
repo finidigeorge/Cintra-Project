@@ -7,7 +7,7 @@ using System.Text;
 namespace Repositories
 {
     [PerScope]
-    public class ClientsRepository: GenericRepository<Client>
+    public class ClientsRepository: GenericPreservableRepository<Client>
     {
 
     }

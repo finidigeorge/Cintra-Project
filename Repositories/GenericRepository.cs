@@ -10,6 +10,7 @@ using LinqToDB;
 using LinqToDB.Mapping;
 using Repositories.Interfaces;
 using Shared.Dto.Interfaces;
+using DbLayer.Interfaces;
 
 namespace Repositories
 {
@@ -28,7 +29,7 @@ namespace Repositories
 
                 return fetcher(db);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (isTransactional)
                 {
@@ -52,9 +53,9 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {               
                 if (entity.Id == 0)
-                    return await Task.FromResult((long) db.InsertWithIdentity(entity));
+                    return await db.InsertWithIdentityAsync(entity);
 
-                await Task.FromResult(db.Update(entity));
+                await db.UpdateAsync(entity);
                 return entity.Id;
             }, dbContext);
         }
@@ -66,7 +67,7 @@ namespace Repositories
                 var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
                 var expression = SimpleComparison(pkName.Name, id);
 
-                await Task.FromResult(db.Delete(db.GetTable<T>().Where(expression).FirstOrDefault()));
+                await db.DeleteAsync(db.GetTable<T>().Where(expression).FirstOrDefault());                
 
                 return null;
             }, dbContext);
@@ -110,7 +111,7 @@ namespace Repositories
         /// <param name="propertyName">Name of property</param>
         /// <param name="valueToFilter">Value to filter query</param>
         /// <returns>List of T</returns>
-        public async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter)
+        public virtual async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter)
            
         {
             if (string.IsNullOrWhiteSpace(propertyName))

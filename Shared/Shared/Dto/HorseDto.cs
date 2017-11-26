@@ -11,8 +11,6 @@ namespace Shared.Dto
         public virtual long Id { get; set; }
 
         [VmMeta(IsNullable = false)]
-        public virtual string NickName { get; set; }
-
-        public virtual List<ScheduleDto> Schedules { get; set; }
+        public virtual string NickName { get; set; }        
     }
 }

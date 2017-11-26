@@ -20,6 +20,7 @@ namespace DataModels
 	/// </summary>
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
+		public ITable<Booking>           Bookings          { get { return this.GetTable<Booking>(); } }
 		public ITable<Client>            Clients           { get { return this.GetTable<Client>(); } }
 		public ITable<Coach>             Coaches           { get { return this.GetTable<Coach>(); } }
 		public ITable<DbUpdatesLog>      DbUpdatesLog      { get { return this.GetTable<DbUpdatesLog>(); } }
@@ -45,6 +46,50 @@ namespace DataModels
 		partial void InitDataContext();
 	}
 
+	[Table("bookings")]
+	public partial class Booking
+	{
+		[Column("id"),             PrimaryKey,  NotNull] public long     Id             { get; set; } // integer
+		[Column("event_guid"),                  NotNull] public Guid     EventGuid      { get; set; } // guid
+		[Column("horse_id"),                    NotNull] public long     HorseId        { get; set; } // integer
+		[Column("coach_id"),                    NotNull] public long     CoachId        { get; set; } // integer
+		[Column("client_id"),                   NotNull] public long     ClientId       { get; set; } // integer
+		[Column("service_id"),                  NotNull] public long     ServiceId      { get; set; } // integer
+		[Column("date_on"),                     NotNull] public DateTime DateOn         { get; set; } // date
+		[Column("begin_time"),                  NotNull] public DateTime BeginTime      { get; set; } // time
+		[Column("end_time"),                    NotNull] public DateTime EndTime        { get; set; } // time
+		[Column("isPaid"),                      NotNull] public bool     IsPaid         { get; set; } // boolean
+		[Column("paymentOptions"),    Nullable         ] public string   PaymentOptions { get; set; } // varchar(200)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_bookings_3_0
+		/// </summary>
+		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_3_0", BackReferenceName="bookings")]
+		public Client client { get; set; }
+
+		/// <summary>
+		/// FK_bookings_2_0
+		/// </summary>
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_2_0", BackReferenceName="bookings")]
+		public Coach coach { get; set; }
+
+		/// <summary>
+		/// FK_bookings_1_0
+		/// </summary>
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_1_0", BackReferenceName="bookings")]
+		public Hors hors { get; set; }
+
+		/// <summary>
+		/// FK_bookings_0_0
+		/// </summary>
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_0_0", BackReferenceName="bookings")]
+		public Service service { get; set; }
+
+		#endregion
+	}
+
 	[Table("clients")]
 	public partial class Client
 	{
@@ -56,17 +101,35 @@ namespace DataModels
 		[Column("weight"),             Nullable         ] public string Weight         { get; set; } // varchar(10)
 		[Column("height"),             Nullable         ] public string Height         { get; set; } // varchar(10)
 		[Column("contact_details"),    Nullable         ] public string ContactDetails { get; set; } // varchar(200)
+		[Column("is_deleted"),                   NotNull] public bool   IsDeleted      { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_bookings_3_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ClientId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Booking> bookings { get; set; }
+
+		#endregion
 	}
 
 	[Table("coaches")]
 	public partial class Coach
 	{
-		[Column("id"),    PrimaryKey,  Identity] public long   Id    { get; set; } // integer
-		[Column("name"),  NotNull              ] public string Name  { get; set; } // varchar(128)
-		[Column("email"),    Nullable          ] public string Email { get; set; } // varchar(50)
-		[Column("phone"),    Nullable          ] public string Phone { get; set; } // varchar(50)
+		[Column("id"),         PrimaryKey,  Identity] public long   Id        { get; set; } // integer
+		[Column("name"),       NotNull              ] public string Name      { get; set; } // varchar(128)
+		[Column("email"),         Nullable          ] public string Email     { get; set; } // varchar(50)
+		[Column("phone"),         Nullable          ] public string Phone     { get; set; } // varchar(50)
+		[Column("is_deleted"), NotNull              ] public bool   IsDeleted { get; set; } // boolean
 
 		#region Associations
+
+		/// <summary>
+		/// FK_bookings_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Booking> bookings { get; set; }
 
 		/// <summary>
 		/// FK_schedules_0_0_BackReference
@@ -88,17 +151,29 @@ namespace DataModels
 	[Table("horses")]
 	public partial class Hors
 	{
-		[Column("id"),       PrimaryKey, Identity] public long   Id       { get; set; } // integer
-		[Column("nickname"), NotNull             ] public string Nickname { get; set; } // varchar(255)
+		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
+		[Column("nickname"),   NotNull             ] public string Nickname  { get; set; } // varchar(255)
+		[Column("is_deleted"), NotNull             ] public bool   IsDeleted { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_bookings_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Booking> bookings { get; set; }
+
+		#endregion
 	}
 
 	[Table("schedules")]
 	public partial class Schedule
 	{
-		[Column("id"),        PrimaryKey, Identity] public long   Id       { get; set; } // integer
-		[Column("coach_id"),  NotNull             ] public long   CoachId  { get; set; } // integer
-		[Column("name"),      NotNull             ] public string Name     { get; set; } // varchar(50)
-		[Column("is_active"), NotNull             ] public bool   IsActive { get; set; } // boolean
+		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
+		[Column("coach_id"),   NotNull             ] public long   CoachId   { get; set; } // integer
+		[Column("name"),       NotNull             ] public string Name      { get; set; } // varchar(50)
+		[Column("is_active"),  NotNull             ] public bool   IsActive  { get; set; } // boolean
+		[Column("is_deleted"), NotNull             ] public bool   IsDeleted { get; set; } // boolean
 
 		#region Associations
 
@@ -130,6 +205,7 @@ namespace DataModels
 		[Column("date_on"),                     Nullable          ] public DateTime? DateOn                  { get; set; } // date
 		[Column("begin_time"),               NotNull              ] public DateTime  BeginTime               { get; set; } // time
 		[Column("end_time"),                 NotNull              ] public DateTime  EndTime                 { get; set; } // time
+		[Column("is_deleted"),               NotNull              ] public bool      IsDeleted               { get; set; } // boolean
 
 		#region Associations
 
@@ -168,8 +244,19 @@ namespace DataModels
 	[Table("services")]
 	public partial class Service
 	{
-		[Column("id"),   PrimaryKey, Identity] public long   Id   { get; set; } // integer
-		[Column("name"), NotNull             ] public string Name { get; set; } // varchar(255)
+		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
+		[Column("name"),       NotNull             ] public string Name      { get; set; } // varchar(255)
+		[Column("is_deleted"), NotNull             ] public bool   IsDeleted { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_bookings_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Booking> bookings { get; set; }
+
+		#endregion
 	}
 
 	[Table("users")]
@@ -184,6 +271,7 @@ namespace DataModels
 		[Column("email"),                    Nullable          ] public string Email              { get; set; } // varchar(50)
 		[Column("phone"),                    Nullable          ] public string Phone              { get; set; } // varchar(50)
 		[Column("is_locked"),             NotNull              ] public bool   IsLocked           { get; set; } // boolean
+		[Column("is_deleted"),            NotNull              ] public bool   IsDeleted          { get; set; } // boolean
 
 		#region Associations
 
@@ -199,8 +287,9 @@ namespace DataModels
 	[Table("user_roles")]
 	public partial class UserRoles
 	{
-		[Column("id"),   PrimaryKey,  NotNull] public long   Id   { get; set; } // integer
-		[Column("name"),    Nullable         ] public string Name { get; set; } // varchar(255)
+		[Column("id"),         PrimaryKey,  NotNull] public long   Id        { get; set; } // integer
+		[Column("name"),          Nullable         ] public string Name      { get; set; } // varchar(255)
+		[Column("is_deleted"),              NotNull] public bool   IsDeleted { get; set; } // boolean
 
 		#region Associations
 
@@ -215,6 +304,12 @@ namespace DataModels
 
 	public static partial class TableExtensions
 	{
+		public static Booking Find(this ITable<Booking> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
 		public static Client Find(this ITable<Client> table, long Id)
 		{
 			return table.FirstOrDefault(t =>

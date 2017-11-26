@@ -7,7 +7,7 @@ using Shared.Attributes;
 namespace Repositories
 {
     [PerScope]
-    public class SchedulesDataRepository : GenericRepository<SchedulesData>
+    public class SchedulesDataRepository : GenericPreservableRepository<SchedulesData>
     {
     }    
 }

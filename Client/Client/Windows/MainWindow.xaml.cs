@@ -17,6 +17,7 @@ using Common;
 using RestApi;
 using RestClient;
 using WPFCustomMessageBox;
+using Client.Commands;
 
 namespace Client
 {
@@ -46,6 +47,16 @@ namespace Client
 
         private async void OnTabSelectionChanged(Object sender, SelectionChangedEventArgs args)
         {
+            var tabCommands = new Dictionary<string, IAsyncCommand>() 
+                {
+                    { "UserRoles", UserRolesRefView.Model.RefreshDataCommand },
+                    { "Users", UsersRefView.Model.RefreshDataCommand },
+                    { "Horses", HorsesRefView.Model.RefreshDataCommand },
+                    { "Services", ServicesRefView.Model.RefreshDataCommand },
+                    { "Coaches", CoachesRefView.Model.RefreshDataCommand },
+                    { "Clients", ClientsRefView.Model.RefreshDataCommand },
+                };
+
             var tc = sender as TabControl;
             if (tc != null)
             {
@@ -53,35 +64,10 @@ namespace Client
                 if (item.IsSelected && selectedTab != item.Name)
                 {
                     selectedTab = ((TabItem)tc.SelectedItem).Name;
-
-                    //TODO add proper events handling
+                    
                     if (CheckAndWarnAuth())
                     {                        
-                        if (item.Name == "UserRoles")
-                        {
-                            await UserRolesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
-                        }
-
-                        if (item.Name == "Users")
-                        {
-                            await UsersRefView.Model.RefreshDataCommand.ExecuteAsync(null);                            
-                            
-                        }
-
-                        if (item.Name == "Horses")
-                        {
-                            await HorsesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
-                        }
-
-                        if (item.Name == "Services")
-                        {
-                            await ServicesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
-                        }
-
-                        if (item.Name == "Coaches")
-                        {
-                            await CoachesRefView.Model.RefreshDataCommand.ExecuteAsync(null);                                                        
-                        }
+                        await tabCommands[selectedTab].ExecuteAsync(null);                                                                                
                     }
                 }
             }

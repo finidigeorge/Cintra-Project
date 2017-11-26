@@ -2,6 +2,6 @@
 {
     public interface IUniqueDto
     {
-        long Id { get; set; }
+        long Id { get; set; }        
     }
 }

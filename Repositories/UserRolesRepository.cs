@@ -11,13 +11,13 @@ using Shared.Attributes;
 namespace Repositories
 {
     [PerScope]
-    public class UserRolesRepository: GenericRepository<UserRoles>, IUserRolesRepository
+    public class UserRolesRepository: GenericPreservableRepository<UserRoles>, IUserRolesRepository
     {
         public async Task<IList<UserRoles>> GetByParamsWithUsers(Func<UserRoles, bool> where)
         {
             using (var db = new CintraDB())
             {
-                return await Task.FromResult(db.UserRoles.LoadWith(x => x.users).Where(where).ToList());
+                return await Task.FromResult(db.UserRoles.LoadWith(x => x.users).Where(where).Where(x => x.IsDeleted == false).ToList());
             }
         }        
     }
