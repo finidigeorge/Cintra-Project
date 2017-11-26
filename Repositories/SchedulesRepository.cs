@@ -26,12 +26,9 @@ namespace Repositories
         public override async Task Delete(long id, CintraDB dbContext = null)
         {            
             await RunWithinTransaction(async (db) =>
-            {                
-                var schedulesData = await Task.FromResult(db.GetTable<SchedulesData>()
-                    .Where(x => x.ScheduleId == id)
-                    );
-
-                await schedulesData.ForEachAsync(async x => await _dataRepository.Delete(x.Id));                
+            {
+                var schedulesData = await  _dataRepository.GetByParams(x => x.ScheduleId == id);
+                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id));                
 
                 await base.Delete(id, db);
 

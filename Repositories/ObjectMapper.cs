@@ -22,6 +22,33 @@ namespace Mapping
                 {
                     conf.CreateMissingTypeMaps = true;
                     conf.ReplaceMemberName("_", "");
+
+                    conf.CreateMap<Booking, BookingDto>()                    
+                    .AfterMap((db, vm) =>
+                    {
+                        vm.Client = _mapper.Map<ClientDto>(db.client);
+                        vm.Coach = _mapper.Map<CoachDto>(db.coach);
+                        vm.Horse = _mapper.Map<HorseDto>(db.hors);
+                        vm.Service = _mapper.Map<ServiceDto>(db.service);
+                        var payment = db.bookingpayments?.FirstOrDefault();
+                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(db.bookingpayments?.FirstOrDefault());                        
+                    });
+                    conf.CreateMap<BookingDto, Booking>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())                        
+                        .AfterMap((vm, db) =>
+                        {
+                            db.ClientId = vm.Client.Id;
+                            db.CoachId = vm.Coach.Id;
+                            db.HorseId = vm.Horse.Id;
+                            db.ServiceId = vm.Service.Id;
+
+                        });
+
+
+                    conf.CreateMap<BookingPaymentDto, BookingPayments>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+
+
                     conf.CreateMap<User, UserDto>()                    
                     .AfterMap((db, vm) =>
                     {

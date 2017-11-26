@@ -21,6 +21,7 @@ namespace DataModels
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
 		public ITable<Booking>           Bookings          { get { return this.GetTable<Booking>(); } }
+		public ITable<BookingPayments>   BookingPayments   { get { return this.GetTable<BookingPayments>(); } }
 		public ITable<Client>            Clients           { get { return this.GetTable<Client>(); } }
 		public ITable<Coach>             Coaches           { get { return this.GetTable<Coach>(); } }
 		public ITable<DbUpdatesLog>      DbUpdatesLog      { get { return this.GetTable<DbUpdatesLog>(); } }
@@ -49,19 +50,24 @@ namespace DataModels
 	[Table("bookings")]
 	public partial class Booking
 	{
-		[Column("id"),             PrimaryKey,  NotNull] public long     Id             { get; set; } // integer
-		[Column("event_guid"),                  NotNull] public Guid     EventGuid      { get; set; } // guid
-		[Column("horse_id"),                    NotNull] public long     HorseId        { get; set; } // integer
-		[Column("coach_id"),                    NotNull] public long     CoachId        { get; set; } // integer
-		[Column("client_id"),                   NotNull] public long     ClientId       { get; set; } // integer
-		[Column("service_id"),                  NotNull] public long     ServiceId      { get; set; } // integer
-		[Column("date_on"),                     NotNull] public DateTime DateOn         { get; set; } // date
-		[Column("begin_time"),                  NotNull] public DateTime BeginTime      { get; set; } // time
-		[Column("end_time"),                    NotNull] public DateTime EndTime        { get; set; } // time
-		[Column("isPaid"),                      NotNull] public bool     IsPaid         { get; set; } // boolean
-		[Column("paymentOptions"),    Nullable         ] public string   PaymentOptions { get; set; } // varchar(200)
+		[Column("id"),         PrimaryKey, NotNull] public long     Id        { get; set; } // integer
+		[Column("event_guid"),             NotNull] public Guid     EventGuid { get; set; } // guid
+		[Column("horse_id"),               NotNull] public long     HorseId   { get; set; } // integer
+		[Column("coach_id"),               NotNull] public long     CoachId   { get; set; } // integer
+		[Column("client_id"),              NotNull] public long     ClientId  { get; set; } // integer
+		[Column("service_id"),             NotNull] public long     ServiceId { get; set; } // integer
+		[Column("is_deleted"),             NotNull] public bool     IsDeleted { get; set; } // boolean
+		[Column("date_on"),                NotNull] public DateTime DateOn    { get; set; } // date
+		[Column("begin_time"),             NotNull] public DateTime BeginTime { get; set; } // time
+		[Column("end_time"),               NotNull] public DateTime EndTime   { get; set; } // time
 
 		#region Associations
+
+		/// <summary>
+		/// FK_booking_payments_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="BookingId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPayments> bookingpayments { get; set; }
 
 		/// <summary>
 		/// FK_bookings_3_0
@@ -86,6 +92,26 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_0_0", BackReferenceName="bookings")]
 		public Service service { get; set; }
+
+		#endregion
+	}
+
+	[Table("booking_payments")]
+	public partial class BookingPayments
+	{
+		[Column("id"),             PrimaryKey,  NotNull] public long   Id             { get; set; } // integer
+		[Column("booking_id"),                  NotNull] public long   BookingId      { get; set; } // integer
+		[Column("isPaid"),                      NotNull] public bool   IsPaid         { get; set; } // boolean
+		[Column("paymentOptions"),    Nullable         ] public string PaymentOptions { get; set; } // varchar(200)
+		[Column("is_deleted"),                  NotNull] public bool   IsDeleted      { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_booking_payments_0_0
+		/// </summary>
+		[Association(ThisKey="BookingId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_0_0", BackReferenceName="bookingpayments")]
+		public Booking bookingpayment { get; set; }
 
 		#endregion
 	}
@@ -305,6 +331,12 @@ namespace DataModels
 	public static partial class TableExtensions
 	{
 		public static Booking Find(this ITable<Booking> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static BookingPayments Find(this ITable<BookingPayments> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

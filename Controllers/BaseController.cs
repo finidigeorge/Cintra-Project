@@ -13,7 +13,7 @@ namespace Controllers
     public class BaseController<T, T1> : IBaseController<T1>
     {
         protected IGenericRepository<T> _repository;
-        private readonly ILogger _logger;
+        protected readonly ILogger _logger;
         public BaseController(IGenericRepository<T> repository, ILoggerFactory loggerFactory)
         {
             _repository = repository;
@@ -25,7 +25,7 @@ namespace Controllers
         {
             try
             {
-                return await Task.Run(() => _repository.Create(ObjectMapper.Map<T>(entity)));
+                return await _repository.Create(ObjectMapper.Map<T>(entity));
             }
             catch (Exception e)
             {
@@ -55,7 +55,7 @@ namespace Controllers
         {
             try
             {
-                return (await Task.Run(() => _repository.GetAll())).Select(x => ObjectMapper.Map<T1>(x)).ToList();
+                return (await _repository.GetAll()).Select(x => ObjectMapper.Map<T1>(x)).ToList();
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace Controllers
         {
             try
             {
-                return ObjectMapper.Map<T1>(await Task.Run(() => _repository.GetById(id)));
+                return ObjectMapper.Map<T1>(await _repository.GetById(id));
             }
             catch (Exception e)
             {

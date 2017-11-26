@@ -2,6 +2,7 @@ using DataModels;
 using Mapping;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shared.Dto;
+using System.Collections.Generic;
 
 namespace Tests
 {
@@ -17,6 +18,29 @@ namespace Tests
         }
 
         [TestMethod]
+        public void BookingsMapping()
+        {
+            var dto = new BookingDto()
+            {
+                BookingPayment = new BookingPaymentDto(),
+                Client = new ClientDto(),
+                Coach = new CoachDto() { Schedules = new List<ScheduleDto>() },
+                Horse = new HorseDto(),
+                Service = new ServiceDto()
+            };
+
+            var result = ObjectMapper.Map<Booking>(dto);
+            result.bookingpayments = new List<BookingPayments>() { new BookingPayments() };
+            dto = ObjectMapper.Map<BookingDto>(result);
+        }
+
+        [TestMethod]
+        public void BookingPaymentMapping()
+        {
+            TestMapping<BookingPaymentDto, BookingPayments>();
+        }
+
+        [TestMethod]
         public void ClientMapping()
         {
             TestMapping<ClientDto, Client>();            
@@ -25,7 +49,9 @@ namespace Tests
         [TestMethod]
         public void CoachMapping()
         {
-            TestMapping<CoachDto, Coach>();            
+            var dto = new CoachDto() { Schedules = new List<ScheduleDto>() };
+            var result = ObjectMapper.Map<Coach>(dto);
+            dto = ObjectMapper.Map<CoachDto>(result);
         }
 
         [TestMethod]

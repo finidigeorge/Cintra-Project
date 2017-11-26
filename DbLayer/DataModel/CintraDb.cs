@@ -6,6 +6,8 @@ using DbLayer.Interfaces;
 
 namespace DataModels
 {
+    public partial class Booking : IPreservable { }
+    public partial class BookingPayments : IPreservable { }
     public partial class Coach : IPreservable {}
     public partial class Client : IPreservable { }
     public partial class Hors : IPreservable { }
