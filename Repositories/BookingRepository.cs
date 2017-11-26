@@ -13,13 +13,8 @@ namespace Repositories
     [PerScope]
     public class BookingRepository: GenericPreservableRepository<Booking>
     {
-        private readonly IBookingPaymentsRepository _paymentsRepository;
-
-        public BookingRepository(IBookingPaymentsRepository paymentsRepository)
-        {
-            _paymentsRepository = paymentsRepository;
-        }
-
+        private readonly IBookingPaymentsRepository _paymentsRepository = new BookingPaymentsRepository();
+        
         public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where)
         {
             using (var db = new CintraDB())

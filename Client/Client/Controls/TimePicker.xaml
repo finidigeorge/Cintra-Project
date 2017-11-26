@@ -58,7 +58,7 @@
                       BorderThickness="1"
                       FontSize="12"
                       ItemsSource="{Binding AmPmTypes}"
-                      SelectedItem="{Binding DisplayAmPm}" Height="26" Width="40" />
+                      SelectedItem="{Binding DisplayAmPm}" Height="26" />
         </StackPanel>
 
 

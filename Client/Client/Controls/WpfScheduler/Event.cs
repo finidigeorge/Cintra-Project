@@ -48,5 +48,26 @@ namespace Client.Controls.WpfScheduler
             scheduleData.BeginTime = Start;
             scheduleData.EndTime = End;
         }
+
+
+        public void UpdateFromBookingDataUi(BookingDtoUi booking)
+        {
+            if (booking.EventGuid != Guid.Empty)
+                Id = booking.EventGuid;
+
+            Description = booking.Client.Name;
+            Start = booking.BeginTime;
+            End = booking.EndTime;
+            AllDay = false;
+            Subject = booking.Client.Email;
+        }
+
+        public void MergeToScheduleDtoData(ref BookingDtoUi booking)
+        {
+            booking.EventGuid = Id;
+
+            booking.BeginTime = Start;
+            booking.EndTime = End;
+        }
     }
 }

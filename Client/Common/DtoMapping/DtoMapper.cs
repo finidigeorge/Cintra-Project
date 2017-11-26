@@ -67,6 +67,8 @@ namespace Common.DtoMapping
         {
             return string.Empty;
         }
+
+        public override string ToString() => Name;
     }
 
     public partial class ScheduleDtoUi : ScheduleDto, INotifyPropertyChanged

@@ -1,5 +1,6 @@
 ﻿using DataModels;
 using LinqToDB;
+using Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
-    public class BookingPaymentsRepository: GenericPreservableRepository<BookingPayments>
+    public class BookingPaymentsRepository: GenericPreservableRepository<BookingPayments>, IBookingPaymentsRepository
     {
         public async Task SynchronizeWithBooking(long bookingId, BookingPayments payment, CintraDB dbContext = null)
         {

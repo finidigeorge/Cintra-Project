@@ -1,6 +1,9 @@
 ﻿using Client.Commands;
+using Client.Controls.WpfScheduler;
+using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
+using Shared.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +26,7 @@ namespace Client.Windows
     public partial class BookingWindow : Window
     {
         private SolidColorBrush dailyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
+        private SolidColorBrush dailyEventPayedBrush = new SolidColorBrush(Colors.White);
 
         public BookingRefVm Model => (BookingRefVm)Resources["ViewModel"];
 
@@ -42,9 +46,13 @@ namespace Client.Windows
 
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
-                
+                var res = ShowScheduleEditor();
+                if (res.Item1)
+                {
+                    await CreateSchedulerEvent(res.Item2);
+                }
 
-            }, (x) => Model.SelectedItem != null);
+            }, (x) => true);
 
             Model.UpdateDailyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
 
@@ -53,13 +61,34 @@ namespace Client.Windows
                 
 
             }, (x) => Model.SelectedItem != null);
-
-            Model.OnSelectedItemChanged += OnSelectedScheduleChanged;
         }
 
-        private async void OnSelectedScheduleChanged(object sender, BookingDtoUi s)
+        private async Task CreateSchedulerEvent(BookingDtoUi booking)
         {
-            DailyScheduler.DeleteAllEvents();                                  
+            var e = new Event() { Color = booking.BookingPayment.IsPaid ? dailyEventPayedBrush : dailyEventBrush };
+            e.UpdateFromBookingDataUi(booking);
+            e.MergeToScheduleDtoData(ref booking);
+            
+            await Model.AddItemCommand.ExecuteAsync(booking);
+
+            DailyScheduler.AddEvent(e);
+        }
+
+        private (bool, BookingDtoUi) ShowScheduleEditor()
+        {
+            var beginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6);
+            var endTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21);
+            var bookingData = new BookingDtoUi()
+            {
+                DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),
+                BookingPayment = new BookingPaymentDto(),
+                BeginTime = beginTime,
+                EndTime = endTime
+            };
+            var editor = new BookingEditWindow(beginTime, endTime, bookingData) { Owner = this };            
+                        
+            var res = editor.ShowDialog() ?? false;            
+            return (res, editor.Model.BookingData);
         }
 
         private void DailyScheduler_OnEventClick(object sender, Controls.WpfScheduler.Event e)
