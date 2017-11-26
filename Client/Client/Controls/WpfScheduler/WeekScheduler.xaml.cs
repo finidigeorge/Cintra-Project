@@ -189,7 +189,7 @@ namespace Client.Controls.WpfScheduler
             {
                 int numColumn = (int)e.Start.Date.Subtract(FirstDay.Date).TotalDays + 1;
 
-                if (numColumn >= 0 && numColumn <= 7)
+                if (numColumn >= 0 && numColumn <= 7 && e.Start.Date >= FirstDay.Date)
                 {
                     Canvas sp = (Canvas)FindName("column" + numColumn);
                     sp.Width = columnWidth;

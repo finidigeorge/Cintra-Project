@@ -43,6 +43,6 @@ namespace Client.Windows
 
             DialogResult = true;
             Close();
-        }
+        }        
     }
 }

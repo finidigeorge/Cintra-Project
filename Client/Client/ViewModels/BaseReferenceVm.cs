@@ -129,7 +129,7 @@ namespace Client.ViewModels
 
             PropertyChanged += (o, args) =>
             {
-                if (args.PropertyName == "SelectedItem")
+                if (args.PropertyName == nameof(SelectedItem))
                 {
                     OnSelectedItemChanged?.Invoke(o, SelectedItem);
                 }

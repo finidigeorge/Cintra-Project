@@ -7,18 +7,19 @@ using RestClient;
 using RestSharp;
 using Shared.Dto;
 using Shared.Interfaces;
+using Shared;
 
 namespace RestApi
 {
     public class UserRolesClient: BaseRestApiClient<UserRoleDto>, IUserRolesController
     {
-        public UserRolesClient() : base("userRoles")
+        public UserRolesClient() : base(enKnownControllers.UserRolesController)
         {
         }
 
         public async Task<IList<UserRoleDto>> GetByUser(string login)
         {
-            return await SendRequest<List<UserRoleDto>>($"api/userRoles/getByUser/{login}");
+            return await SendRequest<List<UserRoleDto>>($"api/{ControllerName}/getByUser/{login}");
         }
     }
 }

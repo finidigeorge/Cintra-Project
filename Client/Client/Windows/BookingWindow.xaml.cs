@@ -33,15 +33,18 @@ namespace Client.Windows
         public BookingWindow()
         {
             InitializeComponent();
+            DailyScheduler.SelectedDate = Model.CurrentDate;
 
-            Model.NextDayCommand = new Command<object>(() =>
+            Model.NextDayCommand = new Command<object>(async () =>
             {
                 DailyScheduler.NextPage();
+                await LoadSchedule();
             }, (x) => true);
 
-            Model.PrevDayCommand = new Command<object>(() =>
+            Model.PrevDayCommand = new Command<object>(async () =>
             {
-                DailyScheduler.PrevPage();
+                DailyScheduler.PrevPage();                
+                await LoadSchedule();
             }, x => DailyScheduler.SelectedDate >= DateTime.Now);
 
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
@@ -56,11 +59,27 @@ namespace Client.Windows
 
             Model.UpdateDailyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
 
-            Model.DeleteDailyScheduledIntervalCommand = new Command<object>(() =>
+            Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
-                
+                DailyScheduler.DeleteEvent(Model.SelectedItem.EventGuid);
+                await Model.DeleteSelectedItemCommand.ExecuteAsync(null);
 
-            }, (x) => Model.SelectedItem != null);
+            }, (x) => Model.SelectedItem != null);            
+
+        }
+
+        private async Task LoadSchedule()
+        {
+            Model.CurrentDate = DailyScheduler.SelectedDate.TruncateToDayStart();
+            await Model.RefreshDataCommand.ExecuteAsync(null);
+            DailyScheduler.DeleteAllEvents();
+
+            foreach (var booking in Model.Items)
+            {
+                var e = new Event() { Color = booking.BookingPayment.IsPaid ? dailyEventPayedBrush : dailyEventBrush };
+                e.UpdateFromBookingDataUi(booking);                
+                DailyScheduler.AddEvent(e);
+            }
         }
 
         private async Task CreateSchedulerEvent(BookingDtoUi booking)
@@ -94,6 +113,11 @@ namespace Client.Windows
         private void DailyScheduler_OnEventClick(object sender, Controls.WpfScheduler.Event e)
         {
             Model.SelectedItem = Model.Items.FirstOrDefault(x => x.EventGuid == e.Id);
+        }
+
+        private async void Window_LoadedAsync(object sender, RoutedEventArgs e)
+        {
+            await LoadSchedule();
         }
     }
 }

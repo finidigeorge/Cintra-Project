@@ -31,7 +31,7 @@ namespace Client.ViewModels
                 var thread = new Thread(() =>
                 {
                     var bookingWindow = new BookingWindow();
-                    bookingWindowIsRunning = true;
+                    bookingWindowIsRunning = true;                    
                     bookingWindow.Show();
 
                     bookingWindow.Closed += (sender2, e2) => { bookingWindow.Dispatcher.InvokeShutdown(); bookingWindowIsRunning = false; };

@@ -1,4 +1,5 @@
-﻿using Common.DtoMapping;
+﻿using Client.Extentions;
+using Common.DtoMapping;
 using RestClient;
 using Shared.Dto;
 using System;
@@ -12,9 +13,20 @@ namespace Client.ViewModels
 {
     public class BookingRefVm : BaseReferenceVm<BookingDto, BookingDtoUi>
     {
+        public int NumDaysToLoad { get; set; } = 1;
+
+        public DateTime CurrentDate { get; set; } = DateTime.Now.TruncateToDayStart();
+
+        private BookingsClient _client { get => (BookingsClient)Client; }
+
         public BookingRefVm()
         {
-            Client = RestClientFactory.GetClient<BookingDto>();
+            Client = new BookingsClient();            
+        }
+
+        protected override async Task<IList<BookingDto>> GetItems()
+        {
+            return await _client.GetAllFiltered(CurrentDate.ToBinary(), CurrentDate.AddDays(NumDaysToLoad).ToBinary());
         }
 
         //UI Event wrappers commands

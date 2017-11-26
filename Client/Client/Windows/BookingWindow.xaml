@@ -9,7 +9,8 @@
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
         mc:Ignorable="d"
         Title="Bookings" Height="800" Width="1280" WindowStartupLocation="CenterScreen"
-        FontSize="14">
+        FontSize="14"
+        Loaded="Window_LoadedAsync">
     <Window.Resources>
         <viewModels:BookingRefVm x:Key="ViewModel" />
     </Window.Resources>
