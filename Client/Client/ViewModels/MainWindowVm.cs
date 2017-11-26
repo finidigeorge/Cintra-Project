@@ -8,12 +8,12 @@ using RestApi;
 using RestClient;
 using WPFCustomMessageBox;
 using Client.Windows;
+using System.Threading;
 
 namespace Client.ViewModels
 {
     public class MainWindowVm
     {
-        private BookingWindow bookingWindow;
         public ICommand ShowBookingWindowCommand { get; }
         public ICommand ShowLoginDialogCommand { get; }
         public ICommand ShowChangePasswordDialogCommand { get; }
@@ -22,18 +22,27 @@ namespace Client.ViewModels
         public AuthVm AuthVm { get; }
         public Dictionary<string, IEditableSelectableReference<object>> TabsDictionary = new Dictionary<string, IEditableSelectableReference<object>>();
 
+        bool bookingWindowIsRunning = false;
+
         public MainWindowVm()
         {
             ShowBookingWindowCommand = new Command<object>(() =>
-            {
-                if (bookingWindow == null)
+            {                
+                var thread = new Thread(() =>
                 {
-                    bookingWindow = new BookingWindow();                    
-                }
-                bookingWindow.Show();
-                bookingWindow.Activate();
+                    var bookingWindow = new BookingWindow();
+                    bookingWindowIsRunning = true;
+                    bookingWindow.Show();
 
-            }, x => AuthVm.IsAuthenticated);
+                    bookingWindow.Closed += (sender2, e2) => { bookingWindow.Dispatcher.InvokeShutdown(); bookingWindowIsRunning = false; };
+
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();                                                
+
+            }, x => AuthVm.IsAuthenticated && !bookingWindowIsRunning);
 
             ShowLoginDialogCommand = new Command<object>(() =>
             {

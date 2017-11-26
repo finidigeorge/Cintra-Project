@@ -45,6 +45,7 @@ namespace Cintra
             // configure lin2db
             LinqToDB.Data.DataConnection.DefaultSettings = new DbSettings(Configuration.GetSection("LinqToDb"));
             LinqToDB.Common.Configuration.Linq.AllowMultipleQuery = true;
+            LinqToDB.Common.Configuration.Linq.IgnoreEmptyUpdate = true;            
 
             var assemblyNames = new[] {                
                 "Repositories",

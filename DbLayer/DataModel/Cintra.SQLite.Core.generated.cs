@@ -50,16 +50,16 @@ namespace DataModels
 	[Table("bookings")]
 	public partial class Booking
 	{
-		[Column("id"),         PrimaryKey, NotNull] public long     Id        { get; set; } // integer
-		[Column("event_guid"),             NotNull] public Guid     EventGuid { get; set; } // guid
-		[Column("horse_id"),               NotNull] public long     HorseId   { get; set; } // integer
-		[Column("coach_id"),               NotNull] public long     CoachId   { get; set; } // integer
-		[Column("client_id"),              NotNull] public long     ClientId  { get; set; } // integer
-		[Column("service_id"),             NotNull] public long     ServiceId { get; set; } // integer
-		[Column("is_deleted"),             NotNull] public bool     IsDeleted { get; set; } // boolean
-		[Column("date_on"),                NotNull] public DateTime DateOn    { get; set; } // date
-		[Column("begin_time"),             NotNull] public DateTime BeginTime { get; set; } // time
-		[Column("end_time"),               NotNull] public DateTime EndTime   { get; set; } // time
+		[Column("id"),         PrimaryKey, Identity] public long     Id        { get; set; } // integer
+		[Column("event_guid"), NotNull             ] public Guid     EventGuid { get; set; } // guid
+		[Column("horse_id"),   NotNull             ] public long     HorseId   { get; set; } // integer
+		[Column("coach_id"),   NotNull             ] public long     CoachId   { get; set; } // integer
+		[Column("client_id"),  NotNull             ] public long     ClientId  { get; set; } // integer
+		[Column("service_id"), NotNull             ] public long     ServiceId { get; set; } // integer
+		[Column("is_deleted"), NotNull             ] public bool     IsDeleted { get; set; } // boolean
+		[Column("date_on"),    NotNull             ] public DateTime DateOn    { get; set; } // date
+		[Column("begin_time"), NotNull             ] public DateTime BeginTime { get; set; } // time
+		[Column("end_time"),   NotNull             ] public DateTime EndTime   { get; set; } // time
 
 		#region Associations
 
@@ -99,11 +99,11 @@ namespace DataModels
 	[Table("booking_payments")]
 	public partial class BookingPayments
 	{
-		[Column("id"),             PrimaryKey,  NotNull] public long   Id             { get; set; } // integer
-		[Column("booking_id"),                  NotNull] public long   BookingId      { get; set; } // integer
-		[Column("isPaid"),                      NotNull] public bool   IsPaid         { get; set; } // boolean
-		[Column("paymentOptions"),    Nullable         ] public string PaymentOptions { get; set; } // varchar(200)
-		[Column("is_deleted"),                  NotNull] public bool   IsDeleted      { get; set; } // boolean
+		[Column("id"),             PrimaryKey,  Identity] public long   Id             { get; set; } // integer
+		[Column("booking_id"),     NotNull              ] public long   BookingId      { get; set; } // integer
+		[Column("isPaid"),         NotNull              ] public bool   IsPaid         { get; set; } // boolean
+		[Column("paymentOptions"),    Nullable          ] public string PaymentOptions { get; set; } // varchar(200)
+		[Column("is_deleted"),     NotNull              ] public bool   IsDeleted      { get; set; } // boolean
 
 		#region Associations
 
@@ -119,15 +119,15 @@ namespace DataModels
 	[Table("clients")]
 	public partial class Client
 	{
-		[Column("id"),              PrimaryKey,  NotNull] public long   Id             { get; set; } // integer
-		[Column("name"),                         NotNull] public string Name           { get; set; } // varchar(50)
-		[Column("email"),              Nullable         ] public string Email          { get; set; } // varchar(50)
-		[Column("phone"),              Nullable         ] public string Phone          { get; set; } // varchar(50)
-		[Column("age"),                          NotNull] public object Age            { get; set; } // number
-		[Column("weight"),             Nullable         ] public string Weight         { get; set; } // varchar(10)
-		[Column("height"),             Nullable         ] public string Height         { get; set; } // varchar(10)
-		[Column("contact_details"),    Nullable         ] public string ContactDetails { get; set; } // varchar(200)
-		[Column("is_deleted"),                   NotNull] public bool   IsDeleted      { get; set; } // boolean
+		[Column("id"),              PrimaryKey,  Identity] public long   Id             { get; set; } // integer
+		[Column("name"),            NotNull              ] public string Name           { get; set; } // varchar(50)
+		[Column("email"),              Nullable          ] public string Email          { get; set; } // varchar(50)
+		[Column("phone"),              Nullable          ] public string Phone          { get; set; } // varchar(50)
+		[Column("age"),             NotNull              ] public object Age            { get; set; } // number
+		[Column("weight"),             Nullable          ] public string Weight         { get; set; } // varchar(10)
+		[Column("height"),             Nullable          ] public string Height         { get; set; } // varchar(10)
+		[Column("contact_details"),    Nullable          ] public string ContactDetails { get; set; } // varchar(200)
+		[Column("is_deleted"),      NotNull              ] public bool   IsDeleted      { get; set; } // boolean
 
 		#region Associations
 

@@ -23,7 +23,7 @@ namespace Repositories
 
 
                 db.BookingPayments.Where(p => p.BookingId == bookingId && p.Id != payment.Id).Set(x => x.IsDeleted, true).Update();
-                await Create(payment);
+                await Create(payment, db);
                 return null;
 
             }, dbContext);
