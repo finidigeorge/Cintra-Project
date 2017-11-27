@@ -32,10 +32,18 @@ namespace Common.DtoMapping
     public partial class BookingDtoUi : BookingDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        
 
         public string ApplyObjectLevelValidations()
         {
-            return string.Empty;
+            StringBuilder error = new StringBuilder();
+
+            if (BeginTime >= EndTime)
+            {
+                error.Append((error.Length != 0 ? ", " : "") + "Begin time and End time values are incorrect");
+            }
+
+            return error.ToString();
         }
     }
 
@@ -57,6 +65,8 @@ namespace Common.DtoMapping
         {
             return string.Empty;
         }
+
+        public override string ToString() => Name;
     }
 
     public partial class ClientDtoUi : ClientDto, INotifyPropertyChanged
@@ -68,7 +78,7 @@ namespace Common.DtoMapping
             return string.Empty;
         }
 
-        public override string ToString() => Name;
+        public override string ToString() => $"{Name} ph/email: {Phone ?? Email}";
     }
 
     public partial class ScheduleDtoUi : ScheduleDto, INotifyPropertyChanged
@@ -89,7 +99,14 @@ namespace Common.DtoMapping
 
         public string ApplyObjectLevelValidations()
         {
-            return string.Empty;
+            StringBuilder error = new StringBuilder();
+
+            if (BeginTime >= EndTime)
+            {
+                error.Append((error.Length != 0 ? ", " : "") + "Begin time and End time values are incorrect");
+            }
+
+            return error.ToString();
         }
     }
 
@@ -101,6 +118,8 @@ namespace Common.DtoMapping
         {
             return string.Empty;
         }
+
+        public override string ToString() => NickName;
     }
 
     public partial class ServiceDtoUi : ServiceDto, INotifyPropertyChanged
@@ -110,6 +129,8 @@ namespace Common.DtoMapping
         {
             return string.Empty;
         }
+
+        public override string ToString() => Name;
     }
 
     public partial class UserDtoUi : UserDto, INotifyPropertyChanged

@@ -1,4 +1,5 @@
-﻿using Client.ViewModels;
+﻿using Client.Extentions;
+using Client.ViewModels;
 using Common.DtoMapping;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Client.Windows
 
         public BookingEditWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         public BookingEditWindow(DateTime beginTime, DateTime endTime, BookingDtoUi bookindData)
@@ -34,13 +35,24 @@ namespace Client.Windows
             Model.BookingData = bookindData;
             BeginTimePicker.Model.CurrentTime = beginTime;
             EndTimePicker.Model.CurrentTime = endTime;
+
+            BeginTimePicker.Model.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "CurrentTime")
+                {
+                    Model.BookingData.BeginTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart()); 
+                }
+            };
+
+            EndTimePicker.Model.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "CurrentTime")
+                {
+                    Model.BookingData.EndTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart());
+                }
+            };
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Model.BookingData.BeginTime = BeginTimePicker.Model.CurrentTime;
-            Model.BookingData.EndTime = EndTimePicker.Model.CurrentTime;
-
+        {            
             DialogResult = true;
             Close();
         }        

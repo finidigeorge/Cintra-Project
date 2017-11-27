@@ -40,6 +40,8 @@ foreach (Type type in types)
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
+			public bool IsValid => String.IsNullOrEmpty(Error);
+
 			<# foreach (var p in baseProperties) 
 			{
 				var propertyTypeName = p.PropertyType.Name;
@@ -96,6 +98,8 @@ foreach (Type type in types)
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error

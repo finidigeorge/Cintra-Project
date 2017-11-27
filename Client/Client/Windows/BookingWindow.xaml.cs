@@ -25,8 +25,8 @@ namespace Client.Windows
     /// </summary>
     public partial class BookingWindow : Window
     {
-        private SolidColorBrush dailyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
-        private SolidColorBrush dailyEventPayedBrush = new SolidColorBrush(Colors.White);
+        private SolidColorBrush dailyEventBrush = new SolidColorBrush(Color.FromRgb(255, 240, 240));
+        private SolidColorBrush dailyEventPayedBrush = new SolidColorBrush(Color.FromRgb(240, 255, 240));
 
         public BookingRefVm Model => (BookingRefVm)Resources["ViewModel"];
 
@@ -63,6 +63,7 @@ namespace Client.Windows
             {
                 DailyScheduler.DeleteEvent(Model.SelectedItem.EventGuid);
                 await Model.DeleteSelectedItemCommand.ExecuteAsync(null);
+                Model.SelectedItem = null;
 
             }, (x) => Model.SelectedItem != null);            
 

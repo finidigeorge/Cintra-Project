@@ -9,6 +9,7 @@ namespace Shared.Dto
     {
         public virtual long Id { get; set; }
         public virtual long BookingId { get; set; }
+        public virtual long PaymentTypeId { get; set; }
         public virtual bool IsPaid { get; set; }
         public virtual string PaymentOptions { get; set; }
 

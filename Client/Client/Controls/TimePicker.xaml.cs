@@ -71,11 +71,11 @@ namespace Client.Controls
 
         private void AddHoursTextBox_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.OemPlus)
+            if (e.Key == Key.OemPlus || e.Key == Key.Add)
             {
                 Model.CurrentTime = Model.CurrentTime.AddHours(Model.HoursInterval);
             }
-            if (e.Key == Key.OemMinus)
+            if (e.Key == Key.OemMinus || e.Key == Key.Subtract)
             {
                 Model.CurrentTime = Model.CurrentTime.AddHours(-Model.HoursInterval);
             }
@@ -83,11 +83,11 @@ namespace Client.Controls
 
         private void AddMinutesTextBox_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.OemPlus)
+            if (e.Key == Key.OemPlus || e.Key == Key.Add)
             {
                 Model.CurrentTime = Model.CurrentTime.AddMinutes(Model.MinsInterval);
             }
-            if (e.Key == Key.OemMinus)
+            if (e.Key == Key.OemMinus || e.Key == Key.Subtract)
             {
                 Model.CurrentTime = Model.CurrentTime.AddMinutes(-Model.MinsInterval);
             }

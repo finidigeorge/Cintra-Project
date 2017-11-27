@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,7 +31,7 @@ namespace Client.Controls.WpfScheduler
             }
             else
             {
-                this.DisplayDateText.Text = String.Format("{0} - {1}", e.Start.ToString("HH:mm"), e.End.ToString("HH:mm"));
+                this.DisplayDateText.Text = String.Format("{0} - {1}", e.Start.ToString("hh:mm tt"), e.End.ToString("hh:mm tt"));
             }
             this.BorderElement.ToolTip = this.DisplayDateText.Text + System.Environment.NewLine + this.DisplayText.Text;
 

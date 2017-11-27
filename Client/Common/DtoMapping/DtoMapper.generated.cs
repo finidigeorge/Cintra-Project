@@ -18,6 +18,8 @@ namespace Common.DtoMapping
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
+			public bool IsValid => String.IsNullOrEmpty(Error);
+
 				
 			public override Int64 Id { get; set; }
 				
@@ -78,6 +80,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -116,10 +120,14 @@ namespace Common.DtoMapping
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
 
+			public bool IsValid => String.IsNullOrEmpty(Error);
+
 				
 			public override Int64 Id { get; set; }
 				
 			public override Int64 BookingId { get; set; }
+				
+			public override Int64 PaymentTypeId { get; set; }
 				
 			public override Boolean IsPaid { get; set; }
 				
@@ -164,6 +172,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -201,6 +211,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<CoachDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -250,6 +262,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -287,6 +301,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<ClientDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -344,6 +360,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -381,6 +399,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<ScheduleDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -430,6 +450,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -467,6 +489,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<ScheduleDataDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -528,6 +552,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -565,6 +591,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<HorseDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -610,6 +638,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -647,6 +677,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<ServiceDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -692,6 +724,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -729,6 +763,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<UserDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -788,6 +824,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error
@@ -825,6 +863,8 @@ namespace Common.DtoMapping
 			private readonly EditableAdapter<UserRoleDto> _adapter;
 			public event ItemEndEditEventHandler ItemEndEdit;
 			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
 
 				
 			public override Int64 Id { get; set; }
@@ -870,6 +910,8 @@ namespace Common.DtoMapping
 			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
 			}
 			
 			public string Error

@@ -84,7 +84,12 @@ namespace Client.ViewModels
                 BeforeAddItemHandler(param);
                 var id = await Client.Create(ObjectMapper.Map<T>(param));
                 var item = ObjectMapper.Map<T1>(await Client.GetById(id));
-                Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;                
+
+                //two cases for scheduler and table models
+                if (Items.Any(v => v.Id == 0))
+                    Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;
+                else
+                    Items.Add(item);
             }, (x) => x != null);
 
             UpdateItemCommand = new AsyncCommand<T1>(async (param) =>

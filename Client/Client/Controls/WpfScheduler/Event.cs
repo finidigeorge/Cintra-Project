@@ -53,13 +53,14 @@ namespace Client.Controls.WpfScheduler
         public void UpdateFromBookingDataUi(BookingDtoUi booking)
         {
             if (booking.EventGuid != Guid.Empty)
-                Id = booking.EventGuid;
-
-            Description = booking.Client.Name;
+                Id = booking.EventGuid;            
             Start = booking.BeginTime;
             End = booking.EndTime;
             AllDay = false;
-            Subject = booking.Client.Email;
+            string paymentInfo = booking.BookingPayment.IsPaid ? "Paid" : "Not paid";
+
+            Subject = $"Client: {booking.Client.Name}, Coach: {booking.Coach.Name}, Horse: {booking.Horse.NickName}, Service: {booking.Service.Name} \n" + 
+                $"{paymentInfo}";
         }
 
         public void MergeToScheduleDtoData(ref BookingDtoUi booking)

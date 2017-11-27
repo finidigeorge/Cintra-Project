@@ -41,6 +41,21 @@ namespace Client
             InitializeComponent();
             BeginTimePicker.Model.CurrentTime = beginTime;
             EndTimePicker.Model.CurrentTime = endTime;
+
+            BeginTimePicker.Model.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "CurrentTime")
+                {
+                    Model.BeginTime = ((TimePickerVm)sender).CurrentTime;
+                }
+            };
+
+            EndTimePicker.Model.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "CurrentTime")
+                {
+                    Model.EndTime = ((TimePickerVm)sender).CurrentTime;
+                }
+            };
+
             this.mode = mode;
             SetVisibility();
         }
@@ -62,10 +77,7 @@ namespace Client
         public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Model.BeginTime = BeginTimePicker.Model.CurrentTime;
-            Model.EndTime = EndTimePicker.Model.CurrentTime;
-
+        {            
             DialogResult = true;
             Close();
         }

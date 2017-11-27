@@ -26,6 +26,7 @@ namespace DataModels
 		public ITable<Coach>             Coaches           { get { return this.GetTable<Coach>(); } }
 		public ITable<DbUpdatesLog>      DbUpdatesLog      { get { return this.GetTable<DbUpdatesLog>(); } }
 		public ITable<Hors>              Horses            { get { return this.GetTable<Hors>(); } }
+		public ITable<PaymentTypes>      PaymentTypes      { get { return this.GetTable<PaymentTypes>(); } }
 		public ITable<Schedule>          Schedules         { get { return this.GetTable<Schedule>(); } }
 		public ITable<SchedulesData>     SchedulesData     { get { return this.GetTable<SchedulesData>(); } }
 		public ITable<SchedulesInterval> SchedulesInterval { get { return this.GetTable<SchedulesInterval>(); } }
@@ -99,11 +100,12 @@ namespace DataModels
 	[Table("booking_payments")]
 	public partial class BookingPayments
 	{
-		[Column("id"),             PrimaryKey,  Identity] public long   Id             { get; set; } // integer
-		[Column("booking_id"),     NotNull              ] public long   BookingId      { get; set; } // integer
-		[Column("isPaid"),         NotNull              ] public bool   IsPaid         { get; set; } // boolean
-		[Column("paymentOptions"),    Nullable          ] public string PaymentOptions { get; set; } // varchar(200)
-		[Column("is_deleted"),     NotNull              ] public bool   IsDeleted      { get; set; } // boolean
+		[Column("id"),              PrimaryKey,  Identity] public long   Id             { get; set; } // integer
+		[Column("booking_id"),      NotNull              ] public long   BookingId      { get; set; } // integer
+		[Column("payment_type_id"), NotNull              ] public long   PaymentTypeId  { get; set; } // integer
+		[Column("isPaid"),          NotNull              ] public bool   IsPaid         { get; set; } // boolean
+		[Column("paymentOptions"),     Nullable          ] public string PaymentOptions { get; set; } // varchar(200)
+		[Column("is_deleted"),      NotNull              ] public bool   IsDeleted      { get; set; } // boolean
 
 		#region Associations
 
@@ -112,6 +114,12 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="BookingId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_0_0", BackReferenceName="bookingpayments")]
 		public Booking bookingpayment { get; set; }
+
+		/// <summary>
+		/// FK_booking_payments_1_0
+		/// </summary>
+		[Association(ThisKey="PaymentTypeId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_1_0", BackReferenceName="bookingpayments")]
+		public PaymentTypes FK_booking_payments_1_0 { get; set; }
 
 		#endregion
 	}
@@ -188,6 +196,24 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Booking> bookings { get; set; }
+
+		#endregion
+	}
+
+	[Table("payment_types")]
+	public partial class PaymentTypes
+	{
+		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
+		[Column("name"),       NotNull             ] public string Name      { get; set; } // varchar(50)
+		[Column("is_deleted"), NotNull             ] public bool   IsDeleted { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_booking_payments_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="PaymentTypeId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPayments> bookingpayments { get; set; }
 
 		#endregion
 	}
@@ -361,6 +387,12 @@ namespace DataModels
 		}
 
 		public static Hors Find(this ITable<Hors> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static PaymentTypes Find(this ITable<PaymentTypes> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

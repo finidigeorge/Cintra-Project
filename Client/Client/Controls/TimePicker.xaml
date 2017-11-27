@@ -21,12 +21,12 @@
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Vertical">
-                <Button x:Name="HourUpButton" Click="HourUpButton_OnClick" FontFamily="Marlett" FontSize="9" Content="5">
+                <Button x:Name="HourUpButton" Click="HourUpButton_OnClick" FontFamily="Marlett" FontSize="9" Content="5" Focusable="False">
                 </Button>
 
                 <Button x:Name="HourDownButton"
                         FontFamily="Marlett" FontSize="9" Content="6"
-                        Click="HourDownButton_OnClick">
+                        Click="HourDownButton_OnClick" Focusable="False">
                 </Button>
             </StackPanel>
             <TextBox x:Name="AddMinutesTextBox"
@@ -42,12 +42,12 @@
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Vertical">
-                <Button x:Name="MinutesUpButton" Click="MinutesUpButton_OnClick" FontFamily="Marlett" FontSize="9" Content="5">
+                <Button x:Name="MinutesUpButton" Click="MinutesUpButton_OnClick" FontFamily="Marlett" FontSize="9" Content="5" Focusable="False">
                 </Button>
 
                 <Button x:Name="MinutesDownButton"                        
                         Click="MinutesDownButton_OnClick"
-                        FontFamily="Marlett" FontSize="9" Content="6">
+                        FontFamily="Marlett" FontSize="9" Content="6" Focusable="False">
                 </Button>
             </StackPanel>
 
