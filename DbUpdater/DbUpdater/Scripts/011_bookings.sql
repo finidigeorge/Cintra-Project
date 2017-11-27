@@ -1,6 +1,6 @@
 PRAGMA foreign_keys = ON;
 
-drop table if exists payment_type;
+drop table if exists payment_types;
 drop table if exists booking_payments;
 drop table if exists bookings;
 
