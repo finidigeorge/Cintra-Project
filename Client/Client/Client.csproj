@@ -119,7 +119,6 @@
     </Compile>
     <Compile Include="Extentions\ComboBoxExtention.cs" />
     <Compile Include="Extentions\DataGridExtension.cs" />
-    <Compile Include="Extentions\DateTimeExtentions.cs" />
     <Compile Include="Extentions\EnumBooleanConverter.cs" />
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />

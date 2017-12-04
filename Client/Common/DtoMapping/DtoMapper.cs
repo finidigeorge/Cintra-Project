@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Shared.Dto;
+using PropertyChanged;
+using Common.Extentions;
 
 
 /*
@@ -32,7 +34,22 @@ namespace Common.DtoMapping
     public partial class BookingDtoUi : BookingDto, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
+        [DependsOn("BeginTime")]
+        public String BeginTimeFmtd => BeginTime.ToString("hh:mm tt");
+
+        [DependsOn("BeginTime")]
+        public String BeginTimeRoundedFmtd => BeginTime.RoundDown(TimeSpan.FromMinutes(30)).ToString("hh:mm tt");
+
+        [DependsOn("BeginTime", "EndTime")]
+        public String LengthFmtd {
+            get
+            {
+                if (BeginTime > EndTime) { return "0"; }
+
+                return (EndTime - BeginTime).ToString("h'h 'm'm '");
+            }
+        }
 
         public string ApplyObjectLevelValidations()
         {

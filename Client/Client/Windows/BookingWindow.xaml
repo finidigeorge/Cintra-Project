@@ -54,9 +54,66 @@
                 </ToolBarPanel>
 
             </Grid>
-            <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="21:00"                                             
-                                            OnEventClick="DailyScheduler_OnEventClick"                                            
-                                            />
+
+            <ListView x:Name="BookingList" Grid.Row="1" ItemsSource="{Binding ItemsCollectionView}">
+
+                <ListView.GroupStyle>
+                    <GroupStyle HidesIfEmpty="False">
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="GroupItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GroupItem">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,5" >
+													    <Bold><TextBlock Text="{Binding Name}"/></Bold> (<TextBlock Text="{Binding ItemCount}"/> Lessions)
+												    </TextBlock>
+                                                </Expander.Header>
+                                                <ItemsPresenter />
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+
+                <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->                
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=BeginTimeFmtd}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Horse" DisplayMemberBinding="{Binding Path=Horse.Name}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Service" DisplayMemberBinding="{Binding Path=Service.Name}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=LengthFmtd}" Width="{Binding ElementName=col3, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Client" DisplayMemberBinding="{Binding Path=Client.Name}" Width="{Binding ElementName=col4, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Is Paid" DisplayMemberBinding="{Binding Path=BookingPayment.IsPaid}" Width="{Binding ElementName=col5, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Payment" DisplayMemberBinding="{Binding Path=BookingPayment.PaymentOptions}" Width="{Binding ElementName=col6, Path=ActualWidth}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Grid Visibility="Hidden">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" x:Name="col0"/>
+                <Grid Grid.Column="1" x:Name="col1"/>
+                <Grid Grid.Column="2" x:Name="col2"/>
+                <Grid Grid.Column="3" x:Name="col3"/>
+                <Grid Grid.Column="4" x:Name="col4"/>
+                <Grid Grid.Column="5" x:Name="col5"/>
+                <Grid Grid.Column="6" x:Name="col6"/>
+
+            </Grid>
+
         </Grid>
     </Grid>
 </Window>

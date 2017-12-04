@@ -18,6 +18,7 @@ using Client.ViewModels;
 using Common.DtoMapping;
 using Shared.Dto;
 using Shared;
+using Common.Extentions;
 
 namespace Client.Windows
 {

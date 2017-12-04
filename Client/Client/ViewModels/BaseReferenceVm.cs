@@ -29,9 +29,9 @@ namespace Client.ViewModels
         where T1 : T, IUniqueDto, INotifyPropertyChanged, IAtomicEditableObject, new()
         where T: IUniqueDto, new()
         
-    {                
-
-        public CollectionView ItemsCollectionView { get; private set; }
+    {
+        private ICollectionView _itemsCollectionView;
+        public ICollectionView ItemsCollectionView { get { return _itemsCollectionView; } }
 
         public event EventHandler<T1> OnSelectedItemChanged;
         public T1 SelectedItem { get; set; }
@@ -48,10 +48,7 @@ namespace Client.ViewModels
                 Set(ref _items, value, nameof(Items));
                 _items.CollectionChanged += OnCollectionChanged;
 
-                if (ItemsCollectionView == null)
-                    ItemsCollectionView = new ListCollectionView(_items);
-
-                ItemsCollectionView.Refresh();
+                _itemsCollectionView = CollectionViewSource.GetDefaultView(_items);                
             }
         }
 
@@ -66,12 +63,13 @@ namespace Client.ViewModels
         {
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
-                Items = new ObservableCollection<T1>();
+                if (Items == null)
+                    Items = new ObservableCollection<T1>();
+                else
+                    Items.Clear();
+
                 foreach (var item in (await GetItems()).ToList<T, T1>())                
-                    Items.Add(item);
-
-                ItemsCollectionView?.Refresh();
-
+                    Items.Add(item);                
             });
 
             RefreshDataCommand = new AsyncCommand<object>(async (x) =>
@@ -107,10 +105,7 @@ namespace Client.ViewModels
             {
                 await UpdateItemCommand.ExecuteAsync(SelectedItem);
                 var idx = Items.IndexOf(Items.First(i => i.Id == SelectedItem.Id));
-                Items[idx] = SelectedItem;
-
-                ItemsCollectionView.Refresh();
-
+                Items[idx] = SelectedItem;                
             }, (x) => CanEditSelectedItem);
 
             DeleteSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
@@ -170,7 +165,8 @@ namespace Client.ViewModels
             //delete from collection handler
             if (action == NotifyCollectionChangedAction.Remove && e.OldItems?.Count > 0)
             {                
-                ItemsCollectionView.Refresh();
+                /*ItemsCollectionView.Refresh();
+                OnPropertyChanged(nameof(ItemsCollectionView));*/
             }            
         }
 

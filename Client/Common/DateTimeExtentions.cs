@@ -4,10 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Client.Extentions
+namespace Common.Extentions
 {
     public static class DateTimeExtentions
     {
+        public static DateTime RoundUp(this DateTime dt, TimeSpan d)
+        {
+            return new DateTime(((dt.Ticks + d.Ticks / 2) / d.Ticks) * d.Ticks);
+        }
+
+        public static DateTime RoundDown(this DateTime dt, TimeSpan d)
+        {
+            return new DateTime((dt.Ticks / d.Ticks) * d.Ticks);
+        }
+
         public static DateTime TruncateToYearStart(this DateTime dt)
         {
             return new DateTime(dt.Year, 1, 1);
