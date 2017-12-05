@@ -70,8 +70,9 @@ namespace Client.Windows
 
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
             {                
-                await Model.DeleteSelectedItemCommand.ExecuteAsync(null);
+                Model.BeginDeleteItemCommand.Execute(null);
                 Model.SelectedItem = null;
+                await LoadSchedule();
 
             }, (x) => Model.SelectedItem != null);
 
@@ -102,7 +103,6 @@ namespace Client.Windows
         private async Task LoadSchedule()
         {            
             await Model.RefreshDataCommand.ExecuteAsync(null);
-            Model.ItemsCollectionView.Refresh();
         }
 
         private async Task CreateSchedulerEvent(BookingDtoUi booking)
@@ -125,12 +125,7 @@ namespace Client.Windows
                         
             var res = editor.ShowDialog() ?? false;            
             return (res, editor.Model.BookingData);
-        }
-
-        private void DailyScheduler_OnEventClick(object sender, Controls.WpfScheduler.Event e)
-        {
-            Model.SelectedItem = Model.Items.FirstOrDefault(x => x.EventGuid == e.Id);
-        }
+        }        
 
         private async void Window_LoadedAsync(object sender, RoutedEventArgs e)
         {
