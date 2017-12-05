@@ -35,18 +35,26 @@ namespace Client.Windows
 
         public BookingWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
+            Model.PropertyChanged += async (s, e) => 
+            {
+                if (e.PropertyName == nameof(Model.CurrentDate))
+                {
+                    await LoadSchedule();
+                }
+            };
+
             Model.CurrentDate = DateTime.Now.TruncateToDayStart();
 
             Model.NextDayCommand = new Command<object>(async () =>
-            {                
-                await LoadSchedule();
+            {
+                Model.CurrentDate = Model.CurrentDate.AddDays(1);                
             }, (x) => true);
 
             Model.PrevDayCommand = new Command<object>(async () =>
-            {                        
-                await LoadSchedule();
-            }, x => Model.CurrentDate >= DateTime.Now);
+            {
+                Model.CurrentDate = Model.CurrentDate.AddDays(-1);                
+            }, x => true);
 
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
