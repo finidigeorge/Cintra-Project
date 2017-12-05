@@ -73,35 +73,20 @@ namespace Client.Windows
         private void InitGroupings()
         {
             var groupDescription = new PropertyGroupDescription("BeginTimeRoundedFmtd");
-            groupDescription.GroupNames.Add("06:00 AM");
-            groupDescription.GroupNames.Add("06:30 AM");
-            groupDescription.GroupNames.Add("07:00 AM");
-            groupDescription.GroupNames.Add("07:30 AM");
-            groupDescription.GroupNames.Add("08:00 AM");
-            groupDescription.GroupNames.Add("08:30 AM");
-            groupDescription.GroupNames.Add("09:00 AM");
-            groupDescription.GroupNames.Add("09:30 AM");
-            groupDescription.GroupNames.Add("10:00 AM");
-            groupDescription.GroupNames.Add("10:30 AM");
-            groupDescription.GroupNames.Add("11:00 AM");
-            groupDescription.GroupNames.Add("11:30 AM");
-            groupDescription.GroupNames.Add("12:00 PM");
-            groupDescription.GroupNames.Add("12:30 PM");
-            groupDescription.GroupNames.Add("01:00 PM");
-            groupDescription.GroupNames.Add("01:30 PM");
-            groupDescription.GroupNames.Add("02:00 PM");
-            groupDescription.GroupNames.Add("02:30 PM");
-            groupDescription.GroupNames.Add("03:00 PM");
-            groupDescription.GroupNames.Add("03:30 PM");
-            groupDescription.GroupNames.Add("04:00 PM");
-            groupDescription.GroupNames.Add("04:30 PM");
-            groupDescription.GroupNames.Add("05:00 PM");
-            groupDescription.GroupNames.Add("05:30 PM");
-            groupDescription.GroupNames.Add("06:00 PM");
-            groupDescription.GroupNames.Add("06:30 PM");
-            groupDescription.GroupNames.Add("07:00 PM");
-            groupDescription.GroupNames.Add("07:30 PM");            
-
+            groupDescription.GroupNames.Add("06:00 AM");            
+            groupDescription.GroupNames.Add("07:00 AM");            
+            groupDescription.GroupNames.Add("08:00 AM");            
+            groupDescription.GroupNames.Add("09:00 AM");            
+            groupDescription.GroupNames.Add("10:00 AM");            
+            groupDescription.GroupNames.Add("11:00 AM");            
+            groupDescription.GroupNames.Add("12:00 PM");            
+            groupDescription.GroupNames.Add("01:00 PM");            
+            groupDescription.GroupNames.Add("02:00 PM");            
+            groupDescription.GroupNames.Add("03:00 PM");            
+            groupDescription.GroupNames.Add("04:00 PM");            
+            groupDescription.GroupNames.Add("05:00 PM");            
+            groupDescription.GroupNames.Add("06:00 PM");            
+            groupDescription.GroupNames.Add("07:00 PM");            
 
             Model.ItemsCollectionView.GroupDescriptions.Add(groupDescription);            
         }

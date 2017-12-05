@@ -56,7 +56,14 @@
             </Grid>
 
             <ListView x:Name="BookingList" Grid.Row="1" ItemsSource="{Binding ItemsCollectionView}">
-
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="BorderBrush" Value="LightGray" />
+                        <Setter Property="BorderThickness" Value="0,0.5,0,0.5" />
+                        <Setter Property="Height" Value="24" />
+                        <Setter Property="Margin" Value="0,-1, 0,-1" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.GroupStyle>
                     <GroupStyle HidesIfEmpty="False">
                         <GroupStyle.ContainerStyle>
@@ -66,7 +73,7 @@
                                         <ControlTemplate TargetType="GroupItem">
                                             <Expander IsExpanded="True">
                                                 <Expander.Header>
-                                                    <TextBlock TextWrapping="Wrap" Margin="0,10,0,5" >
+                                                    <TextBlock TextWrapping="Wrap" Margin="0,5,0,5" >
 													    <Bold><TextBlock Text="{Binding Name}"/></Bold> (<TextBlock Text="{Binding ItemCount}"/> Lessions)
 												    </TextBlock>
                                                 </Expander.Header>
@@ -84,12 +91,19 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=BeginTimeFmtd}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Horse" DisplayMemberBinding="{Binding Path=Horse.Name}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Horse" DisplayMemberBinding="{Binding Path=Horse.NickName}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
                         <GridViewColumn Header="Service" DisplayMemberBinding="{Binding Path=Service.Name}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
                         <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=LengthFmtd}" Width="{Binding ElementName=col3, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Client" DisplayMemberBinding="{Binding Path=Client.Name}" Width="{Binding ElementName=col4, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Client" DisplayMemberBinding="{Binding Path=ClientUi.NameFmtd}" Width="{Binding ElementName=col4, Path=ActualWidth}"/>
                         <GridViewColumn Header="Is Paid" DisplayMemberBinding="{Binding Path=BookingPayment.IsPaid}" Width="{Binding ElementName=col5, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Payment" DisplayMemberBinding="{Binding Path=BookingPayment.PaymentOptions}" Width="{Binding ElementName=col6, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Payment Method" DisplayMemberBinding="{Binding Path=BookingPayment.PaymentTypeId}" Width="{Binding ElementName=col6, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Notes" Width="{Binding ElementName=col7, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=BookingPayment.PaymentOptions}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -101,6 +115,7 @@
                     <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -111,7 +126,7 @@
                 <Grid Grid.Column="4" x:Name="col4"/>
                 <Grid Grid.Column="5" x:Name="col5"/>
                 <Grid Grid.Column="6" x:Name="col6"/>
-
+                <Grid Grid.Column="7" x:Name="col7"/>
             </Grid>
 
         </Grid>

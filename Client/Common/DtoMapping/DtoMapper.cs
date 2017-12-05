@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Shared.Dto;
 using PropertyChanged;
 using Common.Extentions;
+using Mapping;
 
 
 /*
@@ -39,7 +40,7 @@ namespace Common.DtoMapping
         public String BeginTimeFmtd => BeginTime.ToString("hh:mm tt");
 
         [DependsOn("BeginTime")]
-        public String BeginTimeRoundedFmtd => BeginTime.RoundDown(TimeSpan.FromMinutes(30)).ToString("hh:mm tt");
+        public String BeginTimeRoundedFmtd => BeginTime.RoundDown(TimeSpan.FromMinutes(60)).ToString("hh:mm tt");
 
         [DependsOn("BeginTime", "EndTime")]
         public String LengthFmtd {
@@ -50,6 +51,9 @@ namespace Common.DtoMapping
                 return (EndTime - BeginTime).ToString("h'h 'm'm '");
             }
         }
+
+        [DependsOn("Client")]
+        public ClientDtoUi ClientUi => ObjectMapper.Map<ClientDtoUi>(Client);
 
         public string ApplyObjectLevelValidations()
         {
@@ -95,7 +99,10 @@ namespace Common.DtoMapping
             return string.Empty;
         }
 
-        public override string ToString() => $"{Name} ph/email: {Phone ?? Email}";
+        [DependsOn("Name", "Phone", "Email")]
+        public String NameFmtd => $"{Name}, ph/@: {Phone ?? Email}";
+
+        public override string ToString() => NameFmtd;
     }
 
     public partial class ScheduleDtoUi : ScheduleDto, INotifyPropertyChanged
