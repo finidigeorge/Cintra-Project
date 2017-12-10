@@ -97,9 +97,7 @@ namespace Mapping
                         {
                             db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
                         });
-
-                    
-
+                   
                     conf.CreateMap<Coach, CoachDto>().AfterMap((db, vm) =>
                     {
                         vm.Schedules = _mapper.Map<List<ScheduleDto>>(db.schedules);
@@ -114,13 +112,35 @@ namespace Mapping
                     conf.CreateMap<HorseDto, Hors>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
 
+                    conf.CreateMap<Service, ServiceDto>().AfterMap((db, vm) =>
+                    {                       
+                        vm.Coaches = _mapper.Map<List<CoachDto>>(db.servicetocoacheslinks.Select(p => p.FK_service_to_coaches_link_1_0));
+                        vm.Horses= _mapper.Map<List<HorseDto>>(db.servicetohorseslinks.Select(p => p.FK_service_to_horses_link_1_0));
+                    });
                     conf.CreateMap<ServiceDto, Service>()
-                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                        .AfterMap((vm, db) =>
+                        {
+                            db.servicetocoacheslinks = vm.Coaches.Select(x => 
+                                new ServiceToCoachesLink()
+                                {                                    
+                                    CoachId = x.Id,
+                                    ServiceId = vm.Id
+                                });
+
+                            db.servicetohorseslinks = vm.Horses.Select(x =>
+                                new ServiceToHorsesLink()
+                                {
+                                    HorseId = x.Id,
+                                    ServiceId = vm.Id
+                                }
+                                );
+                        });
 
                     conf.CreateMap<ClientDto, Client>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
 
-                    conf.CreateMap<PaymentTypeDto, PaymentType>()
+                    conf.CreateMap<PaymentTypeDto, PaymentTypes>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
                 }
             );

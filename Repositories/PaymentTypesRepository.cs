@@ -7,7 +7,7 @@ using System.Text;
 namespace Repositories
 {
     [PerScope]
-    public class PaymentTypesRepository: GenericPreservableRepository<PaymentType>
+    public class PaymentTypesRepository: GenericPreservableRepository<PaymentTypes>
     {
     }
 }

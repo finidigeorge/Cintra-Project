@@ -154,6 +154,23 @@ namespace Common.DtoMapping
             return string.Empty;
         }
 
+        [DependsOn("Coaches")]
+        public String SelectedCoaches {
+            get
+            {
+                return String.Join(", ", Coaches.Select(x => x.Name));
+            }
+        }
+
+        [DependsOn("Horses")]
+        public String SelectedHorses
+        {
+            get
+            {
+                return String.Join(", ", Horses.Select(x => x.NickName));
+            }
+        }
+
         public override string ToString() => Name;
     }
 

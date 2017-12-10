@@ -133,6 +133,7 @@
     <Compile Include="ViewModels\PaymentTypesRefVm.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
+    <Compile Include="ViewModels\ServiceEditWindowVm.cs" />
     <Compile Include="ViewModels\TimePickerVm.cs" />
     <Compile Include="Windows\BookingEditWindow.xaml.cs">
       <DependentUpon>BookingEditWindow.xaml</DependentUpon>
@@ -189,6 +190,9 @@
     <Compile Include="ViewModels\UsersRefVm.cs" />
     <Compile Include="Windows\ScheduleEditor.xaml.cs">
       <DependentUpon>ScheduleEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ServiceEditWindow.xaml.cs">
+      <DependentUpon>ServiceEditWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\ClientsReference.xaml">
       <SubType>Designer</SubType>
@@ -282,6 +286,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Windows\ServiceEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -352,6 +360,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\Refresh.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Delete.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\SelectAll.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.2.2.1.0\build\net452\Fody.targets" Condition="Exists('..\packages\Fody.2.2.1.0\build\net452\Fody.targets')" />

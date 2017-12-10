@@ -12,9 +12,9 @@ namespace Controllers
 {
     [Authorize]
     [Route("/api/[controller]/values")]
-    public class PaymentTypesController : BaseController<PaymentType, PaymentTypeDto>
+    public class PaymentTypesController : BaseController<PaymentTypes, PaymentTypeDto>
     {
-        public PaymentTypesController(IGenericRepository<PaymentType> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        public PaymentTypesController(IGenericRepository<PaymentTypes> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
         }
     }

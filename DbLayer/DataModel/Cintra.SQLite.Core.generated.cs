@@ -20,19 +20,21 @@ namespace DataModels
 	/// </summary>
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
-		public ITable<Booking>           Bookings          { get { return this.GetTable<Booking>(); } }
-		public ITable<BookingPayments>   BookingPayments   { get { return this.GetTable<BookingPayments>(); } }
-		public ITable<Client>            Clients           { get { return this.GetTable<Client>(); } }
-		public ITable<Coach>             Coaches           { get { return this.GetTable<Coach>(); } }
-		public ITable<DbUpdatesLog>      DbUpdatesLog      { get { return this.GetTable<DbUpdatesLog>(); } }
-		public ITable<Hors>              Horses            { get { return this.GetTable<Hors>(); } }
-		public ITable<PaymentType>      PaymentTypes      { get { return this.GetTable<PaymentType>(); } }
-		public ITable<Schedule>          Schedules         { get { return this.GetTable<Schedule>(); } }
-		public ITable<SchedulesData>     SchedulesData     { get { return this.GetTable<SchedulesData>(); } }
-		public ITable<SchedulesInterval> SchedulesInterval { get { return this.GetTable<SchedulesInterval>(); } }
-		public ITable<Service>           Services          { get { return this.GetTable<Service>(); } }
-		public ITable<User>              Users             { get { return this.GetTable<User>(); } }
-		public ITable<UserRoles>         UserRoles         { get { return this.GetTable<UserRoles>(); } }
+		public ITable<Booking>              Bookings             { get { return this.GetTable<Booking>(); } }
+		public ITable<BookingPayments>      BookingPayments      { get { return this.GetTable<BookingPayments>(); } }
+		public ITable<Client>               Clients              { get { return this.GetTable<Client>(); } }
+		public ITable<Coach>                Coaches              { get { return this.GetTable<Coach>(); } }
+		public ITable<DbUpdatesLog>         DbUpdatesLog         { get { return this.GetTable<DbUpdatesLog>(); } }
+		public ITable<Hors>                 Horses               { get { return this.GetTable<Hors>(); } }
+		public ITable<PaymentTypes>         PaymentTypes         { get { return this.GetTable<PaymentTypes>(); } }
+		public ITable<Schedule>             Schedules            { get { return this.GetTable<Schedule>(); } }
+		public ITable<SchedulesData>        SchedulesData        { get { return this.GetTable<SchedulesData>(); } }
+		public ITable<SchedulesInterval>    SchedulesInterval    { get { return this.GetTable<SchedulesInterval>(); } }
+		public ITable<Service>              Services             { get { return this.GetTable<Service>(); } }
+		public ITable<ServiceToCoachesLink> ServiceToCoachesLink { get { return this.GetTable<ServiceToCoachesLink>(); } }
+		public ITable<ServiceToHorsesLink>  ServiceToHorsesLink  { get { return this.GetTable<ServiceToHorsesLink>(); } }
+		public ITable<User>                 Users                { get { return this.GetTable<User>(); } }
+		public ITable<UserRoles>            UserRoles            { get { return this.GetTable<UserRoles>(); } }
 
 		public CintraDB()
 		{
@@ -119,7 +121,7 @@ namespace DataModels
 		/// FK_booking_payments_1_0
 		/// </summary>
 		[Association(ThisKey="PaymentTypeId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_1_0", BackReferenceName="bookingpayments")]
-		public PaymentType FK_booking_payments_1_0 { get; set; }
+		public PaymentTypes FK_booking_payments_1_0 { get; set; }
 
 		#endregion
 	}
@@ -171,6 +173,12 @@ namespace DataModels
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Schedule> schedules { get; set; }
 
+		/// <summary>
+		/// FK_service_to_coaches_link_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ServiceToCoachesLink> servicetolinks { get; set; }
+
 		#endregion
 	}
 
@@ -197,11 +205,17 @@ namespace DataModels
 		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Booking> bookings { get; set; }
 
+		/// <summary>
+		/// FK_service_to_horses_link_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ServiceToHorsesLink> servicetolinks { get; set; }
+
 		#endregion
 	}
 
 	[Table("payment_types")]
-	public partial class PaymentType
+	public partial class PaymentTypes
 	{
 		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
 		[Column("name"),       NotNull             ] public string Name      { get; set; } // varchar(50)
@@ -308,6 +322,68 @@ namespace DataModels
 		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Booking> bookings { get; set; }
 
+		/// <summary>
+		/// FK_service_to_coaches_link_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ServiceToCoachesLink> servicetocoacheslinks { get; set; }
+
+		/// <summary>
+		/// FK_service_to_horses_link_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ServiceToHorsesLink> servicetohorseslinks { get; set; }
+
+		#endregion
+	}
+
+	[Table("service_to_coaches_link")]
+	public partial class ServiceToCoachesLink
+	{
+		[Column("id"),         PrimaryKey, Identity] public long Id        { get; set; } // integer
+		[Column("service_id"), NotNull             ] public long ServiceId { get; set; } // integer
+		[Column("coach_id"),   NotNull             ] public long CoachId   { get; set; } // integer
+		[Column("is_deleted"), NotNull             ] public bool IsDeleted { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_service_to_coaches_link_1_0
+		/// </summary>
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_coaches_link_1_0", BackReferenceName="servicetolinks")]
+		public Coach FK_service_to_coaches_link_1_0 { get; set; }
+
+		/// <summary>
+		/// FK_service_to_coaches_link_0_0
+		/// </summary>
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_coaches_link_0_0", BackReferenceName="servicetocoacheslinks")]
+		public Service servicetocoacheslink { get; set; }
+
+		#endregion
+	}
+
+	[Table("service_to_horses_link")]
+	public partial class ServiceToHorsesLink
+	{
+		[Column("id"),         PrimaryKey, Identity] public long Id        { get; set; } // integer
+		[Column("service_id"), NotNull             ] public long ServiceId { get; set; } // integer
+		[Column("horse_id"),   NotNull             ] public long HorseId   { get; set; } // integer
+		[Column("is_deleted"), NotNull             ] public bool IsDeleted { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_service_to_horses_link_1_0
+		/// </summary>
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_horses_link_1_0", BackReferenceName="servicetolinks")]
+		public Hors FK_service_to_horses_link_1_0 { get; set; }
+
+		/// <summary>
+		/// FK_service_to_horses_link_0_0
+		/// </summary>
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_horses_link_0_0", BackReferenceName="servicetohorseslinks")]
+		public Service servicetohorseslink { get; set; }
+
 		#endregion
 	}
 
@@ -392,7 +468,7 @@ namespace DataModels
 				t.Id == Id);
 		}
 
-		public static PaymentType Find(this ITable<PaymentType> table, long Id)
+		public static PaymentTypes Find(this ITable<PaymentTypes> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
@@ -417,6 +493,18 @@ namespace DataModels
 		}
 
 		public static Service Find(this ITable<Service> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static ServiceToCoachesLink Find(this ITable<ServiceToCoachesLink> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static ServiceToHorsesLink Find(this ITable<ServiceToHorsesLink> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

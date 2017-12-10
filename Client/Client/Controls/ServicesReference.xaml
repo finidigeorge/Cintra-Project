@@ -15,6 +15,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
             <controls:ReferencesToolbar 
@@ -29,8 +31,37 @@
                   CanUserAddRows="False" CanUserDeleteRows="true">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
+                <DataGridTemplateColumn IsReadOnly="True" Width="32">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate>
+                            <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                              Path=DataContext.DisplayEditServiceCommand}"
+                                    CommandParameter="{Binding SelectedItem}" ToolTip="Edit Horses and Coaches assignments to selected service">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/Images/ReferenceEditItem.png" />
+                                </StackPanel>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
+        <Grid HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Assigned Coaches:  " Grid.Column="0"/>
+            <Label Content="{Binding SelectedItem.SelectedCoaches}" Grid.Column="1"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Assigned Horses:" Grid.Column="0"/>
+            <Label Content="{Binding SelectedItem.SelectedHorses}" Grid.Column="1"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -63,7 +63,7 @@ namespace Tests
         [TestMethod]
         public void PaymentTypeMapping()
         {
-            TestMapping<PaymentTypeDto, PaymentType>();
+            TestMapping<PaymentTypeDto, PaymentTypes>();
         }
 
         [TestMethod]
