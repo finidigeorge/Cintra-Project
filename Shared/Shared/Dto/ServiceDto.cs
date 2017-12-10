@@ -10,9 +10,9 @@ namespace Shared.Dto
     {
         public virtual long Id { get; set; }
         [VmMeta(IsNullable = false)]
-        public virtual string Name { get; set; }        
+        public virtual string Name { get; set; }
 
-        public virtual List<CoachDto> Coaches { get; set; }
-        public virtual List<HorseDto> Horses { get; set; }
+        public virtual List<CoachDto> Coaches { get; set; } = new List<CoachDto>();
+        public virtual List<HorseDto> Horses { get; set; } = new List<HorseDto>();
     }
 }

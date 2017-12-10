@@ -24,6 +24,9 @@ namespace Repositories
                         .LoadWith(x => x.client)
                         .LoadWith(x => x.coach)
                         .LoadWith(x => x.service)
+                        .LoadWith(x => x.service.bookings)
+                        .LoadWith(x => x.service.servicetocoacheslinks)
+                        .LoadWith(x => x.service.servicetohorseslinks)
                         .LoadWith(x => x.hors)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );

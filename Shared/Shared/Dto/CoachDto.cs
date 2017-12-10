@@ -15,6 +15,6 @@ namespace Shared.Dto
         [VmMeta(IsNullable = false)]
         public virtual string Phone { get; set; }
 
-        public virtual List<ScheduleDto> Schedules { get; set; }
+        public virtual List<ScheduleDto> Schedules { get; set; } = new List<ScheduleDto>();
     }
 }

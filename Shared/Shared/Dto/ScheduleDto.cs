@@ -13,7 +13,7 @@ namespace Shared.Dto
         public virtual string Name { get; set; }
         public virtual bool IsActive { get; set; }
         public virtual long CoachId { get; set; }
-        public virtual List<ScheduleDataDto> ScheduleData { get; set; }
+        public virtual List<ScheduleDataDto> ScheduleData { get; set; } = new List<ScheduleDataDto>();
 
     }
 }

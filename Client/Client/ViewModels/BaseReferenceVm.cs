@@ -63,13 +63,23 @@ namespace Client.ViewModels
         {
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
+                long selectedItemId = 0;
+                if (SelectedItem != null)
+                    selectedItemId = SelectedItem.Id;
+
                 if (Items == null)
                     Items = new ObservableCollection<T1>();
                 else
                     Items.Clear();
 
                 foreach (var item in (await GetItems()).ToList<T, T1>())                
-                    Items.Add(item);                
+                    Items.Add(item);
+
+                if (selectedItemId != 0)
+                {
+                    SelectedItem = Items.FirstOrDefault(i => i.Id == selectedItemId);
+                }
+
             });
 
             RefreshDataCommand = new AsyncCommand<object>(async (x) =>

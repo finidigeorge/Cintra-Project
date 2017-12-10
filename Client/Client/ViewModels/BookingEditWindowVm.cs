@@ -37,7 +37,12 @@ namespace Client.ViewModels
         public BookingEditWindowVm()
         {
             ClientsModel.OnSelectedItemChanged += (sender, client) => { _bookingData.Client = client; };
-            ServicesModel.OnSelectedItemChanged += (sender, service) => { _bookingData.Service = service; };
+            ServicesModel.OnSelectedItemChanged += async (sender, service) => {
+                _bookingData.Service = service;
+                await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
+                await CoachesModel.RefreshDataCommand.ExecuteAsync(null);
+                SyncServiceDataModels();
+            };
             HorsesModel.OnSelectedItemChanged += (sender, horse) => { _bookingData.Horse = horse; };
             CoachesModel.OnSelectedItemChanged += (sender, coach) => { _bookingData.Coach = coach; };
             PaymentTypesModel.OnSelectedItemChanged += (sender, paymentType) => { _bookingData.BookingPayment.PaymentType = paymentType; };
@@ -50,19 +55,20 @@ namespace Client.ViewModels
             await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
             await CoachesModel.RefreshDataCommand.ExecuteAsync(null);
             await PaymentTypesModel.RefreshDataCommand.ExecuteAsync(null);
-            SyncDataToModels();
+            SyncAllDataToModels();
         }
 
-        private void SyncDataToModels()
+        private void SyncServiceDataModels()
         {
-            if (BookingData.Client != null)
-            {
-                ClientsModel.SelectedItem = ClientsModel.Items.FirstOrDefault(x => x.Id == BookingData.Client.Id);
-            }
-
             if (BookingData.Service != null)
-            {
-                ServicesModel.SelectedItem = ServicesModel.Items.FirstOrDefault(x => x.Id == BookingData.Service.Id);
+            {                
+                var linkedItems = new HashSet<long>(BookingData.Service.Horses.Select(x => x.Id));
+                foreach (var h in HorsesModel.Items.Where(x => !linkedItems.Contains(x.Id)).ToList())
+                    HorsesModel.Items.Remove(h);
+
+                linkedItems = new HashSet<long>(BookingData.Service.Coaches.Select(x => x.Id));
+                foreach (var c in CoachesModel.Items.Where(x => !linkedItems.Contains(x.Id)).ToList())
+                    CoachesModel.Items.Remove(c);
             }
 
             if (BookingData.Horse != null)
@@ -72,6 +78,37 @@ namespace Client.ViewModels
 
             if (BookingData.Coach != null)
             {
+                CoachesModel.SelectedItem = CoachesModel.Items.FirstOrDefault(x => x.Id == BookingData.Coach.Id);
+            }            
+        }
+
+        private void SyncAllDataToModels()
+        {
+            if (BookingData.Client != null)
+            {                
+                ClientsModel.SelectedItem = ClientsModel.Items.FirstOrDefault(x => x.Id == BookingData.Client.Id);
+            }
+
+            if (BookingData.Service != null)
+            {
+                ServicesModel.SelectedItem = ServicesModel.Items.FirstOrDefault(x => x.Id == BookingData.Service.Id);
+
+                var linkedItems = new HashSet<long>(BookingData.Service.Horses.Select(x => x.Id));
+                foreach (var h in HorsesModel.Items.Where(x => !linkedItems.Contains(x.Id)).ToList())
+                    HorsesModel.Items.Remove(h);
+
+                linkedItems = new HashSet<long>(BookingData.Service.Coaches.Select(x => x.Id));
+                foreach (var c in CoachesModel.Items.Where(x => !linkedItems.Contains(x.Id)).ToList())
+                    CoachesModel.Items.Remove(c);
+            }
+
+            if (BookingData.Horse != null)
+            {                
+                HorsesModel.SelectedItem = HorsesModel.Items.FirstOrDefault(x => x.Id == BookingData.Horse.Id);
+            }
+
+            if (BookingData.Coach != null)
+            {                
                 CoachesModel.SelectedItem = CoachesModel.Items.FirstOrDefault(x => x.Id == BookingData.Coach.Id);
             }
 
