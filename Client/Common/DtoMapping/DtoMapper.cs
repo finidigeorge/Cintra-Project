@@ -165,6 +165,8 @@ namespace Common.DtoMapping
         {
             return string.Empty;
         }
+
+        public override string ToString() => Name;
     }
 
     public partial class UserRoleDtoUi : UserRoleDto, INotifyPropertyChanged
@@ -174,6 +176,20 @@ namespace Common.DtoMapping
         {
             return string.Empty;
         }
+
+        public override string ToString() => Name;
+    }
+
+
+    public partial class PaymentTypeDtoUi : PaymentTypeDto, INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public string ApplyObjectLevelValidations()
+        {
+            return string.Empty;
+        }
+
+        public override string ToString() => Name;
     }
 #pragma warning restore CS0067 
 }

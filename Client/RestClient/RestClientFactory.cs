@@ -15,6 +15,7 @@ namespace RestClient
             { typeof(CoachDto), enKnownControllers.CoachesController },
             { typeof(ClientDto), enKnownControllers.ClientsController},
             { typeof(HorseDto), enKnownControllers.HorsesController },
+            { typeof(PaymentTypeDto), enKnownControllers.PaymentTypesController },
             { typeof(ScheduleDto), enKnownControllers.SchedulesController },            
             { typeof(ServiceDto), enKnownControllers.ServicesController},            
 

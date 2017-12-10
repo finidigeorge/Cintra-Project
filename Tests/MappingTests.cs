@@ -61,6 +61,12 @@ namespace Tests
         }
 
         [TestMethod]
+        public void PaymentTypeMapping()
+        {
+            TestMapping<PaymentTypeDto, PaymentType>();
+        }
+
+        [TestMethod]
         public void ScheduleMapping()
         {
             TestMapping<ScheduleDto, Schedule>();

@@ -26,7 +26,7 @@ namespace DataModels
 		public ITable<Coach>             Coaches           { get { return this.GetTable<Coach>(); } }
 		public ITable<DbUpdatesLog>      DbUpdatesLog      { get { return this.GetTable<DbUpdatesLog>(); } }
 		public ITable<Hors>              Horses            { get { return this.GetTable<Hors>(); } }
-		public ITable<PaymentTypes>      PaymentTypes      { get { return this.GetTable<PaymentTypes>(); } }
+		public ITable<PaymentType>      PaymentTypes      { get { return this.GetTable<PaymentType>(); } }
 		public ITable<Schedule>          Schedules         { get { return this.GetTable<Schedule>(); } }
 		public ITable<SchedulesData>     SchedulesData     { get { return this.GetTable<SchedulesData>(); } }
 		public ITable<SchedulesInterval> SchedulesInterval { get { return this.GetTable<SchedulesInterval>(); } }
@@ -119,7 +119,7 @@ namespace DataModels
 		/// FK_booking_payments_1_0
 		/// </summary>
 		[Association(ThisKey="PaymentTypeId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_1_0", BackReferenceName="bookingpayments")]
-		public PaymentTypes FK_booking_payments_1_0 { get; set; }
+		public PaymentType FK_booking_payments_1_0 { get; set; }
 
 		#endregion
 	}
@@ -201,7 +201,7 @@ namespace DataModels
 	}
 
 	[Table("payment_types")]
-	public partial class PaymentTypes
+	public partial class PaymentType
 	{
 		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
 		[Column("name"),       NotNull             ] public string Name      { get; set; } // varchar(50)
@@ -392,7 +392,7 @@ namespace DataModels
 				t.Id == Id);
 		}
 
-		public static PaymentTypes Find(this ITable<PaymentTypes> table, long Id)
+		public static PaymentType Find(this ITable<PaymentType> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

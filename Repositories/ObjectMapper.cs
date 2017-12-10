@@ -44,9 +44,18 @@ namespace Mapping
 
                         });
 
+                    conf.CreateMap<BookingPayments, BookingPaymentDto>()
+                    .AfterMap((db, vm) =>
+                    {
+                        vm.PaymentType = _mapper.Map<PaymentTypeDto>(db.FK_booking_payments_1_0);
+                    });
 
                     conf.CreateMap<BookingPaymentDto, BookingPayments>()
-                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+                    .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                    .AfterMap((db, vm) =>
+                    {
+                        db.BookingId = vm.BookingId;
+                    });
 
 
                     conf.CreateMap<User, UserDto>()                    
@@ -109,6 +118,9 @@ namespace Mapping
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
 
                     conf.CreateMap<ClientDto, Client>()
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+
+                    conf.CreateMap<PaymentTypeDto, PaymentType>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
                 }
             );

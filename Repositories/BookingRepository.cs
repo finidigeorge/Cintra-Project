@@ -13,8 +13,6 @@ namespace Repositories
     [PerScope]
     public class BookingRepository: GenericPreservableRepository<Booking>
     {
-        private readonly IBookingPaymentsRepository _paymentsRepository = new BookingPaymentsRepository();
-        
         public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where)
         {
             using (var db = new CintraDB())
@@ -22,6 +20,7 @@ namespace Repositories
                 return await Task.FromResult(
                     db.Bookings
                         .LoadWith(x => x.bookingpayments)
+                        .LoadWith(x => x.bookingpayments.First().FK_booking_payments_1_0)
                         .LoadWith(x => x.client)
                         .LoadWith(x => x.coach)
                         .LoadWith(x => x.service)

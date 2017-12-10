@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Client.Extentions;
+using Client.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,22 +14,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Client.ViewModels;
-using Client.Extentions;
 
 namespace Client.Controls
 {
     /// <summary>
-    /// Interaction logic for UserRolesReference.xaml
+    /// Interaction logic for PaymentTypesReference.xaml
     /// </summary>
-    public partial class ServicesReference : UserControl
+    public partial class PaymentTypesReference : UserControl
     {
-        public ServicesRefVm Model => (ServicesRefVm)Resources["ViewModel"];
+        public PaymentTypesRefVm Model => (PaymentTypesRefVm)Resources["ViewModel"];
 
-        public ServicesReference()
+        public PaymentTypesReference()
         {
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
-        }        
+        }
     }
 }

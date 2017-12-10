@@ -4,6 +4,7 @@ using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
 using Common.Extentions;
+using Mapping;
 using Shared.Dto;
 using System;
 using System.Collections.Generic;
@@ -46,12 +47,12 @@ namespace Client.Windows
 
             Model.CurrentDate = DateTime.Now.TruncateToDayStart();
 
-            Model.NextDayCommand = new Command<object>(async () =>
+            Model.NextDayCommand = new Command<object>(() =>
             {
                 Model.CurrentDate = Model.CurrentDate.AddDays(1);                
             }, (x) => true);
 
-            Model.PrevDayCommand = new Command<object>(async () =>
+            Model.PrevDayCommand = new Command<object>(() =>
             {
                 Model.CurrentDate = Model.CurrentDate.AddDays(-1);                
             }, x => true);
@@ -61,12 +62,23 @@ namespace Client.Windows
                 var res = ShowScheduleEditor();
                 if (res.Item1)
                 {
-                    await CreateSchedulerEvent(res.Item2);
+                    await Model.AddItemCommand.ExecuteAsync(res.Item2);
                 }
 
             }, (x) => true);
 
-            Model.UpdateDailyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
+            Model.UpdateDailyScheduledIntervalCommand = new Command<object>(async () => 
+            {
+                var res = ShowScheduleEditor(Model.SelectedItem);
+                if (res.Item1)
+                {
+                    await Model.UpdateItemCommand.ExecuteAsync(res.Item2);
+                }
+                else
+                {
+                    await LoadSchedule();
+                }
+            }, (x) => Model.SelectedItem != null);
 
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
             {                
@@ -105,23 +117,27 @@ namespace Client.Windows
             await Model.RefreshDataCommand.ExecuteAsync(null);
         }
 
-        private async Task CreateSchedulerEvent(BookingDtoUi booking)
-        {           
-            await Model.AddItemCommand.ExecuteAsync(booking);            
-        }
 
-        private (bool, BookingDtoUi) ShowScheduleEditor()
+        private (bool, BookingDtoUi) ShowScheduleEditor(BookingDtoUi bookingData = null)
         {
             var beginTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(6);
             var endTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(19) + TimeSpan.FromMinutes(30);
-            var bookingData = new BookingDtoUi()
+
+            BookingDtoUi _bookingData;
+            if (bookingData == null)
             {
-                DateOn = Model.CurrentDate.TruncateToDayStart(),
-                BookingPayment = new BookingPaymentDto(),
-                BeginTime = beginTime,
-                EndTime = endTime
-            };
-            var editor = new BookingEditWindow(beginTime, endTime, bookingData) { Owner = this };            
+                _bookingData = new BookingDtoUi()
+                {
+                    DateOn = Model.CurrentDate.TruncateToDayStart(),
+                    BookingPayment = new BookingPaymentDto(),
+                    BeginTime = beginTime,
+                    EndTime = endTime
+                };
+            }
+            else
+                _bookingData = bookingData;
+
+            var editor = new BookingEditWindow(beginTime, endTime, _bookingData) { Owner = this };            
                         
             var res = editor.ShowDialog() ?? false;            
             return (res, editor.Model.BookingData);

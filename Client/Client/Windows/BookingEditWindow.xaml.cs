@@ -35,7 +35,7 @@ namespace Client.Windows
             InitializeComponent();
             Model.BookingData = bookindData;
             BeginTimePicker.Model.CurrentTime = beginTime;
-            EndTimePicker.Model.CurrentTime = endTime;
+            EndTimePicker.Model.CurrentTime = endTime;            
 
             BeginTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")

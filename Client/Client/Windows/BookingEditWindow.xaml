@@ -113,15 +113,11 @@
 
         <TextBlock Text="Payment Type" Grid.Row="9" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
         <ComboBox Name="paymentTypes" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
-                  SelectedIndex="{Binding Path=BookingData.BookingPayment.PaymentTypeId}">
-            <ComboBoxItem>Block</ComboBoxItem>
-            <ComboBoxItem>Doing BT</ComboBoxItem>
-            <ComboBoxItem>Gift voucher</ComboBoxItem>
-            <ComboBoxItem>Bookme</ComboBoxItem>
-            <ComboBoxItem>Lezair</ComboBoxItem>
+                  ItemsSource="{Binding PaymentTypesModel.Items}"
+                  SelectedItem="{Binding PaymentTypesModel.SelectedItem}">
         </ComboBox>
 
-        <TextBlock Text="Payment Details" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+        <TextBlock Text="Notes" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
         <TextBox Grid.Row="10" Grid.Column="1" Margin="10,10,10,10" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}"/>
 
 

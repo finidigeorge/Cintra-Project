@@ -127,7 +127,7 @@ namespace Common.DtoMapping
 				
 			public override Int64 BookingId { get; set; }
 				
-			public override Int64 PaymentTypeId { get; set; }
+			public override PaymentTypeDto PaymentType { get; set; }
 				
 			public override Boolean IsPaid { get; set; }
 				
@@ -877,6 +877,92 @@ namespace Common.DtoMapping
 			public UserRoleDtoUi()
 			{
 				_adapter = new EditableAdapter<UserRoleDto>(this);
+			}
+
+			public void BeginEdit()
+			{
+				if(!IsEditing) 
+				{
+					IsEditing = true;
+					_adapter.BeginEdit();
+				}
+			}
+
+			public void EndEdit()
+			{
+				_adapter.EndEdit();	
+				if (ItemEndEdit != null && IsEditing)
+				{
+					IsEditing = false;
+					ItemEndEdit(this);
+				}
+			}
+
+			public void CancelEdit()
+			{
+				IsEditing = false;
+				_adapter.CancelEdit();
+				if (ItemCancelEdit != null)
+			        ItemCancelEdit(this);
+			}	
+			
+			[NotifyPropertyChangedInvocator]
+			public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+			{
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Error)));
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsValid)));
+			}
+			
+			public string Error
+			{
+				get
+				{
+					StringBuilder error = new StringBuilder();
+
+					// iterate over all of the properties
+					// of this object - aggregating any validation errors
+					PropertyDescriptorCollection props = TypeDescriptor.GetProperties(this);
+					foreach (PropertyDescriptor prop in props)
+					{
+						string propertyError = this[prop.Name];
+						if (!string.IsNullOrEmpty(propertyError))
+						{
+							error.Append((error.Length!=0  ? ", " : "") + propertyError);
+						}
+					}
+
+					// apply object level validation rules
+					var objectError = ApplyObjectLevelValidations();
+					if (!string.IsNullOrEmpty(objectError))
+						error.Append((error.Length != 0 ? ", " : "") + objectError);
+					
+					return error.ToString();
+				}
+			}
+									
+		}
+
+		
+		public partial class PaymentTypeDtoUi : IAtomicEditableObject, ICustomDataErrorInfo
+		{
+			private readonly EditableAdapter<PaymentTypeDto> _adapter;
+			public event ItemEndEditEventHandler ItemEndEdit;
+			public event ItemEndCancelEventHandler ItemCancelEdit;
+
+			public bool IsValid => String.IsNullOrEmpty(Error);
+
+				
+			public override Int64 Id { get; set; }
+				
+			public override String Name { get; set; }
+			
+			public bool IsEditing { get; set; } = false;
+			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
+
+			public PaymentTypeDtoUi()
+			{
+				_adapter = new EditableAdapter<PaymentTypeDto>(this);
 			}
 
 			public void BeginEdit()

@@ -49,12 +49,13 @@ namespace Client
         {
             var tabCommands = new Dictionary<string, IAsyncCommand>() 
                 {
+                    { "Coaches", CoachesRefView.Model.RefreshDataCommand },
+                    { "Clients", ClientsRefView.Model.RefreshDataCommand },                    
+                    { "Horses", HorsesRefView.Model.RefreshDataCommand },
+                    { "PaymentTypes", PaymentTypesRefView.Model.RefreshDataCommand },
+                    { "Services", ServicesRefView.Model.RefreshDataCommand },                    
                     { "UserRoles", UserRolesRefView.Model.RefreshDataCommand },
                     { "Users", UsersRefView.Model.RefreshDataCommand },
-                    { "Horses", HorsesRefView.Model.RefreshDataCommand },
-                    { "Services", ServicesRefView.Model.RefreshDataCommand },
-                    { "Coaches", CoachesRefView.Model.RefreshDataCommand },
-                    { "Clients", ClientsRefView.Model.RefreshDataCommand },
                 };
 
             if (sender is TabControl tc)

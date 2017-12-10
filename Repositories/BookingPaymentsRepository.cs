@@ -11,6 +11,18 @@ namespace Repositories
 {
     public class BookingPaymentsRepository: GenericPreservableRepository<BookingPayments>, IBookingPaymentsRepository
     {
+        public override async Task<List<BookingPayments>> GetByParams(Func<BookingPayments, bool> where)
+        {
+            using (var db = new CintraDB())
+            {
+                return await Task.FromResult(
+                    db.BookingPayments
+                        .LoadWith(x => x.PaymentOptions)                        
+                        .Where(where).Where(x => x.IsDeleted == false).ToList()
+                );
+            }
+        }
+
         public async Task SynchronizeWithBooking(long bookingId, BookingPayments payment, CintraDB dbContext = null)
         {
             await RunWithinTransaction(async (db) =>

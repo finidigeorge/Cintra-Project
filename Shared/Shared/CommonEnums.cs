@@ -45,6 +45,7 @@ namespace Shared
         public const string ClientsController = "clients";
         public const string HorsesController = "horses";
         public const string SchedulesController = "schedules";
+        public const string PaymentTypesController = "paymentTypes";
         public const string SchedulesDataController = "schedulesData";        
         public const string ServicesController = "services";
         public const string UserRolesController = "userRoles";

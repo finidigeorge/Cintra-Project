@@ -100,7 +100,7 @@
                         <GridViewColumn Header="Coach" DisplayMemberBinding="{Binding Path=Coach.Name}" Width="{Binding ElementName=col4, Path=ActualWidth}"/>
                         <GridViewColumn Header="Client" DisplayMemberBinding="{Binding Path=ClientUi.NameFmtd}" Width="{Binding ElementName=col5, Path=ActualWidth}"/>
                         <GridViewColumn Header="Is Paid" DisplayMemberBinding="{Binding Path=BookingPayment.IsPaid}" Width="{Binding ElementName=col6, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Payment" DisplayMemberBinding="{Binding Path=BookingPayment.PaymentTypeId}" Width="{Binding ElementName=col7, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Payment" DisplayMemberBinding="{Binding Path=BookingPayment.PaymentType.Name}" Width="{Binding ElementName=col7, Path=ActualWidth}"/>
                         <GridViewColumn Header="Notes" Width="{Binding ElementName=col8, Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
