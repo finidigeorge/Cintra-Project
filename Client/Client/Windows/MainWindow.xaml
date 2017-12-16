@@ -75,11 +75,11 @@
                     <controls:UsersReference x:Name="UsersRefView"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="User Roles" Name="UserRoles" TabIndex="6" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <!--TabItem Header="User Roles" Name="UserRoles" TabIndex="6" Visibility="{Binding Path=AuthVm.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid>
                     <controls:UserRolesReference x:Name="UserRolesRefView"/>
                 </Grid>
-            </TabItem>
+            </-->
         </TabControl>
         <Border BorderBrush="Gray" BorderThickness="1" SnapsToDevicePixels="True" DockPanel.Dock="Top" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Margin="1,2,1,1">
             <StackPanel Orientation="Horizontal"  Margin="0">
