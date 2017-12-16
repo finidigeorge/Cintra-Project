@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,12 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DbLayer\DbLayer.csproj" />
     <ProjectReference Include="..\Shared\Shared\Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Security.Claims">
-      <HintPath>C:\Users\alex\.nuget\packages\system.security.claims\4.3.0\ref\netstandard1.3\System.Security.Claims.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

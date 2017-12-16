@@ -24,13 +24,17 @@
         </Grid.RowDefinitions>
         <Menu x:Name="MainMenu" Margin="0,0,0,40" FontSize="16" Grid.ColumnSpan="2">
             <MenuItem Header="File">
-                <MenuItem Header="Login" Command="{Binding ShowLoginDialogCommand}"/>
-                <MenuItem Header="Change password" Command="{Binding ShowChangePasswordDialogCommand}" IsEnabled="{Binding AuthVm.IsAuthenticated}"/>
+                <MenuItem Header="Login" Command="{Binding ShowLoginDialogCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Header="Change password" Command="{Binding ShowChangePasswordDialogCommand, UpdateSourceTrigger=PropertyChanged}" 
+                          IsEnabled="{Binding AuthVm.IsAuthenticated}"/>
                 <Separator />
-                <MenuItem Header="Exit" Command="{Binding ShowExitDialogCommand}"/>
+                <MenuItem Header="Exit" Command="{Binding ShowExitDialogCommand, UpdateSourceTrigger=PropertyChanged}"/>
             </MenuItem>
             <MenuItem Header="Booking">
-                <MenuItem Header="Open Booking Window" Command="{Binding ShowBookingWindowCommand}"/>
+                <MenuItem Header="Open Booking Window" Command="{Binding ShowBookingWindowCommand, UpdateSourceTrigger=PropertyChanged}"/>
+            </MenuItem>
+            <MenuItem Header="Reports">
+                <MenuItem Header="Client Lessions" Command="{Binding RunClientHistoryReportCommand, UpdateSourceTrigger=PropertyChanged}"/>
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About"/>

@@ -20,6 +20,7 @@ using Newtonsoft.Json.Serialization;
 using Server.Middlewares;
 using Shared;
 using Shared.Attributes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Cintra
 {
@@ -179,6 +180,19 @@ namespace Cintra
             services.AddSingleton<IConfiguration>(Configuration);
 
             _configureServices(services);
+
+            var jwtAppSettingOptions = Configuration.GetSection("Jwt");
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Audience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)];                                
+                options.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)];
+                options.TokenValidationParameters = GetJwtTokenValidationParameters();
+            });            
         }
 
         private TokenValidationParameters GetJwtTokenValidationParameters()
@@ -215,13 +229,16 @@ namespace Cintra
             var a = app.ServerFeatures.Get<IServerAddressesFeature>();
             a.Addresses.Clear();
             a.Addresses.Add($"http://*:{Configuration.GetValue<int>("Port")}");
-            
+
+            app.UseAuthentication();
+
+            /*
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 TokenValidationParameters = GetJwtTokenValidationParameters()
-            });
+            });*/
 
             app.UseMiddleware(typeof(ExceptionHandlerMiddleware));
             app.UseMvc();
