@@ -30,7 +30,7 @@ namespace Tests
             };
 
             var result = ObjectMapper.Map<Booking>(dto);
-            result.bookingpayments = new List<BookingPayments>() { new BookingPayments() };
+            result.BookingPayments = new List<BookingPayments>() { new BookingPayments() };
             dto = ObjectMapper.Map<BookingDto>(result);
         }
 
@@ -55,9 +55,23 @@ namespace Tests
         }
 
         [TestMethod]
+        public void HorsesScheduleDataMapping()
+        {
+            TestMapping<HorseScheduleDataDto, HorsesScheduleData>();
+        }
+
+        [TestMethod]
         public void HorseMapping()
         {
-            TestMapping<HorseDto, Hors>();
+            var dto = new HorseDto()
+            {
+                Id = 0, NickName = "BB",
+                HorseScheduleData = new List<HorseScheduleDataDto>() {
+                    new HorseScheduleDataDto() { Id = 1, UnavailabilityType = Shared.HorsesUnavailabilityEnum.DayOff}
+                }
+            };
+            var result = ObjectMapper.Map<HorsesScheduleData>(dto);
+            dto = ObjectMapper.Map<HorseDto>(result);
         }
 
         [TestMethod]

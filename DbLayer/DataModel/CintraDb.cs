@@ -24,6 +24,9 @@ namespace DataModels
     public partial class Schedule : IPreservable { }
     public partial class SchedulesData : IPreservable { }
     public partial class SchedulesInterval : IUniqueDto { }
+    public partial class HorsesScheduleData : IPreservable { }
+    public partial class HorsesUnavailabilityTypes : IUniqueDto { }
+
     public partial class Service : IPreservable { }
     public partial class User : IPreservable { }
     public partial class UserRoles : IPreservable { }

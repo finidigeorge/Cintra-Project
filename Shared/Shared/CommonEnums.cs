@@ -16,6 +16,13 @@ namespace Shared
         Daily = 20,       
     }
 
+    public enum HorsesUnavailabilityEnum
+    {
+        OnHoliday,
+        Sick,
+        DayOff
+    }
+
     public static class enUserRoles
     {
         public const string Administrator = "Administrator";

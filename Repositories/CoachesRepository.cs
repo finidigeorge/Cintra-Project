@@ -15,7 +15,7 @@ namespace Repositories
     {
         private IEnumerable<Schedule> LoadSchedules(long coachId, CintraDB db)
         {
-            return db.Schedules.LoadWith(x => x.data).Where(x => x.CoachId == coachId && x.IsDeleted == false);            
+            return db.Schedules.LoadWith(x => x.SchedulesData).Where(x => x.CoachId == coachId && x.IsDeleted == false);            
         }
 
 
@@ -27,7 +27,7 @@ namespace Repositories
                     db.Coaches.Where(where).Where(x => x.IsDeleted == false).Select(x =>
                     {
                         var res = x;
-                        res.schedules = LoadSchedules(x.Id, db).ToList();
+                        res.Schedules = LoadSchedules(x.Id, db).ToList();
                         return res;
                     }).ToList()
                 );

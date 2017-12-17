@@ -19,15 +19,15 @@ namespace Repositories
             {
                 return await Task.FromResult(
                     db.Bookings
-                        .LoadWith(x => x.bookingpayments)
-                        .LoadWith(x => x.bookingpayments.First().FK_booking_payments_1_0)
-                        .LoadWith(x => x.client)
-                        .LoadWith(x => x.coach)
-                        .LoadWith(x => x.service)
-                        .LoadWith(x => x.service.bookings)
-                        .LoadWith(x => x.service.servicetocoacheslinks)
-                        .LoadWith(x => x.service.servicetohorseslinks)
-                        .LoadWith(x => x.hors)
+                        .LoadWith(x => x.BookingPayments)
+                        .LoadWith(x => x.BookingPayments.First().PaymentType)
+                        .LoadWith(x => x.Client)
+                        .LoadWith(x => x.Coach)
+                        .LoadWith(x => x.Service)
+                        .LoadWith(x => x.Service.Bookings)
+                        .LoadWith(x => x.Service.ServiceToCoachesLinks)
+                        .LoadWith(x => x.Service.ServiceToHorsesLinks)
+                        .LoadWith(x => x.Hor)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
             }

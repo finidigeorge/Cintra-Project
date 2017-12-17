@@ -44,8 +44,8 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.1.1\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Bindables, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bindables.Fody.0.4.0\lib\net40\Bindables.dll</HintPath>
@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\BookingEditWindowVm.cs" />
     <Compile Include="ViewModels\BookingRefVm.cs" />
     <Compile Include="ViewModels\ClientsRefVm.cs" />
+    <Compile Include="ViewModels\HorsesEditWindowVm.cs" />
     <Compile Include="ViewModels\Interfaces\IReportVm.cs" />
     <Compile Include="ViewModels\PaymentTypesRefVm.cs" />
     <Compile Include="ViewModels\Reports\BaseReportVm.cs" />

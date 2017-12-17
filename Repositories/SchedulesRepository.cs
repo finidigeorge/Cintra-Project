@@ -19,7 +19,7 @@ namespace Repositories
         {
             using (var db = new CintraDB())
             {
-                return await Task.FromResult(db.GetTable<Schedule>().LoadWith(x => x.data).Where(where).Where(x => x.IsDeleted == false).ToList());
+                return await Task.FromResult(db.GetTable<Schedule>().LoadWith(x => x.SchedulesData).Where(where).Where(x => x.IsDeleted == false).ToList());
             }
         }        
 

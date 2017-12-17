@@ -20,21 +20,23 @@ namespace DataModels
 	/// </summary>
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
-		public ITable<Booking>              Bookings             { get { return this.GetTable<Booking>(); } }
-		public ITable<BookingPayments>      BookingPayments      { get { return this.GetTable<BookingPayments>(); } }
-		public ITable<Client>               Clients              { get { return this.GetTable<Client>(); } }
-		public ITable<Coach>                Coaches              { get { return this.GetTable<Coach>(); } }
-		public ITable<DbUpdatesLog>         DbUpdatesLog         { get { return this.GetTable<DbUpdatesLog>(); } }
-		public ITable<Hors>                 Horses               { get { return this.GetTable<Hors>(); } }
-		public ITable<PaymentTypes>         PaymentTypes         { get { return this.GetTable<PaymentTypes>(); } }
-		public ITable<Schedule>             Schedules            { get { return this.GetTable<Schedule>(); } }
-		public ITable<SchedulesData>        SchedulesData        { get { return this.GetTable<SchedulesData>(); } }
-		public ITable<SchedulesInterval>    SchedulesInterval    { get { return this.GetTable<SchedulesInterval>(); } }
-		public ITable<Service>              Services             { get { return this.GetTable<Service>(); } }
-		public ITable<ServiceToCoachesLink> ServiceToCoachesLink { get { return this.GetTable<ServiceToCoachesLink>(); } }
-		public ITable<ServiceToHorsesLink>  ServiceToHorsesLink  { get { return this.GetTable<ServiceToHorsesLink>(); } }
-		public ITable<User>                 Users                { get { return this.GetTable<User>(); } }
-		public ITable<UserRoles>            UserRoles            { get { return this.GetTable<UserRoles>(); } }
+		public ITable<Booking>                   Bookings                  { get { return this.GetTable<Booking>(); } }
+		public ITable<BookingPayments>           BookingPayments           { get { return this.GetTable<BookingPayments>(); } }
+		public ITable<Client>                    Clients                   { get { return this.GetTable<Client>(); } }
+		public ITable<Coach>                     Coaches                   { get { return this.GetTable<Coach>(); } }
+		public ITable<DbUpdatesLog>              DbUpdatesLog              { get { return this.GetTable<DbUpdatesLog>(); } }
+		public ITable<Hors>                      Horses                    { get { return this.GetTable<Hors>(); } }
+		public ITable<HorsesScheduleData>        HorsesScheduleData        { get { return this.GetTable<HorsesScheduleData>(); } }
+		public ITable<HorsesUnavailabilityTypes> HorsesUnavailabilityTypes { get { return this.GetTable<HorsesUnavailabilityTypes>(); } }
+		public ITable<PaymentTypes>              PaymentTypes              { get { return this.GetTable<PaymentTypes>(); } }
+		public ITable<Schedule>                  Schedules                 { get { return this.GetTable<Schedule>(); } }
+		public ITable<SchedulesData>             SchedulesData             { get { return this.GetTable<SchedulesData>(); } }
+		public ITable<SchedulesInterval>         SchedulesInterval         { get { return this.GetTable<SchedulesInterval>(); } }
+		public ITable<Service>                   Services                  { get { return this.GetTable<Service>(); } }
+		public ITable<ServiceToCoachesLink>      ServiceToCoachesLink      { get { return this.GetTable<ServiceToCoachesLink>(); } }
+		public ITable<ServiceToHorsesLink>       ServiceToHorsesLink       { get { return this.GetTable<ServiceToHorsesLink>(); } }
+		public ITable<User>                      Users                     { get { return this.GetTable<User>(); } }
+		public ITable<UserRoles>                 UserRoles                 { get { return this.GetTable<UserRoles>(); } }
 
 		public CintraDB()
 		{
@@ -70,31 +72,31 @@ namespace DataModels
 		/// FK_booking_payments_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="BookingId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<BookingPayments> bookingpayments { get; set; }
+		public IEnumerable<BookingPayments> BookingPayments { get; set; }
 
 		/// <summary>
 		/// FK_bookings_3_0
 		/// </summary>
-		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_3_0", BackReferenceName="bookings")]
-		public Client client { get; set; }
+		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_3_0", BackReferenceName="Bookings")]
+		public Client Client { get; set; }
 
 		/// <summary>
 		/// FK_bookings_2_0
 		/// </summary>
-		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_2_0", BackReferenceName="bookings")]
-		public Coach coach { get; set; }
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_2_0", BackReferenceName="Bookings")]
+		public Coach Coach { get; set; }
 
 		/// <summary>
 		/// FK_bookings_1_0
 		/// </summary>
-		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_1_0", BackReferenceName="bookings")]
-		public Hors hors { get; set; }
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_1_0", BackReferenceName="Bookings")]
+		public Hors Hor { get; set; }
 
 		/// <summary>
 		/// FK_bookings_0_0
 		/// </summary>
-		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_0_0", BackReferenceName="bookings")]
-		public Service service { get; set; }
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_0_0", BackReferenceName="Bookings")]
+		public Service Service { get; set; }
 
 		#endregion
 	}
@@ -114,14 +116,14 @@ namespace DataModels
 		/// <summary>
 		/// FK_booking_payments_0_0
 		/// </summary>
-		[Association(ThisKey="BookingId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_0_0", BackReferenceName="bookingpayments")]
-		public Booking bookingpayment { get; set; }
+		[Association(ThisKey="BookingId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_0_0", BackReferenceName="BookingPayments")]
+		public Booking Booking { get; set; }
 
 		/// <summary>
 		/// FK_booking_payments_1_0
 		/// </summary>
-		[Association(ThisKey="PaymentTypeId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_1_0", BackReferenceName="bookingpayments")]
-		public PaymentTypes FK_booking_payments_1_0 { get; set; }
+		[Association(ThisKey="PaymentTypeId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_payments_1_0", BackReferenceName="BookingPayments")]
+		public PaymentTypes PaymentType { get; set; }
 
 		#endregion
 	}
@@ -145,7 +147,7 @@ namespace DataModels
 		/// FK_bookings_3_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ClientId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Booking> bookings { get; set; }
+		public IEnumerable<Booking> Bookings { get; set; }
 
 		#endregion
 	}
@@ -165,19 +167,19 @@ namespace DataModels
 		/// FK_bookings_2_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Booking> bookings { get; set; }
+		public IEnumerable<Booking> Bookings { get; set; }
 
 		/// <summary>
 		/// FK_schedules_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Schedule> schedules { get; set; }
+		public IEnumerable<Schedule> Schedules { get; set; }
 
 		/// <summary>
 		/// FK_service_to_coaches_link_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ServiceToCoachesLink> servicetolinks { get; set; }
+		public IEnumerable<ServiceToCoachesLink> ServiceToCoachesLinks { get; set; }
 
 		#endregion
 	}
@@ -203,13 +205,64 @@ namespace DataModels
 		/// FK_bookings_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Booking> bookings { get; set; }
+		public IEnumerable<Booking> Bookings { get; set; }
+
+		/// <summary>
+		/// FK_horses_schedule_data_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<HorsesScheduleData> HorsesScheduleData { get; set; }
 
 		/// <summary>
 		/// FK_service_to_horses_link_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ServiceToHorsesLink> servicetolinks { get; set; }
+		public IEnumerable<ServiceToHorsesLink> ServiceToHorsesLinks { get; set; }
+
+		#endregion
+	}
+
+	[Table("horses_schedule_data")]
+	public partial class HorsesScheduleData
+	{
+		[Column("id"),                     PrimaryKey,  Identity] public long      Id                   { get; set; } // integer
+		[Column("horse_id"),               NotNull              ] public long      HorseId              { get; set; } // integer
+		[Column("unavailability_type_id"), NotNull              ] public long      UnavailabilityTypeId { get; set; } // integer
+		[Column("is_deleted"),             NotNull              ] public bool      IsDeleted            { get; set; } // boolean
+		[Column("start_date"),                Nullable          ] public DateTime? StartDate            { get; set; } // date
+		[Column("end_date"),                  Nullable          ] public DateTime? EndDate              { get; set; } // date
+
+		#region Associations
+
+		/// <summary>
+		/// FK_horses_schedule_data_1_0
+		/// </summary>
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_horses_schedule_data_1_0", BackReferenceName="HorsesScheduleData")]
+		public Hors Hor { get; set; }
+
+		/// <summary>
+		/// FK_horses_schedule_data_0_0
+		/// </summary>
+		[Association(ThisKey="UnavailabilityTypeId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_horses_schedule_data_0_0", BackReferenceName="HorsesScheduleData")]
+		public HorsesUnavailabilityTypes HorsesUnavailabilityType { get; set; }
+
+		#endregion
+	}
+
+	[Table("horses_unavailability_types")]
+	public partial class HorsesUnavailabilityTypes
+	{
+		[Column("id"),         PrimaryKey,  Identity] public long   Id        { get; set; } // integer
+		[Column("type_name"),     Nullable          ] public string TypeName  { get; set; } // varchar(50)
+		[Column("is_deleted"), NotNull              ] public bool   IsDeleted { get; set; } // boolean
+
+		#region Associations
+
+		/// <summary>
+		/// FK_horses_schedule_data_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="UnavailabilityTypeId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<HorsesScheduleData> HorsesScheduleData { get; set; }
 
 		#endregion
 	}
@@ -227,7 +280,7 @@ namespace DataModels
 		/// FK_booking_payments_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="PaymentTypeId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<BookingPayments> bookingpayments { get; set; }
+		public IEnumerable<BookingPayments> BookingPayments { get; set; }
 
 		#endregion
 	}
@@ -246,14 +299,14 @@ namespace DataModels
 		/// <summary>
 		/// FK_schedules_0_0
 		/// </summary>
-		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_0_0", BackReferenceName="schedules")]
-		public Coach coach { get; set; }
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_0_0", BackReferenceName="Schedules")]
+		public Coach Coach { get; set; }
 
 		/// <summary>
 		/// FK_schedules_data_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ScheduleId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SchedulesData> data { get; set; }
+		public IEnumerable<SchedulesData> SchedulesData { get; set; }
 
 		#endregion
 	}
@@ -278,14 +331,14 @@ namespace DataModels
 		/// <summary>
 		/// FK_schedules_data_1_0
 		/// </summary>
-		[Association(ThisKey="ScheduleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_1_0", BackReferenceName="data")]
-		public Schedule FK_schedules_data_1_0 { get; set; }
+		[Association(ThisKey="ScheduleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_1_0", BackReferenceName="SchedulesData")]
+		public Schedule Schedule { get; set; }
 
 		/// <summary>
 		/// FK_schedules_data_0_0
 		/// </summary>
-		[Association(ThisKey="IntervalId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_0_0", BackReferenceName="schedulesdatas")]
-		public SchedulesInterval schedulesdata { get; set; }
+		[Association(ThisKey="IntervalId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_schedules_data_0_0", BackReferenceName="SchedulesData")]
+		public SchedulesInterval SchedulesInterval { get; set; }
 
 		#endregion
 	}
@@ -302,7 +355,7 @@ namespace DataModels
 		/// FK_schedules_data_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="IntervalId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SchedulesData> schedulesdatas { get; set; }
+		public IEnumerable<SchedulesData> SchedulesData { get; set; }
 
 		#endregion
 	}
@@ -320,19 +373,19 @@ namespace DataModels
 		/// FK_bookings_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Booking> bookings { get; set; }
+		public IEnumerable<Booking> Bookings { get; set; }
 
 		/// <summary>
 		/// FK_service_to_coaches_link_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ServiceToCoachesLink> servicetocoacheslinks { get; set; }
+		public IEnumerable<ServiceToCoachesLink> ServiceToCoachesLinks { get; set; }
 
 		/// <summary>
 		/// FK_service_to_horses_link_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ServiceToHorsesLink> servicetohorseslinks { get; set; }
+		public IEnumerable<ServiceToHorsesLink> ServiceToHorsesLinks { get; set; }
 
 		#endregion
 	}
@@ -350,14 +403,14 @@ namespace DataModels
 		/// <summary>
 		/// FK_service_to_coaches_link_1_0
 		/// </summary>
-		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_coaches_link_1_0", BackReferenceName="servicetolinks")]
-		public Coach FK_service_to_coaches_link_1_0 { get; set; }
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_coaches_link_1_0", BackReferenceName="ServiceToCoachesLinks")]
+		public Coach Coach { get; set; }
 
 		/// <summary>
 		/// FK_service_to_coaches_link_0_0
 		/// </summary>
-		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_coaches_link_0_0", BackReferenceName="servicetocoacheslinks")]
-		public Service servicetocoacheslink { get; set; }
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_coaches_link_0_0", BackReferenceName="ServiceToCoachesLinks")]
+		public Service Service { get; set; }
 
 		#endregion
 	}
@@ -375,14 +428,14 @@ namespace DataModels
 		/// <summary>
 		/// FK_service_to_horses_link_1_0
 		/// </summary>
-		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_horses_link_1_0", BackReferenceName="servicetolinks")]
-		public Hors FK_service_to_horses_link_1_0 { get; set; }
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_horses_link_1_0", BackReferenceName="ServiceToHorsesLinks")]
+		public Hors Hor { get; set; }
 
 		/// <summary>
 		/// FK_service_to_horses_link_0_0
 		/// </summary>
-		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_horses_link_0_0", BackReferenceName="servicetohorseslinks")]
-		public Service servicetohorseslink { get; set; }
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_service_to_horses_link_0_0", BackReferenceName="ServiceToHorsesLinks")]
+		public Service Service { get; set; }
 
 		#endregion
 	}
@@ -406,8 +459,8 @@ namespace DataModels
 		/// <summary>
 		/// FK_users_0_0
 		/// </summary>
-		[Association(ThisKey="RoleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_users_0_0", BackReferenceName="users")]
-		public UserRoles user_roles { get; set; }
+		[Association(ThisKey="RoleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_users_0_0", BackReferenceName="Users")]
+		public UserRoles UserRole { get; set; }
 
 		#endregion
 	}
@@ -425,7 +478,7 @@ namespace DataModels
 		/// FK_users_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="RoleId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<User> users { get; set; }
+		public IEnumerable<User> Users { get; set; }
 
 		#endregion
 	}
@@ -463,6 +516,18 @@ namespace DataModels
 		}
 
 		public static Hors Find(this ITable<Hors> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static HorsesScheduleData Find(this ITable<HorsesScheduleData> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static HorsesUnavailabilityTypes Find(this ITable<HorsesUnavailabilityTypes> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

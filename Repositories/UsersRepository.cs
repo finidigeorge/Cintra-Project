@@ -19,7 +19,7 @@ namespace Repositories
             using (var db = new CintraDB())
             {                
                 return await Task.FromResult(
-                    db.Users.LoadWith(x => x.user_roles).Where(where).Where(x => x.IsDeleted == false).ToList()
+                    db.Users.LoadWith(x => x.UserRole).Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
             }
         }
@@ -35,7 +35,7 @@ namespace Repositories
         public async Task<bool> HasAdminAccess(string login)
         {
             var user = await GetByLogin(login);
-            return user?.user_roles.Name == nameof(UserRolesEnum.Administrator);
+            return user?.UserRole.Name == nameof(UserRolesEnum.Administrator);
         }
     }
 }

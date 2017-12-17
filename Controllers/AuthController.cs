@@ -61,7 +61,7 @@ namespace Controllers
                         new[]
                         {
                             new Claim("User", user.Login),
-                            new Claim(JwtRoleToMsIdentiryMapKey, user.user_roles.Name)
+                            new Claim(JwtRoleToMsIdentiryMapKey, user.UserRole.Name)
                         });
                 }
 

@@ -26,12 +26,12 @@ namespace Mapping
                     conf.CreateMap<Booking, BookingDto>()                    
                     .AfterMap((db, vm) =>
                     {
-                        vm.Client = _mapper.Map<ClientDto>(db.client);
-                        vm.Coach = _mapper.Map<CoachDto>(db.coach);
-                        vm.Horse = _mapper.Map<HorseDto>(db.hors);
-                        vm.Service = _mapper.Map<ServiceDto>(db.service);
-                        var payment = db.bookingpayments?.FirstOrDefault();
-                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(db.bookingpayments?.FirstOrDefault());                        
+                        vm.Client = _mapper.Map<ClientDto>(db.Client);
+                        vm.Coach = _mapper.Map<CoachDto>(db.Coach);
+                        vm.Horse = _mapper.Map<HorseDto>(db.Hor);
+                        vm.Service = _mapper.Map<ServiceDto>(db.Service);
+                        var payment = db.BookingPayments?.FirstOrDefault();
+                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(db.BookingPayments?.FirstOrDefault());                        
                     });
                     conf.CreateMap<BookingDto, Booking>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())                        
@@ -47,7 +47,7 @@ namespace Mapping
                     conf.CreateMap<BookingPayments, BookingPaymentDto>()
                     .AfterMap((db, vm) =>
                     {
-                        vm.PaymentType = _mapper.Map<PaymentTypeDto>(db.FK_booking_payments_1_0);
+                        vm.PaymentType = _mapper.Map<PaymentTypeDto>(db.PaymentType);
                     });
 
                     conf.CreateMap<BookingPaymentDto, BookingPayments>()
@@ -61,7 +61,7 @@ namespace Mapping
                     conf.CreateMap<User, UserDto>()                    
                     .AfterMap((db, vm) =>
                     {
-                        vm.UserRole = _mapper.Map<UserRoleDto>(db.user_roles);
+                        vm.UserRole = _mapper.Map<UserRoleDto>(db.UserRole);
                     });
                     conf.CreateMap<UserDto, User>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
@@ -89,46 +89,68 @@ namespace Mapping
 
                     conf.CreateMap<Schedule, ScheduleDto>().AfterMap((db, vm) =>
                     {
-                        vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.data);                        
+                        vm.ScheduleData = _mapper.Map<List<ScheduleDataDto>>(db.SchedulesData);                        
                     });
                     conf.CreateMap<ScheduleDto, Schedule>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) =>
                         {
-                            db.data = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
+                            db.SchedulesData = _mapper.Map<List<SchedulesData>>(vm.ScheduleData);                        
                         });
                    
                     conf.CreateMap<Coach, CoachDto>().AfterMap((db, vm) =>
                     {
-                        vm.Schedules = _mapper.Map<List<ScheduleDto>>(db.schedules);
+                        vm.Schedules = _mapper.Map<List<ScheduleDto>>(db.Schedules);
                     });
                     conf.CreateMap<CoachDto, Coach>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) =>
                         {
-                            db.schedules = _mapper.Map<List<Schedule>>(vm.Schedules);
+                            db.Schedules = _mapper.Map<List<Schedule>>(vm.Schedules);
+                        });
+
+
+                    conf.CreateMap<HorsesScheduleData, HorseScheduleDataDto>().AfterMap((db, vm) =>
+                    {
+                        vm.UnavailabilityType = (HorsesUnavailabilityEnum)db.UnavailabilityTypeId;
+                    });
+
+                    conf.CreateMap<HorseScheduleDataDto, HorsesScheduleData>().AfterMap((vm, db) =>
+                    {
+                        db.UnavailabilityTypeId = (long)vm.UnavailabilityType;
+                    });
+
+
+                    conf.CreateMap<Hors, HorseDto>()
+                        .AfterMap((db, vm) => 
+                        {
+                            vm.HorseScheduleData = db.HorsesScheduleData.Select(x => _mapper.Map<HorseScheduleDataDto>(x)).ToList();
                         });
 
                     conf.CreateMap<HorseDto, Hors>()
-                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore());
+                        .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+                        .AfterMap((vm, db) => 
+                        {
+                            db.HorsesScheduleData = vm.HorseScheduleData.Select(x => _mapper.Map<HorsesScheduleData>(x)).ToList();
+                        });
 
                     conf.CreateMap<Service, ServiceDto>().AfterMap((db, vm) =>
                     {                       
-                        vm.Coaches = _mapper.Map<List<CoachDto>>(db.servicetocoacheslinks.Select(p => p.FK_service_to_coaches_link_1_0));
-                        vm.Horses= _mapper.Map<List<HorseDto>>(db.servicetohorseslinks.Select(p => p.FK_service_to_horses_link_1_0));
+                        vm.Coaches = _mapper.Map<List<CoachDto>>(db.ServiceToCoachesLinks.Select(p => p.Coach));
+                        vm.Horses= _mapper.Map<List<HorseDto>>(db.ServiceToHorsesLinks.Select(p => p.Hor));
                     });
                     conf.CreateMap<ServiceDto, Service>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) =>
                         {
-                            db.servicetocoacheslinks = vm.Coaches.Select(x => 
+                            db.ServiceToCoachesLinks = vm.Coaches.Select(x => 
                                 new ServiceToCoachesLink()
                                 {                                    
                                     CoachId = x.Id,
                                     ServiceId = vm.Id
                                 });
 
-                            db.servicetohorseslinks = vm.Horses.Select(x =>
+                            db.ServiceToHorsesLinks = vm.Horses.Select(x =>
                                 new ServiceToHorsesLink()
                                 {
                                     HorseId = x.Id,

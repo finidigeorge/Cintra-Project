@@ -23,7 +23,7 @@ namespace Repositories
                     .Where(x => x.ServiceId == entity.Id)
                     .DeleteAsync();
 
-                foreach (var c in entity.servicetocoacheslinks)
+                foreach (var c in entity.ServiceToCoachesLinks)
                     await db.InsertWithIdentityAsync(c);
 
 
@@ -31,7 +31,7 @@ namespace Repositories
                     .Where(x => x.ServiceId == entity.Id)
                     .DeleteAsync();
 
-                foreach (var c in entity.servicetohorseslinks)
+                foreach (var c in entity.ServiceToHorsesLinks)
                     await db.InsertWithIdentityAsync(c);
 
                 return serviceId;
@@ -46,10 +46,10 @@ namespace Repositories
             {
                 return await Task.FromResult(
                     db.Services                        
-                        .LoadWith(x => x.servicetocoacheslinks)
-                        .LoadWith(x => x.servicetocoacheslinks.First().FK_service_to_coaches_link_1_0)
-                        .LoadWith(x => x.servicetohorseslinks)
-                        .LoadWith(x => x.servicetohorseslinks.First().FK_service_to_horses_link_1_0)
+                        .LoadWith(x => x.ServiceToCoachesLinks)
+                        .LoadWith(x => x.ServiceToCoachesLinks.First().Coach)
+                        .LoadWith(x => x.ServiceToHorsesLinks)
+                        .LoadWith(x => x.ServiceToHorsesLinks.First().Hor)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
             }

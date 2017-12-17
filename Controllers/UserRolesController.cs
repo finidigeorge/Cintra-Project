@@ -26,7 +26,7 @@ namespace Controllers
         [HttpGet("/api/[controller]/getByUser/{login}")]        
         public async Task<IList<UserRoleDto>> GetByUser(string login)
         {            
-            return (await ((IUserRolesRepository) _repository).GetByParamsWithUsers(x => x.users.Any(u => u.Login == login))).Select(ObjectMapper.Map<UserRoleDto>).ToList();              
+            return (await ((IUserRolesRepository) _repository).GetByParamsWithUsers(x => x.Users.Any(u => u.Login == login))).Select(ObjectMapper.Map<UserRoleDto>).ToList();              
         }
 
         [Authorize(Roles = nameof(UserRolesEnum.Administrator))]

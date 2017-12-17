@@ -17,7 +17,7 @@ namespace Repositories
         {
             using (var db = new CintraDB())
             {
-                return await Task.FromResult(db.UserRoles.LoadWith(x => x.users).Where(where).Where(x => x.IsDeleted == false).ToList());
+                return await Task.FromResult(db.UserRoles.LoadWith(x => x.Users).Where(where).Where(x => x.IsDeleted == false).ToList());
             }
         }        
     }

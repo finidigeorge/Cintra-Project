@@ -12,5 +12,7 @@ namespace Shared.Dto
 
         [VmMeta(IsNullable = false)]
         public virtual string NickName { get; set; }        
-    }
+
+        public virtual List<HorseScheduleDataDto> HorseScheduleData { get; set; }
+}
 }
