@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using Client.Commands;
 using Client.Extentions;
 using Client.ViewModels;
+using Client.Windows;
 using Common.DtoMapping;
 
 namespace Client.Controls
@@ -21,7 +22,20 @@ namespace Client.Controls
         {
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
-        }        
+            Model.BeginEditItemCommand = new Command<object>(ShowScheduleEditor, (x) => Model.CanEditSelectedItem);
+        }
+
+        private void ShowScheduleEditor()
+        {
+            var editor = new HorseEditWindow()
+            {
+                Owner = Application.Current.MainWindow,
+            };
+
+            editor.Model.HorseData = Model.SelectedItem;            
+
+            editor.ShowDialog();
+        }
     }
 
 

@@ -26,6 +26,8 @@ namespace Client
     /// </summary>
     public partial class SchedulerIntervalEditWindow : Window
     {
+        public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
+
         private ScheduleIntervalEnum mode = ScheduleIntervalEnum.Weekly;
 
         public bool IsDatePickerVisible => mode == ScheduleIntervalEnum.Daily;
@@ -73,8 +75,7 @@ namespace Client
                 dayPickerLabel.Visibility = Visibility.Hidden;
                 dayPicker.Visibility = Visibility.Hidden;
             }
-        }
-        public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
+        }        
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {            

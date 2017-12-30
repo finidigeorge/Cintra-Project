@@ -124,6 +124,7 @@
     </Compile>
     <Compile Include="Extentions\ComboBoxExtention.cs" />
     <Compile Include="Extentions\DataGridExtension.cs" />
+    <Compile Include="Extentions\EnumToItemsSource.cs" />
     <Compile Include="Extentions\EnumBooleanConverter.cs" />
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\ReportRunner.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="ViewModels\BookingEditWindowVm.cs" />
     <Compile Include="ViewModels\BookingRefVm.cs" />
     <Compile Include="ViewModels\ClientsRefVm.cs" />
+    <Compile Include="ViewModels\HorseSchedulesRefVm.cs" />
     <Compile Include="ViewModels\HorsesEditWindowVm.cs" />
     <Compile Include="ViewModels\Interfaces\IReportVm.cs" />
     <Compile Include="ViewModels\PaymentTypesRefVm.cs" />
@@ -145,6 +147,12 @@
     </Compile>
     <Compile Include="Windows\BookingWindow.xaml.cs">
       <DependentUpon>BookingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\HorseEditScheduleWindow.xaml.cs">
+      <DependentUpon>HorseEditScheduleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\HorseEditWindow.xaml.cs">
+      <DependentUpon>HorseEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Reports\ClientLessonsReportWindow.xaml.cs">
       <DependentUpon>ClientLessonsReportWindow.xaml</DependentUpon>
@@ -235,6 +243,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\BookingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\HorseEditScheduleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\HorseEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -30,7 +30,7 @@ namespace Client
             {
                 var thread = new Thread(() =>
                 {
-                    var bookingWindow = new BookingWindow() { Owner = this };
+                    var bookingWindow = new BookingWindow();
                     bookingWindowIsRunning = true;
                     bookingWindow.Show();
 

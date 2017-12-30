@@ -63,9 +63,9 @@
                         <DataTemplate>
                             <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
                                               Path=DataContext.DeleteSelectedItemCommand}"
-                                    CommandParameter="{Binding}" ToolTip="Delete current item">
+                                    CommandParameter="{Binding}" ToolTip="Edit horse availability">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Resources/Images/ReferenceDeleteItem.png" />
+                                    <Image Source="/Resources/Images/ReferenceEditItem.png" />
                                 </StackPanel>
                             </Button>
                         </DataTemplate>

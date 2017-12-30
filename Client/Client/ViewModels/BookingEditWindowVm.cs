@@ -48,7 +48,7 @@ namespace Client.ViewModels
             PaymentTypesModel.OnSelectedItemChanged += (sender, paymentType) => { _bookingData.BookingPayment.PaymentType = paymentType; };
         }
 
-        private async Task RefreshAllModels()
+        private async void RefreshAllModels()
         {
             await ClientsModel.RefreshDataCommand.ExecuteAsync(null);
             await ServicesModel.RefreshDataCommand.ExecuteAsync(null);

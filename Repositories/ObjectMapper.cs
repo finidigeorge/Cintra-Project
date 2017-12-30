@@ -124,14 +124,14 @@ namespace Mapping
                     conf.CreateMap<Hors, HorseDto>()
                         .AfterMap((db, vm) => 
                         {
-                            vm.HorseScheduleData = db.HorsesScheduleData.Select(x => _mapper.Map<HorseScheduleDataDto>(x)).ToList();
+                            vm.HorseScheduleData = db.HorsesScheduleData?.Select(x => _mapper.Map<HorseScheduleDataDto>(x)).ToList() ?? new List<HorseScheduleDataDto>();
                         });
 
                     conf.CreateMap<HorseDto, Hors>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) => 
                         {
-                            db.HorsesScheduleData = vm.HorseScheduleData.Select(x => _mapper.Map<HorsesScheduleData>(x)).ToList();
+                            db.HorsesScheduleData = vm.HorseScheduleData.Select(x => _mapper.Map<HorsesScheduleData>(x)).ToList() ?? new List<HorsesScheduleData>();
                         });
 
                     conf.CreateMap<Service, ServiceDto>().AfterMap((db, vm) =>

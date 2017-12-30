@@ -8,6 +8,7 @@ using Shared.Dto;
 using PropertyChanged;
 using Common.Extentions;
 using Mapping;
+using Shared;
 
 
 /*
@@ -208,5 +209,32 @@ namespace Common.DtoMapping
 
         public override string ToString() => Name;
     }
+
+    public partial class HorseScheduleDataDtoUi : HorseScheduleDataDto, INotifyPropertyChanged
+    {
+        [DependsOn("UnavailabilityType")]
+        public int UnavailabilityReasonMapped {
+            get => (int)UnavailabilityType;
+            set
+            {
+                UnavailabilityType = (HorsesUnavailabilityEnum)value;
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public string ApplyObjectLevelValidations()
+        {
+            StringBuilder error = new StringBuilder();
+
+            if (StartDate >= EndDate)
+            {
+                error.Append((error.Length != 0 ? ", " : "") + "Date To / Date From values are incorrect");
+            }
+
+            return error.ToString();
+        }
+
+        public override string ToString() => $"{UnavailabilityType.ToString()} {StartDate.ToString("dd/MM/yyyy")} {EndDate.ToString("dd/MM/yyyy")}";
+    }
+
 #pragma warning restore CS0067 
 }

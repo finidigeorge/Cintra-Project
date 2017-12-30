@@ -89,8 +89,6 @@
                         </GroupStyle.ContainerStyle>
                     </GroupStyle>
                 </ListView.GroupStyle>
-
-                <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->                
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=BeginTimeFmtd}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
@@ -111,6 +109,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
             <Grid Visibility="Hidden">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>

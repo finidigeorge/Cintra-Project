@@ -22,23 +22,8 @@ namespace Client.ViewModels
 
         public CoachesRefVm()
         {
-            Client = RestClientFactory.GetClient<CoachDto>();
-            DisplayEditItemScheduleCommand = new Command<object>(ShowScheduleEditor, (x) => CanEditSelectedItem);
-        }
-
-        private void ShowScheduleEditor()
-        {
-            var editor = new ScheduleEditor()
-            {
-                Owner = Application.Current.MainWindow,
-            };
-
-            editor.Model.Coach = SelectedItem;
-            editor.Model.DataSource = SelectedItem.Schedules;
-            editor.Model.RefreshDataCommand.ExecuteAsync(null);
-
-            editor.ShowDialog();
-        }        
+            Client = RestClientFactory.GetClient<CoachDto>();            
+        }           
     }
 
 }

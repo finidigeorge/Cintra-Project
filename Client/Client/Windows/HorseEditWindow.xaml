@@ -1,0 +1,70 @@
+﻿<Window x:Class="Client.Windows.HorseEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client.Windows"
+        xmlns:viewModels="clr-namespace:Client.ViewModels"
+        xmlns:controls="clr-namespace:Client.Controls"
+        mc:Ignorable="d"
+        FontSize="14"
+        Title="Horse Edit Window" MinHeight="480" Width="640" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Window.Resources>
+        <viewModels:HorsesEditWindowVm x:Key="ViewModel" />
+    </Window.Resources>
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
+        <Label Content="Horse: " HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="63"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="72,23,0,0" TextWrapping="Wrap" Text="{Binding HorseData.NickName}" VerticalAlignment="Top" Width="249" IsEnabled="False"/>
+
+        <Label Content="Horse unavailable" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="208"/>
+        <Button HorizontalAlignment="Right" 
+                VerticalAlignment="Top" Width="24" Height="24"
+                Command="{Binding AddUnavalabilityInterval}" ToolTip="Add horse unavailable days" Margin="0,52,41,0">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/ReferenceNewItem.png" Width="21" />
+            </StackPanel>
+        </Button>
+        <Button HorizontalAlignment="Right" 
+                VerticalAlignment="Top" Width="24" Height="24"
+                Command="{Binding DeleteUnavalabilityInterval}" ToolTip="Remove horse unavailable days" Margin="0,52,10,0">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/Delete.ico" Width="21" />
+            </StackPanel>
+        </Button>
+        <ListView x:Name="SchedluleList" HorizontalAlignment="Left" Margin="10,82,0,66" ItemsSource="{Binding HorsesScheduleModel.ItemsCollectionView}" SelectedItem="{Binding HorsesScheduleModel.SelectedItem, Mode=TwoWay}" Width="614">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="BorderBrush" Value="LightGray" />
+                    <Setter Property="BorderThickness" Value="0,0.5,0,0.5" />
+                    <Setter Property="Height" Value="24" />
+                    <Setter Property="Margin" Value="0,-1, 0,-1" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding Path=StartDate}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
+                    <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding Path=EndDate}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
+                    <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding Path=UnavailabilityType}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+        <Grid Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" x:Name="col0"/>
+            <Grid Grid.Column="1" x:Name="col1"/>
+            <Grid Grid.Column="2" x:Name="col2"/>
+        </Grid>
+
+        <Button Content="Close"                
+            Margin="0,0,10,10" Width="120" IsDefault="True" HorizontalAlignment="Right" IsEnabled="{Binding HorseData.IsValid}" Click="Button_Click" RenderTransformOrigin="0.506,1.385" Height="36" VerticalAlignment="Bottom"/>
+        <CheckBox Content="Show full history" HorizontalAlignment="Left" Margin="429,54,0,0" VerticalAlignment="Top" Width="125"/>
+
+
+    </Grid>
+</Window>

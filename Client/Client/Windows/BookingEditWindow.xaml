@@ -2,11 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
         xmlns:local="clr-namespace:Client.Windows"
         xmlns:viewModels="clr-namespace:Client.ViewModels"
         xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
+        FontSize="14"
         Title="Booking Edit Window" MinHeight="600" Height="600" Width="640" WindowStartupLocation="CenterOwner"
     >
     <Window.Resources>
@@ -56,7 +57,7 @@
                   >
         </ComboBox>
         <Button Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
-                VerticalAlignment="Top" Width="21" Height="22"
+                VerticalAlignment="Top" Width="24" Height="24"
                 Command="{Binding GetClientsCommand}" ToolTip="Refresh data">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/Refresh.ico" RenderTransformOrigin="7.874,0.37" Width="20" />
@@ -70,7 +71,7 @@
                   >
         </ComboBox>
         <Button Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="245,10,0,0"  
-                VerticalAlignment="Top" Width="22" Height="22"
+                VerticalAlignment="Top" Width="24" Height="24"
                 Command="{Binding GetCoachesCommand}" ToolTip="Refresh data">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/Refresh.ico" />
@@ -84,7 +85,7 @@
                   >
         </ComboBox>
         <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="245,10,0,0"  
-                VerticalAlignment="Top" Width="22" Height="22"
+                VerticalAlignment="Top" Width="24" Height="24"
                 Command="{Binding GetHorsesCommand}" ToolTip="Refresh data">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/Refresh.ico" />
@@ -97,8 +98,8 @@
                   SelectedItem="{Binding ServicesModel.SelectedItem}"
                   >
         </ComboBox>
-        <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="245,10,0,0"  
-                VerticalAlignment="Top" Width="22" Height="22"
+        <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="245,10,0,0"
+                VerticalAlignment="Top" Width="24" Height="24"
                 Command="{Binding GetServicesCommand}" ToolTip="Refresh data">
             <StackPanel Orientation="Horizontal">
                 <Image Source="/Resources/Images/Refresh.ico" />

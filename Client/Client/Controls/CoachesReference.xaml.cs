@@ -1,6 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using Client.Commands;
 using Client.Extentions;
 using Client.ViewModels;
+using Client.Windows;
 
 namespace Client.Controls
 {
@@ -13,6 +16,21 @@ namespace Client.Controls
         {
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
-        }        
+            Model.DisplayEditItemScheduleCommand = new Command<object>(ShowScheduleEditor, (x) => Model.CanEditSelectedItem);
+        }
+
+        private void ShowScheduleEditor()
+        {
+            var editor = new ScheduleEditor()
+            {
+                Owner = Application.Current.MainWindow,
+            };
+
+            editor.Model.Coach = Model.SelectedItem;
+            editor.Model.DataSource = Model.SelectedItem.Schedules;
+            editor.Model.RefreshDataCommand.ExecuteAsync(null);
+
+            editor.ShowDialog();
+        }
     }
 }
