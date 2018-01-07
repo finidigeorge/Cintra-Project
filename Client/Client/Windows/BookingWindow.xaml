@@ -65,6 +65,7 @@
                         <Setter Property="BorderThickness" Value="0,0.5,0,0.5" />
                         <Setter Property="Height" Value="24" />
                         <Setter Property="Margin" Value="0,-1, 0,-1" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.GroupStyle>
@@ -91,13 +92,40 @@
                 </ListView.GroupStyle>
                 <ListView.View>
                     <GridView>
+                        <GridViewColumn Header="Status" Width="50">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Width="16">
+                                        <Image.Style>
+                                            <Style TargetType="{x:Type Image}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsValid}" Value="True">
+                                                        <Setter Property="Source" Value="/Resources/Images/OkStatus.png"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                                        <Setter Property="Source" Value="/Resources/Images/ErrorStatus.png"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=BeginTimeFmtd}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
                         <GridViewColumn Header="Horse" DisplayMemberBinding="{Binding Path=Horse.NickName}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
                         <GridViewColumn Header="Service" DisplayMemberBinding="{Binding Path=Service.Name}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
                         <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=LengthFmtd}" Width="{Binding ElementName=col3, Path=ActualWidth}"/>
                         <GridViewColumn Header="Coach" DisplayMemberBinding="{Binding Path=Coach.Name}" Width="{Binding ElementName=col4, Path=ActualWidth}"/>
                         <GridViewColumn Header="Client" DisplayMemberBinding="{Binding Path=ClientUi.NameFmtd}" Width="{Binding ElementName=col5, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Is Paid" DisplayMemberBinding="{Binding Path=BookingPayment.IsPaid}" Width="{Binding ElementName=col6, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Is Paid" Width="{Binding ElementName=col6, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Margin="-4,0,-4,0" HorizontalContentAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding BookingPayment.IsPaid}" IsEnabled="False"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        
                         <GridViewColumn Header="Payment" DisplayMemberBinding="{Binding Path=BookingPayment.PaymentType.Name}" Width="{Binding ElementName=col7, Path=ActualWidth}"/>
                         <GridViewColumn Header="Notes" Width="{Binding ElementName=col8, Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>

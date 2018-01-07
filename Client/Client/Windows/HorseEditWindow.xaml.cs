@@ -41,7 +41,7 @@ namespace Client.Windows
             {
                 DataContext = new HorseScheduleDataDtoUi()
                 {
-                    StartDate = DateTime.Now.TruncateToDayStart(), EndDate = DateTime.Now.TruncateToDayStart().AddDays(1),
+                    StartDate = DateTime.Now.TruncateToDayStart(), EndDate = DateTime.Now.TruncateToDayStart().AddDays(1).AddSeconds(-1),
                     UnavailabilityType = Shared.HorsesUnavailabilityEnum.DayOff,
                     HorseId = Model.HorseData.Id
                 }

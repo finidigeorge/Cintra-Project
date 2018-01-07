@@ -18,10 +18,13 @@ namespace Repositories
         {
             foreach (var b in bookings)
             {
-                b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted = false);
-                b.Service = b.Service.IsDeleted ? null : b.Service;
-                b.Hor = b.Hor.IsDeleted || !(await IsHorseAvialableForBooking(b.Hor, b)) ? null : b.Hor;
-                b.Coach = b.Coach.IsDeleted || !(await IsCoachAvialableForBooking(b.Coach, b)) ? null : b.Coach;
+                if (b.EndTime.TruncateToDayStart() >= DateTime.Now.TruncateToDayStart())
+                {
+                    b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted = false);
+                    b.Service = b.Service.IsDeleted ? null : b.Service;
+                    b.Hor = b.Hor.IsDeleted || !(await IsHorseAvialableForBooking(b.Hor, b)) ? null : b.Hor;
+                    b.Coach = b.Coach.IsDeleted || !(await IsCoachAvialableForBooking(b.Coach, b)) ? null : b.Coach;
+                }
             }
 
             return bookings;
@@ -49,26 +52,26 @@ namespace Repositories
         public async Task<bool> IsCoachAvialableForBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
-            {
+            {                
                 bool hasOverlappedBookings =
-                    await db.Bookings
+                    (await db.Bookings
                         .Where(
                             x => x.IsDeleted == false &&
                                  x.CoachId == coach.Id &&
                                  x.DateOn == bookingData.DateOn &&
-                                 DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime)
-
-                         ).AnyAsync();
+                                 x.Id != bookingData.Id
+                         ).ToListAsync())
+                    .Any(x => DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime));
 
                 bool eligibleForService =
                     bookingData.Service.ServiceToCoachesLinks.Any(x => x.CoachId == coach.Id);
 
                 bool passedScheduleCheck = false;
-                var activeSchedule = coach.Schedules.FirstOrDefault(x => x.IsDeleted = false && x.IsActive);
+                var activeSchedule = coach.Schedules?.FirstOrDefault(x => x.IsDeleted == false && x.IsActive);
 
-                if (activeSchedule != null) {
+                if (activeSchedule != null && activeSchedule.SchedulesData != null) {
                     passedScheduleCheck = activeSchedule.SchedulesData.Any(
-                        x => x.IsDeleted = false && 
+                        x => x.IsDeleted == false && 
                         DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) &&
                         x.IsAvialable
                     );
@@ -83,20 +86,20 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 bool hasOverlappedBookings =
-                    await db.Bookings
+                    (await db.Bookings
                         .Where(
                             x => x.IsDeleted == false &&
                                  x.HorseId == horse.Id &&
                                  x.DateOn == bookingData.DateOn &&
-                                 DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime)
-
-                         ).AnyAsync();
+                                 x.Id != bookingData.Id
+                    ).ToListAsync())
+                    .Any(x => DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime));
 
                 bool eligibleForService =
                     bookingData.Service.ServiceToHorsesLinks.Any(x => x.HorseId == horse.Id);
 
                 bool passedScheduleCheck = !(horse.HorsesScheduleData?.Any() ?? false)
-                    || !(horse.HorsesScheduleData.Any(x => x.IsDeleted = false && DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate, x.EndDate)));
+                    && !(horse.HorsesScheduleData.Any(x => x.IsDeleted == false && DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate, x.EndDate)));
 
                 return !hasOverlappedBookings && eligibleForService && passedScheduleCheck;
             }, dbContext);
@@ -112,10 +115,13 @@ namespace Repositories
                         .LoadWith(x => x.BookingPayments.First().PaymentType)
                         .LoadWith(x => x.Client)
                         .LoadWith(x => x.Coach)
+                        .LoadWith(x => x.Coach.Schedules)
+                        .LoadWith(x => x.Coach.Schedules.First().SchedulesData)
                         .LoadWith(x => x.Service)                        
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)
                         .LoadWith(x => x.Hor)
+                        .LoadWith(x => x.Hor.HorsesScheduleData)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
 
