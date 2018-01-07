@@ -3,7 +3,7 @@ using Client.Controls.WpfScheduler;
 using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
-using Common.Extentions;
+using Shared.Extentions;
 using Mapping;
 using Shared.Dto;
 using System;

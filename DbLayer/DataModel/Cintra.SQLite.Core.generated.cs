@@ -225,12 +225,12 @@ namespace DataModels
 	[Table("horses_schedule_data")]
 	public partial class HorsesScheduleData
 	{
-		[Column("id"),                     PrimaryKey,  Identity] public long      Id                   { get; set; } // integer
-		[Column("horse_id"),               NotNull              ] public long      HorseId              { get; set; } // integer
-		[Column("unavailability_type_id"), NotNull              ] public long      UnavailabilityTypeId { get; set; } // integer
-		[Column("is_deleted"),             NotNull              ] public bool      IsDeleted            { get; set; } // boolean
-		[Column("start_date"),                Nullable          ] public DateTime? StartDate            { get; set; } // date
-		[Column("end_date"),                  Nullable          ] public DateTime? EndDate              { get; set; } // date
+		[Column("id"),                     PrimaryKey, Identity] public long     Id                   { get; set; } // integer
+		[Column("horse_id"),               NotNull             ] public long     HorseId              { get; set; } // integer
+		[Column("unavailability_type_id"), NotNull             ] public long     UnavailabilityTypeId { get; set; } // integer
+		[Column("is_deleted"),             NotNull             ] public bool     IsDeleted            { get; set; } // boolean
+		[Column("start_date"),             NotNull             ] public DateTime StartDate            { get; set; } // date
+		[Column("end_date"),               NotNull             ] public DateTime EndDate              { get; set; } // date
 
 		#region Associations
 

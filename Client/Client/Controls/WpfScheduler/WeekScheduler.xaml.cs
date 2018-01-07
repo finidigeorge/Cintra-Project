@@ -1,5 +1,5 @@
-﻿using Client.Extentions;
-using Common.Extentions;
+﻿
+using Shared.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

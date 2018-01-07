@@ -57,12 +57,11 @@
             
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
-                <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
                 <DataGridTemplateColumn IsReadOnly="True" Width="32">
                     <DataGridTemplateColumn.CellTemplate >
                         <DataTemplate>
                             <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                              Path=DataContext.DeleteSelectedItemCommand}"
+                                              Path=DataContext.ShowAvalabilityEditorCommand}"
                                     CommandParameter="{Binding}" ToolTip="Edit horse availability">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/Images/ReferenceEditItem.png" />
@@ -71,6 +70,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

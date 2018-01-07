@@ -16,7 +16,7 @@
         <Label Content="Horse: " HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="63"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="72,23,0,0" TextWrapping="Wrap" Text="{Binding HorseData.NickName}" VerticalAlignment="Top" Width="249" IsEnabled="False"/>
 
-        <Label Content="Horse unavailable" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="208"/>
+        <Label Content="Days unavailable:" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="208"/>
         <Button HorizontalAlignment="Right" 
                 VerticalAlignment="Top" Width="24" Height="24"
                 Command="{Binding AddUnavalabilityInterval}" ToolTip="Add horse unavailable days" Margin="0,52,41,0">
@@ -42,8 +42,8 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding Path=StartDate}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
-                    <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding Path=EndDate}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
+                    <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding Path=StartDate, StringFormat='dd/MM/yyyy'}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
+                    <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding Path=EndDate, StringFormat='dd/MM/yyyy'}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
                     <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding Path=UnavailabilityType}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
                 </GridView>
             </ListView.View>

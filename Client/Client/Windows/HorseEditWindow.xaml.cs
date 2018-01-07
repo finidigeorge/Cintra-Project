@@ -2,7 +2,7 @@
 using Client.ViewModels;
 using Common;
 using Common.DtoMapping;
-using Common.Extentions;
+using Shared.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +29,10 @@ namespace Client.Windows
 
         public HorseEditWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
+            
             Model.AddUnavalabilityInterval = new Command<object>(ShowAddIntervalDialog);
+            Model.DeleteUnavalabilityInterval = new Command<object>(DeleteInterval);
         }
 
         private void ShowAddIntervalDialog()
@@ -40,7 +42,8 @@ namespace Client.Windows
                 DataContext = new HorseScheduleDataDtoUi()
                 {
                     StartDate = DateTime.Now.TruncateToDayStart(), EndDate = DateTime.Now.TruncateToDayStart().AddDays(1),
-                    UnavailabilityType = Shared.HorsesUnavailabilityEnum.DayOff
+                    UnavailabilityType = Shared.HorsesUnavailabilityEnum.DayOff,
+                    HorseId = Model.HorseData.Id
                 }
             };
 

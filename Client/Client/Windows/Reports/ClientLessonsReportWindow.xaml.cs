@@ -1,8 +1,8 @@
-﻿using Client.Extentions;
+﻿
 using Client.ViewModels;
 using Client.ViewModels.Reports;
 using Common.DtoMapping;
-using Common.Extentions;
+using Shared.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using Client.ViewModels.Interfaces;
-using Common.Extentions;
+using Shared.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

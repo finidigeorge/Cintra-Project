@@ -17,13 +17,13 @@ namespace Client.Extentions
 {
     public class ReferenceVmHelper
     {
-        public static void SetupUiCommands<T, T1>(BaseReferenceVm<T, T1> vm, DataGrid dataGrid)
+        public static void SetupUiCommands<T, T1>(BaseReferenceVm<T, T1> vm, DataGrid dataGrid, int columnIndex = 0)
             where T1 : T, IUniqueDto, INotifyPropertyChanged, IAtomicEditableObject, new()
             where T : IUniqueDto, new()
         {
             vm.BeginEditItemCommand = new Command<object>(() =>
             {
-                dataGrid.EditItemEventHandler(vm.SelectedItem, null);
+                dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
             }, (x) => vm.CanEditSelectedItem);
 
             vm.BeginAddItemCommand = new Command<object>(() =>
@@ -31,7 +31,7 @@ namespace Client.Extentions
                 dataGrid.SelectedItem = vm.AddEmptyItem();
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
 
-                vm.BeginEditItemCommand.Execute(dataGrid);
+                dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
             }, (x) => vm.CanAddItem);            
         }
     }

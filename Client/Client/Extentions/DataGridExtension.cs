@@ -10,12 +10,12 @@ namespace Client.Extentions
 {
     public static class DataGridExtension
     {
-        public static void EditItemEventHandler(this DataGrid value, object sender, RoutedEventArgs e)
+        public static void EditItemEventHandler(this DataGrid value, object sender, RoutedEventArgs e, int columnIndex)
         {
             var selectedIndex = value.SelectedIndex;
 
             //value.SelectionUnit = DataGridSelectionUnit.Cell;
-            value.CurrentCell = new DataGridCellInfo(value.Items[selectedIndex], value.Columns[0]);
+            value.CurrentCell = new DataGridCellInfo(value.Items[selectedIndex], value.Columns[columnIndex]);
             value.BeginEdit();
         }        
     }

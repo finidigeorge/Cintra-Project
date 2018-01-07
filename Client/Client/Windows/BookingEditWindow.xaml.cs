@@ -1,7 +1,7 @@
 ﻿using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
-using Common.Extentions;
+using Shared.Extentions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,6 +1,6 @@
-﻿using Client.Extentions;
+﻿
 using Common.DtoMapping;
-using Common.Extentions;
+using Shared.Extentions;
 using RestClient;
 using Shared.Dto;
 using System;
@@ -25,7 +25,7 @@ namespace Client.ViewModels
             Client = new BookingsClient();            
         }
 
-        protected override async Task<IList<BookingDto>> GetItems()
+        protected override async Task<IList<BookingDto>> GetAll()
         {
             return await _client.GetAllFiltered(CurrentDate.ToBinary(), CurrentDate.AddDays(NumDaysToLoad).ToBinary());
         }

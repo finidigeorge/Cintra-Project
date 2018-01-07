@@ -32,7 +32,7 @@ namespace Client.ViewModels
         public SchedulesDataRefVm ScheduleDailyDataModel { get; set; } = new SchedulesDataRefVm();
         public SchedulesDataRefVm ScheduleWeeklyDataModel { get; set; } = new SchedulesDataRefVm();
 
-        protected override async Task<IList<ScheduleDto>> GetItems()
+        protected override async Task<IList<ScheduleDto>> GetAll()
         {
             return await Task.FromResult(DataSource);
         }

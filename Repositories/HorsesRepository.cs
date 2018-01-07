@@ -7,12 +7,13 @@ using DataModels;
 using LinqToDB;
 using Repositories.Interfaces;
 using Shared.Attributes;
+using Shared.Extentions;
 
 namespace Repositories
 {
     [PerScope]
     public class HorsesRepository: GenericPreservableRepository<Hors>
-    {
+    {                        
         public override async Task<List<Hors>> GetByParams(Func<Hors, bool> where)
         {
             using (var db = new CintraDB())

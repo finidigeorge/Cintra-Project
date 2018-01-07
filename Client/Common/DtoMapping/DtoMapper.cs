@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Shared.Dto;
 using PropertyChanged;
-using Common.Extentions;
+using Shared.Extentions;
 using Mapping;
 using Shared;
 

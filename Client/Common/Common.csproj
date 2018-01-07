@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthProvider.cs" />
-    <Compile Include="DateTimeExtentions.cs" />
     <Compile Include="DtoMapping\DtoMapper.cs" />
     <Compile Include="DtoMapping\DtoMapper.generated.cs">
       <DependentUpon>DtoMapper.generated.tt</DependentUpon>

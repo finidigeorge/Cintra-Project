@@ -18,8 +18,8 @@ create table horses_schedule_data
 	horse_id integer not null,
 	unavailability_type_id integer not null,
 	is_deleted BOOLEAN default FALSE not null,
-	start_date DATE,
-	end_date DATE,
+	start_date DATE not null,
+	end_date DATE  not null,
 	foreign key (horse_id) REFERENCES horses(id),
 	foreign key (unavailability_type_id) REFERENCES horses_unavailability_types(id)
 );

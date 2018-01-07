@@ -54,13 +54,13 @@ namespace Client.ViewModels
 
         public IBaseController<T> Client;
 
-        protected virtual async Task<IList<T>> GetItems()
+        protected virtual async Task<IList<T>> GetAll()
         {
             return await Client.GetAll();
         }
 
         protected BaseReferenceVm()
-        {
+        {            
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
                 long selectedItemId = 0;
@@ -72,7 +72,7 @@ namespace Client.ViewModels
                 else
                     Items.Clear();
 
-                foreach (var item in (await GetItems()).ToList<T, T1>())                
+                foreach (var item in (await GetAll()).ToList<T, T1>())                
                     Items.Add(item);
 
                 if (selectedItemId != 0)
@@ -198,7 +198,7 @@ namespace Client.ViewModels
 
         //predefined back end related Commands 
         public IAsyncCommand RefreshDataCommand { get; set; }
-        public IAsyncCommand GetItemsCommand { get; set; }
+        public IAsyncCommand GetItemsCommand { get; set; }        
         public IAsyncCommand AddItemCommand { get; set; }
         public IAsyncCommand DeleteItemCommand { get; set; }
         public IAsyncCommand DeleteSelectedItemCommand { get; set; }

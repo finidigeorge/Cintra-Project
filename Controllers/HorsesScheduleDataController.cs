@@ -21,7 +21,7 @@ namespace Controllers
         {
         }
 
-        [HttpGet("/api/[controller]/getByHorse/{scheduleId}")]
+        [HttpGet("/api/[controller]/getByHorse/{horseId}")]
         public async Task<IList<HorseScheduleDataDto>> GetByHorse(long horseId)
         {
             return (await _repository.GetByParams(x => x.HorseId == horseId))

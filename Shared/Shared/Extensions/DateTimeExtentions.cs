@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Extentions
+namespace Shared.Extentions
 {
     public static class DateTimeExtentions
     {
@@ -41,6 +41,16 @@ namespace Common.Extentions
         public static DateTime TruncateToSecondStart(this DateTime dt)
         {
             return new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+        }
+
+        public static bool IsBetween(this DateTime dt, DateTime startDate, DateTime endDate)
+        {
+            return (dt >= startDate && dt <= endDate);
+        }
+
+        public static bool IsOverlap(DateTime startDate1, DateTime endDate1, DateTime startDate2, DateTime endDate2)
+        {
+            return !((startDate1 > endDate2) || (startDate2 > endDate1));
         }
     }
 }

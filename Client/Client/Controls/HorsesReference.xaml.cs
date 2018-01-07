@@ -21,8 +21,8 @@ namespace Client.Controls
         public HorsesReference()
         {
             InitializeComponent();
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
-            Model.BeginEditItemCommand = new Command<object>(ShowScheduleEditor, (x) => Model.CanEditSelectedItem);
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);   
+            Model.ShowAvalabilityEditorCommand = new Command<object>(() => ShowScheduleEditor(), (x) => true);
         }
 
         private void ShowScheduleEditor()
@@ -33,7 +33,6 @@ namespace Client.Controls
             };
 
             editor.Model.HorseData = Model.SelectedItem;            
-
             editor.ShowDialog();
         }
     }
