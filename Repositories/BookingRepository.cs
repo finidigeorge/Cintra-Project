@@ -140,6 +140,8 @@ namespace Repositories
 
                 var overlappedBooking =
                 (await db.Bookings
+                    .LoadWith(x => x.Client)
+                    .LoadWith(x => x.Coach)
                     .Where(
                         x => x.IsDeleted == false &&
                                 x.HorseId == horse.Id &&
@@ -193,9 +195,7 @@ namespace Repositories
                 var result = new CheckResultDto() { Result = true };
                 var lastBooking =
                     (await
-                        db.Bookings                        
-                        .LoadWith(x => x.Client)
-                        .LoadWith(x => x.Coach)
+                        db.Bookings                                                
                         .Where(x => x.IsDeleted == false &&
                               x.HorseId == horse.Id &&
                               x.DateOn == bookingData.DateOn &&

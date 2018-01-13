@@ -68,14 +68,13 @@ namespace Client.ViewModels
             };
             HorsesModel.OnSelectedItemChanged += async (sender, horse) => {
                 _bookingData.Horse = horse;
+                var dto = ObjectMapper.Map<BookingDto>(_bookingData);
 
-                if (horse != null)
+                if (dto.Horse != null)
                 {
                     horseValidationError = null;
                     HorseValidationHoursPerDayWarning = null;
-                    HorseValidationHoursInRowWarning = null;
-
-                    var dto = ObjectMapper.Map<BookingDto>(_bookingData);
+                    HorseValidationHoursInRowWarning = null;                
 
                     var res = await bookingsClient.HasHorseNotOverlappedBooking(dto);
                     if (!res.Result)
@@ -85,11 +84,11 @@ namespace Client.ViewModels
                     if (!res.Result)
                         horseValidationError = horseValidationError + (!string.IsNullOrEmpty(horseValidationError) ? ", " : "") + res.ErrorMessage;
 
-                    res = await bookingsClient.HasHorseRequiredBreak(ObjectMapper.Map<BookingDto>(_bookingData));
+                    res = await bookingsClient.HasHorseRequiredBreak(dto);
                     if (!res.Result)
                         HorseValidationHoursInRowWarning = res.ErrorMessage;
 
-                    res = await bookingsClient.HasHorseWorkedLessThanAllowed(ObjectMapper.Map<BookingDto>(_bookingData));
+                    res = await bookingsClient.HasHorseWorkedLessThanAllowed(dto);
                     if (!res.Result)
                         HorseValidationHoursPerDayWarning = res.ErrorMessage;
 
@@ -101,16 +100,16 @@ namespace Client.ViewModels
             };
             CoachesModel.OnSelectedItemChanged += async (sender, coach) => {
                 _bookingData.Coach = coach;
-
+                var dto = ObjectMapper.Map<BookingDto>(_bookingData);
                 coachValidationError = null;
 
-                if (coach != null)
+                if (dto.Coach != null)
                 {
-                    var res = await bookingsClient.HasCoachNotOverlappedBooking(ObjectMapper.Map<BookingDto>(_bookingData));
+                    var res = await bookingsClient.HasCoachNotOverlappedBooking(dto);
                     if (!res.Result)
                         coachValidationError = res.ErrorMessage;
 
-                    res = await bookingsClient.HasCoachScheduleFitBooking(ObjectMapper.Map<BookingDto>(_bookingData));
+                    res = await bookingsClient.HasCoachScheduleFitBooking(dto);
                     if (!res.Result)
                         coachValidationError = coachValidationError + (!string.IsNullOrEmpty(coachValidationError) ? ", " : "") + res.ErrorMessage;
                 }
