@@ -17,7 +17,7 @@
     <Window.Resources>
         <viewModels:SchedulesRefVm x:Key="ViewModel" />
     </Window.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
@@ -52,10 +52,12 @@
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Schedule Name" Binding="{Binding Path = Name}"  Width="*" />
+                <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
+                <DataGridCheckBoxColumn Header="Is Active" Binding="{Binding Path = IsActive}"  Width="100" />
+                <DataGridTextColumn Header="Schedule Name" Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
                 <!--DataGridComboBoxColumn Header="Schedule Interval" ItemsSource="{Binding Source={StaticResource ScheduleIntervalEnum}}" Width="150"
                                         SelectedItemBinding="{Binding IntervalId}"/-->
-                <DataGridCheckBoxColumn Header="Is Active" Binding="{Binding Path = IsActive}"  Width="100" />
+                
             </DataGrid.Columns>
         </DataGrid>
         <TabControl HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch">

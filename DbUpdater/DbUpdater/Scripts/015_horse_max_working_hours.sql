@@ -1,0 +1,1 @@
+alter table horses add max_working_hours int default 3 not null;

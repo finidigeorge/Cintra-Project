@@ -1,4 +1,6 @@
 ﻿using Common.DtoMapping;
+using Mapping;
+using RestClient;
 using Shared.Dto;
 using System;
 using System.Collections.Generic;
@@ -11,12 +13,15 @@ namespace Client.ViewModels
 {
     public class BookingEditWindowVm: BaseVm
     {
+        BookingsClient bookingsClient = new BookingsClient();
+
         private BookingDtoUi _bookingData;
         public BookingDtoUi BookingData {
             get => _bookingData;
             set
             {
                 Set(ref _bookingData, value, nameof(BookingData));
+                _bookingData.ObjectLevelValidationCallback = BookingValidationCallback;
                 RefreshAllModels();                               
             }
         }
@@ -33,18 +38,86 @@ namespace Client.ViewModels
         public CoachesRefVm CoachesModel { get; set; } = new CoachesRefVm();
         public PaymentTypesRefVm PaymentTypesModel { get; set; } = new PaymentTypesRefVm();
 
+        private String horseValidationError;
+        private String coachValidationError;
+
+        public String HorseValidationHoursPerDayWarning { get; set; }
+        public String HorseValidationHoursInRowWarning { get; set; }
+
+        private StringBuilder BookingValidationCallback(StringBuilder error)
+        {            
+            if (!string.IsNullOrEmpty(horseValidationError))
+                error.Append((error.Length != 0 ? ", " : "") + horseValidationError);
+
+            if (!string.IsNullOrEmpty(coachValidationError))
+                error.Append((error.Length != 0 ? ", " : "") + coachValidationError);
+
+            return error;
+        }
 
         public BookingEditWindowVm()
         {
-            ClientsModel.OnSelectedItemChanged += (sender, client) => { _bookingData.Client = client; };
+            ClientsModel.OnSelectedItemChanged += (sender, client) => {
+                _bookingData.Client = client;                
+            };
             ServicesModel.OnSelectedItemChanged += async (sender, service) => {
                 _bookingData.Service = service;
                 await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
                 await CoachesModel.RefreshDataCommand.ExecuteAsync(null);
                 SyncServiceDataModels();
             };
-            HorsesModel.OnSelectedItemChanged += (sender, horse) => { _bookingData.Horse = horse; };
-            CoachesModel.OnSelectedItemChanged += (sender, coach) => { _bookingData.Coach = coach; };
+            HorsesModel.OnSelectedItemChanged += async (sender, horse) => {
+                _bookingData.Horse = horse;
+
+                if (horse != null)
+                {
+                    horseValidationError = null;
+                    HorseValidationHoursPerDayWarning = null;
+                    HorseValidationHoursInRowWarning = null;
+
+                    var dto = ObjectMapper.Map<BookingDto>(_bookingData);
+
+                    var res = await bookingsClient.HasHorseNotOverlappedBooking(dto);
+                    if (!res.Result)
+                        horseValidationError = res.ErrorMessage;
+
+                    res = await bookingsClient.HasHorseScheduleFitBooking(dto);
+                    if (!res.Result)
+                        horseValidationError = horseValidationError + (!string.IsNullOrEmpty(horseValidationError) ? ", " : "") + res.ErrorMessage;
+
+                    res = await bookingsClient.HasHorseRequiredBreak(ObjectMapper.Map<BookingDto>(_bookingData));
+                    if (!res.Result)
+                        HorseValidationHoursInRowWarning = res.ErrorMessage;
+
+                    res = await bookingsClient.HasHorseWorkedLessThanAllowed(ObjectMapper.Map<BookingDto>(_bookingData));
+                    if (!res.Result)
+                        HorseValidationHoursPerDayWarning = res.ErrorMessage;
+
+                }
+
+                //to raise validation checks
+                _bookingData.OnPropertyChanged(nameof(_bookingData.Horse));
+
+            };
+            CoachesModel.OnSelectedItemChanged += async (sender, coach) => {
+                _bookingData.Coach = coach;
+
+                coachValidationError = null;
+
+                if (coach != null)
+                {
+                    var res = await bookingsClient.HasCoachNotOverlappedBooking(ObjectMapper.Map<BookingDto>(_bookingData));
+                    if (!res.Result)
+                        coachValidationError = res.ErrorMessage;
+
+                    res = await bookingsClient.HasCoachScheduleFitBooking(ObjectMapper.Map<BookingDto>(_bookingData));
+                    if (!res.Result)
+                        coachValidationError = coachValidationError + (!string.IsNullOrEmpty(coachValidationError) ? ", " : "") + res.ErrorMessage;
+                }
+
+                //to raise validation checks
+                _bookingData.OnPropertyChanged(nameof(_bookingData.Coach));                
+            };
             PaymentTypesModel.OnSelectedItemChanged += (sender, paymentType) => { _bookingData.BookingPayment.PaymentType = paymentType; };
         }
 

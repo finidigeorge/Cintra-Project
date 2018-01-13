@@ -9,6 +9,7 @@ using PropertyChanged;
 using Shared.Extentions;
 using Mapping;
 using Shared;
+using Newtonsoft.Json;
 
 
 /*
@@ -34,8 +35,10 @@ namespace Common.DtoMapping
 #pragma warning disable CS0067
 
     public partial class BookingDtoUi : BookingDto, INotifyPropertyChanged
-    {
+    {                
         public event PropertyChangedEventHandler PropertyChanged;
+                
+        public Func<StringBuilder, StringBuilder> ObjectLevelValidationCallback;
 
         [DependsOn("BeginTime")]
         public String BeginTimeFmtd => BeginTime.ToString("hh:mm tt");
@@ -63,6 +66,11 @@ namespace Common.DtoMapping
             if (BeginTime >= EndTime)
             {
                 error.Append((error.Length != 0 ? ", " : "") + "Begin time and End time values are incorrect");
+            }
+
+            if (ObjectLevelValidationCallback != null)
+            {
+                error = ObjectLevelValidationCallback(error);
             }
 
             return error.ToString();

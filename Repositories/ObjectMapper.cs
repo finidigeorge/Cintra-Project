@@ -37,10 +37,17 @@ namespace Mapping
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())                        
                         .AfterMap((vm, db) =>
                         {
-                            db.ClientId = vm.Client.Id;
-                            db.CoachId = vm.Coach.Id;
-                            db.HorseId = vm.Horse.Id;
-                            db.ServiceId = vm.Service.Id;
+                            db.ClientId = vm.Client?.Id ?? 0;
+                            db.Client = vm.Client != null ? _mapper.Map<Client>(vm.Client) : null;
+                            db.CoachId = vm.Coach?.Id ?? 0;
+                            db.HorseId = vm.Horse?.Id ?? 0;
+                            db.Hor = vm.Horse != null ? _mapper.Map<Hors>(vm.Horse) : null;
+                            db.ServiceId = vm.Service?.Id ?? 0;
+                            db.Service = vm.Service != null ? _mapper.Map<Service>(vm.Horse) : null;
+
+                            //need for checks only
+                            vm.Coach = _mapper.Map<CoachDto>(db.Coach);
+                            vm.Horse = _mapper.Map<HorseDto>(db.Hor);                            
 
                         });
 

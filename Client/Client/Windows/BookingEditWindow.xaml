@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
         FontSize="14"
-        Title="Booking Edit Window" MinHeight="600" Height="600" Width="640" WindowStartupLocation="CenterOwner"
+        Title="Booking Edit Window" MinHeight="640" Height="640" Width="640" WindowStartupLocation="CenterOwner"
     >
     <Window.Resources>
         <viewModels:BookingEditWindowVm x:Key="ViewModel" />

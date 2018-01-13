@@ -1,7 +1,9 @@
 ﻿using DataModels;
 using LinqToDB;
 using Repositories.Interfaces;
+using Shared;
 using Shared.Attributes;
+using Shared.Dto;
 using Shared.Extentions;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 namespace Repositories
 {
     [PerScope]
-    public class BookingRepository : GenericPreservableRepository<Booking>
+    public class BookingRepository : GenericPreservableRepository<Booking>, IBookingRepository
     {
         private async Task<List<Booking>> AccessFilter(List<Booking> bookings, CintraDB db)
         {
@@ -49,19 +51,68 @@ namespace Repositories
             return result;
         }
 
-        public async Task<bool> IsCoachAvialableForBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
-            {                
-                bool hasOverlappedBookings =
+            {
+                var result = new CheckResultDto() { Result = true };
+
+                var overlappedBooking =
                     (await db.Bookings
+                        .LoadWith(x => x.Client)
+                        .LoadWith(x => x.Hor)
                         .Where(
                             x => x.IsDeleted == false &&
                                  x.CoachId == coach.Id &&
                                  x.DateOn == bookingData.DateOn &&
                                  x.Id != bookingData.Id
                          ).ToListAsync())
-                    .Any(x => DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime));
+                    .FirstOrDefault(x => DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime));
+
+                if (overlappedBooking != null)
+                {
+                    result.Result = false;
+                    result.ErrorMessage = $"Coach has another booking during the selected time interval (Client: {overlappedBooking}, Horse: {overlappedBooking.Hor.Nickname}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                }
+
+                return result;
+
+
+            }, dbContext);
+        }
+
+        public async Task<CheckResultDto> HasCoachScheduleFitBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {               
+                var result = new CheckResultDto();
+                var activeSchedule = coach.Schedules?.FirstOrDefault(x => x.IsDeleted == false && x.IsActive);
+
+                if (activeSchedule != null && activeSchedule.SchedulesData != null)
+                {
+                    result.Result = activeSchedule.SchedulesData.Any(
+                        x => x.IsDeleted == false &&
+                        DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) &&
+                        x.IsAvialable
+                    );
+                }
+
+                if (!result.Result)
+                {
+                    result.ErrorMessage = "Coach is currently unavailable (check coach's schedule)";
+                }
+
+                return result;
+
+            }, dbContext);
+        }
+
+        private async Task<bool> IsCoachAvialableForBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {                
+                bool hasOverlappedBookings =
+                    !(await HasCoachNotOverlappedBooking(coach, bookingData, db)).Result;
 
                 bool eligibleForService =
                     bookingData.Service.ServiceToCoachesLinks.Any(x => x.CoachId == coach.Id);
@@ -81,29 +132,127 @@ namespace Repositories
             }, dbContext);
         }
 
+        public async Task<CheckResultDto> HasHorseNotOverlappedBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                var result = new CheckResultDto() { Result = true };
+
+                var overlappedBooking =
+                (await db.Bookings
+                    .Where(
+                        x => x.IsDeleted == false &&
+                                x.HorseId == horse.Id &&
+                                x.DateOn == bookingData.DateOn &&
+                                x.Id != bookingData.Id
+                        ).ToListAsync())
+                    .FirstOrDefault(x => DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime));
+
+                if (overlappedBooking != null)
+                {
+                    result.Result = false;
+                    result.ErrorMessage = $"Horse has another booking during the selected time interval (Coach: {overlappedBooking.Coach.Name}, Client: {overlappedBooking}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                }
+
+                return result;
+            }, dbContext);
+        }
+
+        public async Task<CheckResultDto> HasHorseWorkedLessThanAllowed(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                var result = new CheckResultDto() { Result = true };
+
+                var workedMinutes =
+                (await db.Bookings
+                    .Where(
+                        x => x.IsDeleted == false &&
+                                x.HorseId == horse.Id &&
+                                x.DateOn == bookingData.DateOn &&
+                                x.Id != bookingData.Id
+                        ).ToListAsync())
+                    .Sum(x => x.EndTime.Subtract(x.BeginTime).Minutes);
+
+                if ((workedMinutes / 60) > horse.MaxWorkingHours) 
+                {
+                    var workedTimeStr = $"{workedMinutes / 60} h {workedMinutes % 60} min";
+
+                    result.Result = false;
+                    result.ErrorMessage = $"Horse already has booked lessions (total time is {workedTimeStr}) which is more than maximum allowed time ({horse.MaxWorkingHours} h)";
+                }
+
+                return result;
+            }, dbContext);
+        }
+
+        public async Task<CheckResultDto> HasHorseRequiredBreak(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                var result = new CheckResultDto() { Result = true };
+                var lastBooking =
+                    (await
+                        db.Bookings                        
+                        .LoadWith(x => x.Client)
+                        .LoadWith(x => x.Coach)
+                        .Where(x => x.IsDeleted == false &&
+                              x.HorseId == horse.Id &&
+                              x.DateOn == bookingData.DateOn &&
+                              x.BeginTime < bookingData.BeginTime                        
+                        )
+                        .OrderByDescending(x => x.BeginTime)
+                        .FirstOrDefaultAsync()
+                    );
+
+                if (lastBooking != null)
+                {
+                    var timediff = bookingData.BeginTime - lastBooking.BeginTime;
+                    if (timediff < Constants.HorseBreakTime)
+                    {
+                        result.Result = false;
+                        result.ErrorMessage = $"Horse has not enoulgh time for rest since the last booking (finished: {lastBooking.EndTime.ToString("hh:mm tt")})";
+                    }
+                }
+
+                return result;
+
+            }, dbContext);
+        }
+
+        public async Task<CheckResultDto> HasHorseScheduleFitBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {                
+                bool passedScheduleCheck = !(horse.HorsesScheduleData?.Any() ?? false)
+                    || !(horse.HorsesScheduleData.Any(x => x.IsDeleted == false && DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate, x.EndDate)));
+
+                var result = new CheckResultDto() { Result = passedScheduleCheck };
+
+                if (!passedScheduleCheck)
+                {
+                    result.ErrorMessage = "Horse is currently unavailable (check horse's schedule)";
+                }
+
+                return result;
+            }, dbContext);
+        }
+
         public async Task<bool> IsHorseAvialableForBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 bool hasOverlappedBookings =
-                    (await db.Bookings
-                        .Where(
-                            x => x.IsDeleted == false &&
-                                 x.HorseId == horse.Id &&
-                                 x.DateOn == bookingData.DateOn &&
-                                 x.Id != bookingData.Id
-                    ).ToListAsync())
-                    .Any(x => DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime));
+                    !(await HasHorseNotOverlappedBooking(horse, bookingData, db)).Result;
 
                 bool eligibleForService =
                     bookingData.Service.ServiceToHorsesLinks.Any(x => x.HorseId == horse.Id);
 
-                bool passedScheduleCheck = !(horse.HorsesScheduleData?.Any() ?? false)
-                    && !(horse.HorsesScheduleData.Any(x => x.IsDeleted == false && DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate, x.EndDate)));
+                bool passedScheduleCheck = (await HasHorseScheduleFitBooking(horse, bookingData)).Result;
 
                 return !hasOverlappedBookings && eligibleForService && passedScheduleCheck;
             }, dbContext);
-        }
+        }        
 
         public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where)
         {
@@ -140,6 +289,8 @@ namespace Repositories
 
             }, dbContext);
         }
+
+        
     }
 }
 

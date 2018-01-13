@@ -52,5 +52,27 @@ namespace Shared.Extentions
         {
             return !((startDate1 > endDate2) || (startDate2 > endDate1));
         }
+
+        public static DateTime TruncateToCurrentHourStart(this DateTime dt)
+        {
+            var hour = DateTime.Now.Hour + 1;
+            if (hour < Constants.BeginHour)
+                hour = Constants.BeginHour;
+
+            if (hour > 23)
+                hour = 23;
+
+            return new DateTime(dt.Year, dt.Month, dt.Day, hour, 0, 0);
+        }
+
+        public static DateTime TruncateToCurrentHourEnd(this DateTime dt)
+        {
+            var hour = DateTime.Now.Hour + 2;
+
+            if (hour > 23)
+                hour = 23;
+
+            return new DateTime(dt.Year, dt.Month, dt.Day, hour, 0, 0);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Client.Extentions;
 using Client.ViewModels;
+using Common;
 using Common.DtoMapping;
 using Shared.Extentions;
 using System;
@@ -15,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPFCustomMessageBox;
 
 namespace Client.Windows
 {
@@ -53,7 +55,21 @@ namespace Client.Windows
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {            
+        {
+            if (!string.IsNullOrEmpty(Model.HorseValidationHoursPerDayWarning))
+            {
+                MessageBoxResult result = CustomMessageBox.Show($"{Model.HorseValidationHoursPerDayWarning}. Do you want to proceed ?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
+
+            if (!string.IsNullOrEmpty(Model.HorseValidationHoursInRowWarning))
+            {
+                MessageBoxResult result = CustomMessageBox.Show($"{Model.HorseValidationHoursInRowWarning}. Do you want to proceed ?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
+
             DialogResult = true;
             Close();
         }        

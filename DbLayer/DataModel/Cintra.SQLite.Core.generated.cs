@@ -195,9 +195,10 @@ namespace DataModels
 	[Table("horses")]
 	public partial class Hors
 	{
-		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
-		[Column("nickname"),   NotNull             ] public string Nickname  { get; set; } // varchar(255)
-		[Column("is_deleted"), NotNull             ] public bool   IsDeleted { get; set; } // boolean
+		[Column("id"),                PrimaryKey, Identity] public long   Id              { get; set; } // integer
+		[Column("nickname"),          NotNull             ] public string Nickname        { get; set; } // varchar(255)
+		[Column("is_deleted"),        NotNull             ] public bool   IsDeleted       { get; set; } // boolean
+		[Column("max_working_hours"), NotNull             ] public int    MaxWorkingHours { get; set; } // int
 
 		#region Associations
 

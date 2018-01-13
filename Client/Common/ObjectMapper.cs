@@ -63,14 +63,32 @@ namespace Mapping
                 {
                     conf.CreateMissingTypeMaps = true;
                     conf.ReplaceMemberName("_", "");
-                    
+
+                    conf.CreateMap<BookingDto, BookingDtoUi>();
+                    conf.CreateMap<BookingPaymentDto, BookingPaymentDtoUi>();
+                    conf.CreateMap<ClientDto, ClientDtoUi>();
                     conf.CreateMap<CoachDto, CoachDtoUi>();
                     conf.CreateMap<HorseDto, HorseDtoUi>();
+                    conf.CreateMap<HorseScheduleDataDto, HorseScheduleDataDtoUi>();
                     conf.CreateMap<ScheduleDataDto, ScheduleDataDtoUi>();
                     conf.CreateMap<ScheduleDto, ScheduleDtoUi>();
                     conf.CreateMap<ServiceDto, ServiceDtoUi>();
                     conf.CreateMap<UserDto, UserDtoUi>();
-                    conf.CreateMap<UserRoleDto, UserRoleDtoUi>();                    
+                    conf.CreateMap<UserRoleDto, UserRoleDtoUi>();
+                    conf.CreateMap<PaymentTypeDto, PaymentTypeDtoUi>();
+
+                    conf.CreateMap<BookingDtoUi, BookingDto>();
+                    conf.CreateMap<BookingPaymentDtoUi, BookingPaymentDto>();
+                    conf.CreateMap<ClientDtoUi, ClientDto>();
+                    conf.CreateMap<CoachDtoUi, CoachDto>();
+                    conf.CreateMap<HorseDtoUi, HorseDto>();
+                    conf.CreateMap<HorseScheduleDataDtoUi, HorseScheduleDataDto>();
+                    conf.CreateMap<ScheduleDataDtoUi, ScheduleDataDto>();
+                    conf.CreateMap<ScheduleDtoUi, ScheduleDto>();
+                    conf.CreateMap<ServiceDtoUi, ServiceDto>();
+                    conf.CreateMap<UserDtoUi, UserDto>();
+                    conf.CreateMap<UserRoleDtoUi, UserRoleDto>();
+                    conf.CreateMap<PaymentTypeDtoUi, PaymentTypeDto>();
                     conf.IgnoreUnmapped();
                 }
             );            

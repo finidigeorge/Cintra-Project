@@ -34,9 +34,7 @@ namespace Client.Windows
 
         public ScheduleEditor()
         {
-            InitializeComponent();
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
-
+            InitializeComponent();            
             #region Day Scheduler
             Model.NextDayCommand = new Command<object>(() =>
             {
@@ -122,7 +120,8 @@ namespace Client.Windows
             #endregion
 
             Model.OnSelectedItemChanged += OnSelectedScheduleChanged;
-            
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);
+
         }
 
         private async void OnSelectedScheduleChanged(object sender, ScheduleDtoUi s)
@@ -162,8 +161,8 @@ namespace Client.Windows
 
         private (bool, ScheduleDataDtoUi) ShowScheduleEditor(ScheduleIntervalEnum mode)
         {
-            var beginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(6);
-            var endTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(21);
+            var beginTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
+            var endTime = DailyScheduler.SelectedDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourEnd().Hour);
             var editor = new SchedulerIntervalEditWindow(beginTime, endTime, mode)
             {
                 DataContext = new ScheduleDataDtoUi()

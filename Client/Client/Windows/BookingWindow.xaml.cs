@@ -120,8 +120,8 @@ namespace Client.Windows
 
         private (bool, BookingDtoUi) ShowScheduleEditor(BookingDtoUi bookingData = null)
         {
-            var beginTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(6);
-            var endTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(19) + TimeSpan.FromMinutes(30);
+            var beginTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
+            var endTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourEnd().Hour);
 
             BookingDtoUi _bookingData;
             if (bookingData == null)

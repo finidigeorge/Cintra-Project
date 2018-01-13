@@ -27,7 +27,7 @@ namespace Client.Controls
         public PaymentTypesReference()
         {
             InitializeComponent();
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 1);
         }
     }
 }

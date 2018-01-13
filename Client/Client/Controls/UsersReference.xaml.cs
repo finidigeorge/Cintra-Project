@@ -18,7 +18,7 @@ namespace Client.Controls
         public UsersReference()
         {
             InitializeComponent();
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid);
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 1);
         }        
     }
 }

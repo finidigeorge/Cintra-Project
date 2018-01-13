@@ -6,6 +6,11 @@ namespace Shared.Dto
 {
     public class ErrorMessageDto
     {
-        public string Error { get; set; }
+        public string ErrorMessage { get; set; }
+    }
+
+    public class CheckResultDto : ErrorMessageDto
+    {
+        public bool Result { get; set; }
     }
 }

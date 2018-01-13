@@ -39,7 +39,7 @@ namespace Server.Middlewares
             if (exception is AuthenticationException)
                 code = HttpStatusCode.Unauthorized;            
 
-            var result = JsonConvert.SerializeObject(new ErrorMessageDto { Error = exception.Message });
+            var result = JsonConvert.SerializeObject(new ErrorMessageDto { ErrorMessage = exception.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;            
             return context.Response.WriteAsync(result);

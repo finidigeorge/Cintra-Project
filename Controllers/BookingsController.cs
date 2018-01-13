@@ -20,7 +20,10 @@ namespace Controllers
     public class BookingsController : BaseController<Booking, BookingDto>, IBookingController
     {
         private readonly BookingPaymentsRepository _paymentsRepository = new BookingPaymentsRepository();
-        public BookingsController(IGenericRepository<Booking> repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        private IBookingRepository repository { get => (IBookingRepository)_repository; }
+
+
+        public BookingsController(IBookingRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {            
         }
 
@@ -39,7 +42,6 @@ namespace Controllers
                 _logger.LogError(null, e, e.Message, entity);
                 throw;
             }
-
         }
 
         [HttpGet("/api/[controller]/GetAllFiltered/{beginDate}/{endDate}")]
@@ -59,6 +61,108 @@ namespace Controllers
                 throw;
             }
 
+        }
+
+        [HttpPost("/api/[controller]/HasCoachNotOverlappedBooking")]
+        public async Task<CheckResultDto> HasCoachNotOverlappedBooking([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var coach = booking.Coach;
+
+                return await repository.HasCoachNotOverlappedBooking(coach, booking);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }
+        }
+
+        [HttpPost("/api/[controller]/HasHorseNotOverlappedBooking")]
+        public async Task<CheckResultDto> HasHorseNotOverlappedBooking([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var horse = booking.Hor;
+
+                return await repository.HasHorseNotOverlappedBooking(horse, booking);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }
+        }
+
+        [HttpPost("/api/[controller]/HasHorseRequiredBreak")]
+        public async Task<CheckResultDto> HasHorseRequiredBreak([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var horse = booking.Hor;
+
+                return await repository.HasHorseRequiredBreak(horse, booking);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }
+        }
+
+        [HttpPost("/api/[controller]/HasHorseWorkedLessThanAllowed")]
+        public async Task<CheckResultDto> HasHorseWorkedLessThanAllowed([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var horse = booking.Hor;
+
+                return await repository.HasHorseWorkedLessThanAllowed(horse, booking);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }
+        }
+
+        [HttpPost("/api/[controller]/HasHorseScheduleFitBooking")]
+        public async Task<CheckResultDto> HasHorseScheduleFitBooking([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var horse = booking.Hor;
+
+                return await repository.HasHorseScheduleFitBooking(horse, booking);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }
+        }
+
+        [HttpPost("/api/[controller]/HasCoachScheduleFitBooking")]
+        public async Task<CheckResultDto> HasCoachScheduleFitBooking([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var coach = booking.Coach;
+
+                return await repository.HasCoachScheduleFitBooking(coach, booking);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entity);
+                throw;
+            }
         }
     }
 }

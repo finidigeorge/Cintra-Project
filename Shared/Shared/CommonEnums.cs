@@ -4,6 +4,17 @@ using System.Text;
 
 namespace Shared
 {
+    public static class Constants
+    {
+        public static int BeginHour = 6;
+        public static int BeginMinute = 0;
+
+        public static int EndHour = 19;
+        public static int EndMinute = 30;
+
+        public static TimeSpan HorseBreakTime = TimeSpan.FromMinutes(60);
+    }
+
     //TODO autogenerate from database
     public enum UserRolesEnum {
         Administrator,
