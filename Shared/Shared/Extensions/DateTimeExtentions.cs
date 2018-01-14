@@ -74,5 +74,12 @@ namespace Shared.Extentions
 
             return new DateTime(dt.Year, dt.Month, dt.Day, hour, 0, 0);
         }
+
+        public static DateTime TruncateToNextWeekday(this DateTime dt, DayOfWeek day)
+        {
+            // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
+            int daysToAdd = ((int)day - (int)dt.DayOfWeek + 7) % 7;
+            return dt.AddDays(daysToAdd).TruncateToDayStart();
+        }
     }
 }

@@ -33,12 +33,14 @@ namespace Client
         public bool IsDatePickerVisible => mode == ScheduleIntervalEnum.Daily;
         public bool IsWeekDropdownVisible => mode == ScheduleIntervalEnum.Weekly;
 
+        public bool IsWorkHoursCheckboxVisible { get; set; } = true;
+
         public SchedulerIntervalEditWindow()
         {
             InitializeComponent();            
         }
 
-        public SchedulerIntervalEditWindow(DateTime beginTime, DateTime endTime, ScheduleIntervalEnum mode)
+        public SchedulerIntervalEditWindow(DateTime beginTime, DateTime endTime, ScheduleIntervalEnum mode, bool showWorkHoursCheckbox = true)
         {
             InitializeComponent();
             BeginTimePicker.Model.CurrentTime = beginTime;
@@ -58,6 +60,7 @@ namespace Client
                 }
             };
 
+            this.IsWorkHoursCheckboxVisible = showWorkHoursCheckbox;
             this.mode = mode;
             SetVisibility();
         }
@@ -74,6 +77,11 @@ namespace Client
             {
                 dayPickerLabel.Visibility = Visibility.Hidden;
                 dayPicker.Visibility = Visibility.Hidden;
+            }
+
+            if (!IsWorkHoursCheckboxVisible)
+            {
+                workingHoursCheckBox.Visibility = Visibility.Hidden;
             }
         }        
 

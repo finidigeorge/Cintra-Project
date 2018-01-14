@@ -123,7 +123,7 @@
                         </ToolBarPanel>
                         
                     </Grid>
-                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="21:00"                                             
+                    <wpfScheduler:Scheduler x:Name="DailyScheduler" Grid.Row="1" Mode="Day" StartJourney="6:00" EndJourney="20:00"                                             
                                             OnEventClick="DailyScheduler_OnEventClick"                                            
                                             />
                 </Grid>

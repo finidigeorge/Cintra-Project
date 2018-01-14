@@ -1,7 +1,10 @@
-﻿using Client.Extentions;
+﻿using Client.Commands;
+using Client.Controls.WpfScheduler;
+using Client.Extentions;
 using Client.ViewModels;
 using Common;
 using Common.DtoMapping;
+using Shared;
 using Shared.Extentions;
 using System;
 using System.Collections.Generic;
@@ -25,12 +28,16 @@ namespace Client.Windows
     /// </summary>
     public partial class BookingEditWindow : Window
     {
+        private SolidColorBrush weeklyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
+
         public BookingEditWindowVm Model => (BookingEditWindowVm)Resources["ViewModel"];
+
+        private Event SelectedEvent { get; set; }
 
         public BookingEditWindow()
         {
             InitializeComponent();            
-        }
+        }       
 
         public BookingEditWindow(DateTime beginTime, DateTime endTime, BookingDtoUi bookindData)
         {
@@ -52,6 +59,51 @@ namespace Client.Windows
                     Model.BookingData.EndTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart());
                 }
             };
+
+            Model.AddWeeklyScheduledIntervalCommand = new Command<object>(() =>
+            {
+                var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly);
+                if (editorResult.Item1)
+                {
+                    var e = new Event() { Color = weeklyEventBrush };                                                            
+                    AddWeeklyEvent(editorResult.Item2, e);
+                }
+
+            }, (x) => true);
+
+            Model.UpdateWeeklyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
+
+            Model.DeleteWeeklyScheduledIntervalCommand = new Command<object>(() =>
+            {                        
+                WeeklyScheduler.DeleteEvent(SelectedEvent.Id);                
+            }, (x) => SelectedEvent != null);
+        }
+
+        private void AddWeeklyEvent(ScheduleDataDtoUi item, Event e)
+        {
+            e.UpdateFromScheduleDtoData(item);
+            e.Start = WeeklyScheduler.WeekScheduler.FirstDay.TruncateToDayStart().AddDays((double)item.DayNumber) + item.BeginTime.TimeOfDay;
+            e.End = WeeklyScheduler.WeekScheduler.FirstDay.TruncateToDayStart().AddDays((double)item.DayNumber) + item.EndTime.TimeOfDay;
+            WeeklyScheduler.AddEvent(e);
+        }
+
+        private (bool, ScheduleDataDtoUi) ShowScheduleEditor(ScheduleIntervalEnum mode)
+        {
+            var beginTime = DateTime.Now.TruncateToCurrentHourStart();
+            var endTime = DateTime.Now.TruncateToCurrentHourEnd();
+
+            var editor = new SchedulerIntervalEditWindow(beginTime, endTime, mode, false)
+            {
+                DataContext = new ScheduleDataDtoUi()
+                {
+                    IsAvialable = true,
+                    AvailabilityDescription = Model.BookingData.BookingPayment.PaymentOptions
+                },
+                Owner = this
+            };
+
+            var res = editor.ShowDialog() ?? false;            
+            return (res, editor.Model);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -72,6 +124,31 @@ namespace Client.Windows
 
             DialogResult = true;
             Close();
-        }        
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is TabControl tc)
+            {
+                var item = (TabItem)tc.SelectedItem;
+                if (item == null || (item.IsSelected && item.Name == "Booking"))
+                {
+                    Width = 720;
+                    return;
+                }
+
+                if (item.IsSelected && item.Name == "Appointments")
+                {
+                    Width = 840;
+                    return;
+                }
+            }
+        }
+
+        private void WeeklyScheduler_OnEventClick(object sender, Controls.WpfScheduler.Event e)
+        {
+            SelectedEvent = e;
+        }
     }
 }
+

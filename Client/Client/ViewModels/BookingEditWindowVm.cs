@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Shared.Extentions;
 
 namespace Client.ViewModels
 {
@@ -24,7 +25,15 @@ namespace Client.ViewModels
                 _bookingData.ObjectLevelValidationCallback = BookingValidationCallback;
                 RefreshAllModels();                               
             }
-        }
+        }        
+
+        public bool EnableRecurringApointments { get; set; }
+        public int RecurringApointmentsWeeksNumber { get; set; } = 10;
+        public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToNextWeekday(DayOfWeek.Monday);
+
+        public ICommand AddWeeklyScheduledIntervalCommand { get; set; }
+        public ICommand UpdateWeeklyScheduledIntervalCommand { get; set; }
+        public ICommand DeleteWeeklyScheduledIntervalCommand { get; set; }
 
         public ICommand GetClientsCommand { get => ClientsModel.RefreshDataCommand; }
         public ICommand GetServicesCommand { get=> ServicesModel.RefreshDataCommand; }
