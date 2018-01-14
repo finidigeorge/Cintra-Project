@@ -122,10 +122,12 @@ namespace Client.Windows
         {
             var beginTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
             var endTime = beginTime.AddHours(1);
+            var IsEditMode = true;
 
             BookingDtoUi _bookingData;
             if (bookingData == null)
             {
+                IsEditMode = false;
                 _bookingData = new BookingDtoUi()
                 {
                     DateOn = Model.CurrentDate.TruncateToDayStart(),
@@ -137,7 +139,7 @@ namespace Client.Windows
             else
                 _bookingData = bookingData;
 
-            var editor = new BookingEditWindow(beginTime, endTime, _bookingData) { Owner = this };            
+            var editor = new BookingEditWindow(beginTime, endTime, _bookingData, IsEditMode) { Owner = this };            
                         
             var res = editor.ShowDialog() ?? false;            
             return (res, editor.Model.BookingData);

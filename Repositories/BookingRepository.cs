@@ -92,8 +92,11 @@ namespace Repositories
                 {
                     result.Result = activeSchedule.SchedulesData.Any(
                         x => x.IsDeleted == false &&
-                        DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) &&
-                        x.IsAvialable
+                        (bookingData.BeginTime >= x.BeginTime && bookingData.EndTime <= x.EndTime) && x.IsAvialable
+                    ) &&
+                     !activeSchedule.SchedulesData.Any(
+                        x => x.IsDeleted == false &&
+                        DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) && !x.IsAvialable
                     );
                 }
 

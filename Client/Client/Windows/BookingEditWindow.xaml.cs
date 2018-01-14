@@ -39,10 +39,11 @@ namespace Client.Windows
             InitializeComponent();            
         }       
 
-        public BookingEditWindow(DateTime beginTime, DateTime endTime, BookingDtoUi bookindData)
+        public BookingEditWindow(DateTime beginTime, DateTime endTime, BookingDtoUi bookindData, bool isEditMode)
         {
             InitializeComponent();
             Model.BookingData = bookindData;
+            Model.IsEditMode = isEditMode;
             BeginTimePicker.Model.CurrentTime = beginTime;
             EndTimePicker.Model.CurrentTime = endTime;            
 

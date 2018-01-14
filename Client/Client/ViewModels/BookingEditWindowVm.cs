@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Shared.Extentions;
+using PropertyChanged;
 
 namespace Client.ViewModels
 {
@@ -23,10 +24,22 @@ namespace Client.ViewModels
             {
                 Set(ref _bookingData, value, nameof(BookingData));
                 _bookingData.ObjectLevelValidationCallback = BookingValidationCallback;
+                _bookingData.PropertyChanged += async (s, e) =>
+                {
+                    if (_bookingData != null && e.PropertyName == nameof(_bookingData.BeginTime) || e.PropertyName == nameof(_bookingData.EndTime))
+                    {
+                        await RunHorseValidations();
+                        await RunCoachValidations();
+                    }
+                };
+
                 RefreshAllModels();                               
             }
-        }        
+        }
 
+        public bool IsEditMode { get; set; }
+               
+        public bool ShowRecurringTab { get => !IsEditMode && (BookingData?.IsValid ?? false); }
         public bool EnableRecurringApointments { get; set; }
         public int RecurringApointmentsWeeksNumber { get; set; } = 10;
         public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToNextWeekday(DayOfWeek.Monday);
@@ -65,68 +78,84 @@ namespace Client.ViewModels
         }
 
         public BookingEditWindowVm()
-        {
+        {            
             ClientsModel.OnSelectedItemChanged += (sender, client) => {
-                _bookingData.Client = client;                
+                _bookingData.Client = client;
+
+                OnPropertyChanged(nameof(ShowRecurringTab));
             };
             ServicesModel.OnSelectedItemChanged += async (sender, service) => {
                 _bookingData.Service = service;
                 await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
                 await CoachesModel.RefreshDataCommand.ExecuteAsync(null);
+
                 SyncServiceDataModels();
+                OnPropertyChanged(nameof(ShowRecurringTab));
             };
-            HorsesModel.OnSelectedItemChanged += async (sender, horse) => {
+            HorsesModel.OnSelectedItemChanged += async (sender, horse) =>
+            {
                 _bookingData.Horse = horse;
-                var dto = ObjectMapper.Map<BookingDto>(_bookingData);
-
-                if (dto.Horse != null)
-                {
-                    horseValidationError = null;
-                    HorseValidationHoursPerDayWarning = null;
-                    HorseValidationHoursInRowWarning = null;                
-
-                    var res = await bookingsClient.HasHorseNotOverlappedBooking(dto);
-                    if (!res.Result)
-                        horseValidationError = res.ErrorMessage;
-
-                    res = await bookingsClient.HasHorseScheduleFitBooking(dto);
-                    if (!res.Result)
-                        horseValidationError = horseValidationError + (!string.IsNullOrEmpty(horseValidationError) ? ", " : "") + res.ErrorMessage;
-
-                    res = await bookingsClient.HasHorseRequiredBreak(dto);
-                    if (!res.Result)
-                        HorseValidationHoursInRowWarning = res.ErrorMessage;
-
-                    res = await bookingsClient.HasHorseWorkedLessThanAllowed(dto);
-                    if (!res.Result)
-                        HorseValidationHoursPerDayWarning = res.ErrorMessage;
-
-                }
-
-                //to raise validation checks
-                _bookingData.OnPropertyChanged(nameof(_bookingData.Horse));
-
+                await RunHorseValidations();                
             };
-            CoachesModel.OnSelectedItemChanged += async (sender, coach) => {
+            CoachesModel.OnSelectedItemChanged += async (sender, coach) =>
+            {
                 _bookingData.Coach = coach;
-                var dto = ObjectMapper.Map<BookingDto>(_bookingData);
-                coachValidationError = null;
-
-                if (dto.Coach != null)
-                {
-                    var res = await bookingsClient.HasCoachNotOverlappedBooking(dto);
-                    if (!res.Result)
-                        coachValidationError = res.ErrorMessage;
-
-                    res = await bookingsClient.HasCoachScheduleFitBooking(dto);
-                    if (!res.Result)
-                        coachValidationError = coachValidationError + (!string.IsNullOrEmpty(coachValidationError) ? ", " : "") + res.ErrorMessage;
-                }
-
-                //to raise validation checks
-                _bookingData.OnPropertyChanged(nameof(_bookingData.Coach));                
+                await RunCoachValidations();
             };
             PaymentTypesModel.OnSelectedItemChanged += (sender, paymentType) => { _bookingData.BookingPayment.PaymentType = paymentType; };
+        }
+
+        private async Task RunCoachValidations()
+        {
+            var dto = ObjectMapper.Map<BookingDto>(_bookingData);
+            coachValidationError = null;
+
+            if (dto.Coach != null)
+            {
+                var res = await bookingsClient.HasCoachNotOverlappedBooking(dto);
+                if (!res.Result)
+                    coachValidationError = res.ErrorMessage;
+
+                res = await bookingsClient.HasCoachScheduleFitBooking(dto);
+                if (!res.Result)
+                    coachValidationError = coachValidationError + (!string.IsNullOrEmpty(coachValidationError) ? ", " : "") + res.ErrorMessage;
+            }
+
+            //to raise validation checks
+            _bookingData.OnPropertyChanged(nameof(_bookingData.Coach));
+            OnPropertyChanged(nameof(ShowRecurringTab));
+        }
+
+        private async Task RunHorseValidations()
+        {
+            var dto = ObjectMapper.Map<BookingDto>(_bookingData);
+            if (dto.Horse != null)
+            {
+                horseValidationError = null;
+                HorseValidationHoursPerDayWarning = null;
+                HorseValidationHoursInRowWarning = null;
+
+                var res = await bookingsClient.HasHorseNotOverlappedBooking(dto);
+                if (!res.Result)
+                    horseValidationError = res.ErrorMessage;
+
+                res = await bookingsClient.HasHorseScheduleFitBooking(dto);
+                if (!res.Result)
+                    horseValidationError = horseValidationError + (!string.IsNullOrEmpty(horseValidationError) ? ", " : "") + res.ErrorMessage;
+
+                res = await bookingsClient.HasHorseRequiredBreak(dto);
+                if (!res.Result)
+                    HorseValidationHoursInRowWarning = res.ErrorMessage;
+
+                res = await bookingsClient.HasHorseWorkedLessThanAllowed(dto);
+                if (!res.Result)
+                    HorseValidationHoursPerDayWarning = res.ErrorMessage;
+
+            }
+
+            //to raise validation checks
+            _bookingData.OnPropertyChanged(nameof(_bookingData.Horse));
+            OnPropertyChanged(nameof(ShowRecurringTab));
         }
 
         private async void RefreshAllModels()

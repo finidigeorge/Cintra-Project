@@ -45,12 +45,12 @@ namespace Shared.Extentions
 
         public static bool IsBetween(this DateTime dt, DateTime startDate, DateTime endDate)
         {
-            return (dt >= startDate && dt <= endDate);
+            return (dt >= startDate && dt <= endDate.AddSeconds(-1));
         }
 
         public static bool IsOverlap(DateTime startDate1, DateTime endDate1, DateTime startDate2, DateTime endDate2)
         {
-            return !((startDate1 > endDate2) || (startDate2 > endDate1));
+            return !((startDate1 > endDate2.AddSeconds(-1)) || (startDate2 > endDate1.AddSeconds(-1)));
         }
 
         public static DateTime TruncateToCurrentHourStart(this DateTime dt)

@@ -138,7 +138,7 @@
                      IsReadOnly="True" Grid.ColumnSpan="2" Grid.Column="0" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Recurring appointments" Name="Appointments" TabIndex="1">
+            <TabItem Header="Recurring appointments" Name="Appointments" TabIndex="1" IsEnabled="{Binding ShowRecurringTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
