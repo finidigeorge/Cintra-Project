@@ -19,9 +19,9 @@ namespace Repositories
         }
 
 
-        public override async Task<List<Coach>> GetByParams(Func<Coach, bool> where)
+        public override async Task<List<Coach>> GetByParams(Func<Coach, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
                     db.Coaches.Where(where).Where(x => x.IsDeleted == false).Select(x =>
@@ -31,7 +31,7 @@ namespace Repositories
                         return res;
                     }).ToList()
                 );
-            }
+            }, dbContext);
         }
     }
 }

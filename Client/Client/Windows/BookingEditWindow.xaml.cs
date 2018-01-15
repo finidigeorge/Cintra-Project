@@ -128,6 +128,16 @@ namespace Client.Windows
             Close();
         }
 
+        private void CenterWindowOnScreen()
+        {
+            double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+            double windowWidth = this.Width;
+            double windowHeight = this.Height;
+            this.Left = (screenWidth / 2) - (windowWidth / 2);
+            this.Top = (screenHeight / 2) - (windowHeight / 2);
+        }
+
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is TabControl tc)
@@ -135,15 +145,21 @@ namespace Client.Windows
                 var item = (TabItem)tc.SelectedItem;
                 if (item == null || (item.IsSelected && item.Name == "Booking"))
                 {
-                    Width = 720;
+                    Height = 700;
+                    Width = 740;
+
+                    CenterWindowOnScreen();
                     return;
                 }
 
                 if (item.IsSelected && item.Name == "Appointments")
                 {
-                    Width = 840;
+                    Height = 900;
+                    Width = 1280;
+
+                    CenterWindowOnScreen();
                     return;
-                }
+                }                
             }
         }
 

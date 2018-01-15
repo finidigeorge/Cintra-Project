@@ -33,12 +33,12 @@ namespace Repositories
             return (await GetByParams((x) => x.IsDeleted == false)).ToList();
         }
 
-        public override async Task<List<T>> GetByParams(Func<T, bool> where)
+        public override async Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(db.GetTable<T>().Where(where).Where((x) => x.IsDeleted == false).ToList());
-            }
+            }, dbContext);
         }
 
         public override async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter)

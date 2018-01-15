@@ -33,7 +33,7 @@ namespace Client.Controls.WpfScheduler
             {
                 this.DisplayDateText.Text = String.Format("{0} - {1}", e.Start.ToString("hh:mm tt"), e.End.ToString("hh:mm tt"));
             }
-            this.BorderElement.ToolTip = this.DisplayDateText.Text + System.Environment.NewLine + this.DisplayText.Text;
+            this.BorderElement.ToolTip = this.DisplayDateText.Text + Environment.NewLine + this.DisplayText.Text;
 
             if (e.IsSelected)
             {

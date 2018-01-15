@@ -15,12 +15,12 @@ namespace Repositories
     {
         private readonly SchedulesDataRepository _dataRepository = new SchedulesDataRepository();
 
-        public override async Task<List<Schedule>> GetByParams(Func<Schedule, bool> where)
+        public override async Task<List<Schedule>> GetByParams(Func<Schedule, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(db.GetTable<Schedule>().LoadWith(x => x.SchedulesData).Where(where).Where(x => x.IsDeleted == false).ToList());
-            }
+            }, dbContext);
         }        
 
         public override async Task Delete(long id, CintraDB dbContext = null)

@@ -14,14 +14,14 @@ namespace Repositories
     [PerScope]
     public class UserRepository : GenericPreservableRepository<User>, IUsersRepository
     {
-        public override async Task<List<User>> GetByParams(Func<User, bool> where)
-        {            
-            using (var db = new CintraDB())
+        public override async Task<List<User>> GetByParams(Func<User, bool> where, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
             {                
                 return await Task.FromResult(
                     db.Users.LoadWith(x => x.UserRole).Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
-            }
+            }, dbContext);
         }
         
         public async Task<User> GetByLogin(string login)

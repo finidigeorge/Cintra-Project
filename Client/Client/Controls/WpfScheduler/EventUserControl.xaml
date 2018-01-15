@@ -7,9 +7,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Border x:Name="BorderElement" CornerRadius="5" BorderBrush="Gray" Background="LightGreen" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
             Opacity="0.8" Height="Auto" Margin="1">
-        <StackPanel Orientation="Horizontal" Height="Auto">
-            <TextBlock x:Name="DisplayDateText" FontSize="14" Padding="2" TextWrapping="Wrap"/>
-            <TextBlock x:Name="DisplayText" Text="{Binding Subject}" FontSize="14" Padding="2" TextWrapping="Wrap"/>
+        <StackPanel Orientation="Vertical" Height="Auto">
+            <TextBlock x:Name="DisplayDateText" FontSize="12" Padding="2" TextWrapping="Wrap"/>
+            <TextBlock x:Name="DisplayText" Text="{Binding Subject}" FontSize="12" Padding="2" TextWrapping="Wrap"/>
         </StackPanel>
     </Border>
 </UserControl>

@@ -40,9 +40,9 @@ namespace Repositories
             );
         }
 
-        public override async Task<List<Service>> GetByParams(Func<Service, bool> where)
+        public override async Task<List<Service>> GetByParams(Func<Service, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
                     db.Services                        
@@ -52,7 +52,7 @@ namespace Repositories
                         .LoadWith(x => x.ServiceToHorsesLinks.First().Hor)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
-            }
+            }, dbContext);
         }
     }
 }

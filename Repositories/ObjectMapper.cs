@@ -31,7 +31,7 @@ namespace Mapping
                         vm.Horse = _mapper.Map<HorseDto>(db.Hor);
                         vm.Service = _mapper.Map<ServiceDto>(db.Service);
                         var payment = db.BookingPayments?.FirstOrDefault();
-                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(db.BookingPayments?.FirstOrDefault());                        
+                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(payment);                        
                     });
                     conf.CreateMap<BookingDto, Booking>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())                        

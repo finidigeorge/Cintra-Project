@@ -26,6 +26,7 @@ namespace Client.Windows
     {
         public bool IsBooked { get; set; }
         public BookingDtoUi Booking { get; set; }
+        public bool HasRecurrentBookings{ get; set; }
         public List<Event> RecurrentBookings { get; set; }
         public DateTime RecurentDateStart { get; set; }
         public int RecurrentWeekNumber { get; set; }
@@ -73,7 +74,7 @@ namespace Client.Windows
                 {
                     await Model.AddItemCommand.ExecuteAsync(res.Booking);
 
-                    if (res.RecurrentBookings.Any())
+                    if (res.HasRecurrentBookings && res.RecurrentBookings.Any())
                     {
                         var items = MergeEventData(res);
                         await Model.InserAll(items);
@@ -120,7 +121,8 @@ namespace Client.Windows
 
                     item.DateOn = item.BeginTime.TruncateToDayStart();
 
-                    result.Add(item);
+                    if (item.DateOn == DateTime.Now.TruncateToDayStart())
+                        result.Add(item);
                 }
             }
             return result;
@@ -181,6 +183,7 @@ namespace Client.Windows
             {
                 IsBooked = res,
                 Booking = editor.Model.BookingData,
+                HasRecurrentBookings = editor.Model.EnableRecurringApointments,
                 RecurrentBookings = editor.Model.RecurrentScheduler.Events.ToList(),
                 RecurentDateStart = editor.Model.RecurringStartDate,
                 RecurrentWeekNumber = editor.Model.RecurringWeeksNumber

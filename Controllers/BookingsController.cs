@@ -71,9 +71,14 @@ namespace Controllers
             {
                 var _beginDate = DateTime.FromBinary(beginDate);
                 var _endDate = DateTime.FromBinary(endDate);
-               
-                var res = (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate))).Select(x => ObjectMapper.Map<BookingDto>(x)).ToList();
-                return res;
+
+                return await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
+                {
+                    var tmp = (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate), db)).ToList();
+                    var res = tmp.Select(x => ObjectMapper.Map<BookingDto>(x)).ToList();
+                    return res;
+                });               
+                
             }
             catch (Exception e)
             {

@@ -22,7 +22,7 @@ namespace Repositories
             {
                 if (b.EndTime.TruncateToDayStart() >= DateTime.Now.TruncateToDayStart())
                 {
-                    b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted = false);
+                    b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
                     b.Service = b.Service.IsDeleted ? null : b.Service;
                     b.Hor = b.Hor.IsDeleted || !(await IsHorseAvialableForBooking(b.Hor, b)) ? null : b.Hor;
                     b.Coach = b.Coach.IsDeleted || !(await IsCoachAvialableForBooking(b.Coach, b)) ? null : b.Coach;
@@ -257,9 +257,9 @@ namespace Repositories
             }, dbContext);
         }        
 
-        public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where)
+        public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 var result =  await Task.FromResult(
                     db.Bookings
@@ -278,7 +278,8 @@ namespace Repositories
                 );
 
                 return await AccessFilter(result, db);
-            }
+
+            }, dbContext);
         }
 
         public override async Task Delete(long id, CintraDB dbContext = null)

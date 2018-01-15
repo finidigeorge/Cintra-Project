@@ -14,7 +14,7 @@ namespace Repositories.Interfaces
 
          Task<List<T>> GetAll();
 
-         Task<List<T>> GetByParams(Func<T, bool> where);
+         Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null);
 
          Task<T> GetById(long id);
 

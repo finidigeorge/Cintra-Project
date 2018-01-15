@@ -78,12 +78,12 @@ namespace Repositories
             return (await GetByParams((x) => true)).ToList();
         }
 
-        public virtual async Task<List<T>> GetByParams(Func<T, bool> where)
+        public virtual async Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
-            {
+            return await RunWithinTransaction(async (db) =>
+            {                
                 return await Task.FromResult(db.GetTable<T>().Where(where).ToList());
-            }
+            }, dbContext);
         }
 
         /// <summary>

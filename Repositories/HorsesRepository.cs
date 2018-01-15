@@ -14,9 +14,9 @@ namespace Repositories
     [PerScope]
     public class HorsesRepository: GenericPreservableRepository<Hors>
     {                        
-        public override async Task<List<Hors>> GetByParams(Func<Hors, bool> where)
+        public override async Task<List<Hors>> GetByParams(Func<Hors, bool> where, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
                     db.Horses
@@ -25,7 +25,7 @@ namespace Repositories
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
-            }
+            }, dbContext);
         }        
     }
 }
