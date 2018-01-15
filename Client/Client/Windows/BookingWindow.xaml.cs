@@ -22,6 +22,15 @@ using System.Windows.Shapes;
 
 namespace Client.Windows
 {
+    class BookingData
+    {
+        public bool IsBooked { get; set; }
+        public BookingDtoUi Booking { get; set; }
+        public List<Event> RecurrentBookings { get; set; }
+        public DateTime RecurentDateStart { get; set; }
+        public int RecurrentWeekNumber { get; set; }
+    };
+
     public class Grouping
     {
         public string Name { get; set; }
@@ -60,9 +69,15 @@ namespace Client.Windows
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
                 var res = ShowScheduleEditor();
-                if (res.Item1)
+                if (res.IsBooked)
                 {
-                    await Model.AddItemCommand.ExecuteAsync(res.Item2);
+                    await Model.AddItemCommand.ExecuteAsync(res.Booking);
+
+                    if (res.RecurrentBookings.Any())
+                    {
+                        var items = MergeEventData(res);
+                        await Model.InserAll(items);
+                    }
                 }
 
             }, (x) => true);
@@ -70,9 +85,9 @@ namespace Client.Windows
             Model.UpdateDailyScheduledIntervalCommand = new Command<object>(async () => 
             {
                 var res = ShowScheduleEditor(Model.SelectedItem);
-                if (res.Item1)
+                if (res.IsBooked)
                 {
-                    await Model.UpdateItemCommand.ExecuteAsync(res.Item2);
+                    await Model.UpdateItemCommand.ExecuteAsync(res.Booking);
                 }
                 else
                 {
@@ -89,7 +104,27 @@ namespace Client.Windows
             }, (x) => Model.SelectedItem != null);
 
             InitGroupings();
-        }        
+        }
+
+        private List<BookingDto> MergeEventData(BookingData data)
+        {
+            var result = new List<BookingDto>();
+
+            for (int w= 0; w < data.RecurrentWeekNumber; w++)
+            {
+                foreach (var e in data.RecurrentBookings)
+                {
+                    var item = ObjectMapper.Map<BookingDto>(data.Booking);
+                    item.BeginTime = e.Start.AddDays(7 * w);
+                    item.EndTime = e.End.AddDays(7 * w);
+
+                    item.DateOn = item.BeginTime.TruncateToDayStart();
+
+                    result.Add(item);
+                }
+            }
+            return result;
+        }
 
         private void InitGroupings()
         {
@@ -118,7 +153,7 @@ namespace Client.Windows
         }
 
 
-        private (bool, BookingDtoUi) ShowScheduleEditor(BookingDtoUi bookingData = null)
+        private BookingData ShowScheduleEditor(BookingDtoUi bookingData = null)
         {
             var beginTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
             var endTime = beginTime.AddHours(1);
@@ -142,7 +177,14 @@ namespace Client.Windows
             var editor = new BookingEditWindow(beginTime, endTime, _bookingData, IsEditMode) { Owner = this };            
                         
             var res = editor.ShowDialog() ?? false;            
-            return (res, editor.Model.BookingData);
+            return new BookingData()
+            {
+                IsBooked = res,
+                Booking = editor.Model.BookingData,
+                RecurrentBookings = editor.Model.RecurrentScheduler.Events.ToList(),
+                RecurentDateStart = editor.Model.RecurringStartDate,
+                RecurrentWeekNumber = editor.Model.RecurringWeeksNumber
+            };
         }        
 
         private async void Window_LoadedAsync(object sender, RoutedEventArgs e)

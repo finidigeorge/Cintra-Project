@@ -64,6 +64,9 @@ namespace Mapping
                     conf.CreateMissingTypeMaps = true;
                     conf.ReplaceMemberName("_", "");
 
+                    //for cloning
+                    conf.CreateMap<BookingDtoUi, BookingDtoUi>();
+
                     conf.CreateMap<BookingDto, BookingDtoUi>();
                     conf.CreateMap<BookingPaymentDto, BookingPaymentDtoUi>();
                     conf.CreateMap<ClientDto, ClientDtoUi>();

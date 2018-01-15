@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Shared.Extentions;
 using PropertyChanged;
+using Client.Controls.WpfScheduler;
 
 namespace Client.ViewModels
 {
@@ -41,7 +42,7 @@ namespace Client.ViewModels
                
         public bool ShowRecurringTab { get => !IsEditMode && (BookingData?.IsValid ?? false); }
         public bool EnableRecurringApointments { get; set; }
-        public int RecurringApointmentsWeeksNumber { get; set; } = 10;
+        public int RecurringWeeksNumber { get; set; } = 10;
         public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToNextWeekday(DayOfWeek.Monday);
 
         public ICommand AddWeeklyScheduledIntervalCommand { get; set; }
@@ -53,6 +54,8 @@ namespace Client.ViewModels
         public ICommand GetHorsesCommand { get => HorsesModel.RefreshDataCommand; }
         public ICommand GetCoachesCommand { get => CoachesModel.RefreshDataCommand; }
 
+
+        public Scheduler RecurrentScheduler { get; set; }
 
         public ClientsRefVm ClientsModel { get; set; } = new ClientsRefVm();
         public ServicesRefVm ServicesModel { get; set; } = new ServicesRefVm();

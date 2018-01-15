@@ -50,6 +50,10 @@ namespace RestClient
         {
             return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasHorseWorkedLessThanAllowed", RestSharp.Method.POST, entity);
         }
-        
+
+        public async Task InsertAll(List<BookingDto> entityList)
+        {
+            await SendRequest<CheckResultDto>($"api/{ControllerName}/InsertAll", RestSharp.Method.POST, entityList);
+        }
     }
 }

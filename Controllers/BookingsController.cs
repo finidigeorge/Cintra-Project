@@ -44,6 +44,26 @@ namespace Controllers
             }
         }
 
+        [HttpPost("/api/[controller]/InsertAll")]
+        public async Task InsertAll([FromBody] List<BookingDto> entityList)
+        {
+            try
+            {
+                await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
+                {
+                    foreach (var e in entityList)
+                        await Create(e);
+
+                    return null;
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, entityList);
+                throw;
+            }
+        }
+
         [HttpGet("/api/[controller]/GetAllFiltered/{beginDate}/{endDate}")]
         public virtual async Task<List<BookingDto>> GetAllFiltered(long beginDate, long endDate)
         {

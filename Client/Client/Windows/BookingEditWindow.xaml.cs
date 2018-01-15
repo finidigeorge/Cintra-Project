@@ -44,6 +44,7 @@ namespace Client.Windows
             InitializeComponent();
             Model.BookingData = bookindData;
             Model.IsEditMode = isEditMode;
+            Model.RecurrentScheduler = WeeklyScheduler;
             BeginTimePicker.Model.CurrentTime = beginTime;
             EndTimePicker.Model.CurrentTime = endTime;            
 

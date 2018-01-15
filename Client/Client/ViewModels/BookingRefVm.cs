@@ -30,6 +30,11 @@ namespace Client.ViewModels
             return await _client.GetAllFiltered(CurrentDate.ToBinary(), CurrentDate.AddDays(NumDaysToLoad).ToBinary());
         }
 
+        public async Task InserAll(IEnumerable<BookingDto> bookings)
+        {
+            await _client.InsertAll(bookings.ToList());
+        }
+
         //UI Event wrappers commands
         public ICommand NextDayCommand { get; set; }
         public ICommand PrevDayCommand { get; set; }

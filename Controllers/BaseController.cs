@@ -33,7 +33,7 @@ namespace Controllers
                 throw;
             }
             
-        }
+        }        
 
         [HttpDelete("{id}")]
         public virtual async Task Delete(long id)
