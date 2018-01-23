@@ -21,7 +21,9 @@ namespace DataModels
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
 		public ITable<Booking>                   Bookings                  { get { return this.GetTable<Booking>(); } }
+		public ITable<BookingPatterns>           BookingPatterns           { get { return this.GetTable<BookingPatterns>(); } }
 		public ITable<BookingPayments>           BookingPayments           { get { return this.GetTable<BookingPayments>(); } }
+		public ITable<BookingPermanentData>      BookingPermanentData      { get { return this.GetTable<BookingPermanentData>(); } }
 		public ITable<Client>                    Clients                   { get { return this.GetTable<Client>(); } }
 		public ITable<Coach>                     Coaches                   { get { return this.GetTable<Coach>(); } }
 		public ITable<DbUpdatesLog>              DbUpdatesLog              { get { return this.GetTable<DbUpdatesLog>(); } }
@@ -55,18 +57,25 @@ namespace DataModels
 	[Table("bookings")]
 	public partial class Booking
 	{
-		[Column("id"),         PrimaryKey, Identity] public long     Id        { get; set; } // integer
-		[Column("event_guid"), NotNull             ] public Guid     EventGuid { get; set; } // guid
-		[Column("horse_id"),   NotNull             ] public long     HorseId   { get; set; } // integer
-		[Column("coach_id"),   NotNull             ] public long     CoachId   { get; set; } // integer
-		[Column("client_id"),  NotNull             ] public long     ClientId  { get; set; } // integer
-		[Column("service_id"), NotNull             ] public long     ServiceId { get; set; } // integer
-		[Column("is_deleted"), NotNull             ] public bool     IsDeleted { get; set; } // boolean
-		[Column("date_on"),    NotNull             ] public DateTime DateOn    { get; set; } // date
-		[Column("begin_time"), NotNull             ] public DateTime BeginTime { get; set; } // time
-		[Column("end_time"),   NotNull             ] public DateTime EndTime   { get; set; } // time
+		[Column("id"),                PrimaryKey,  Identity] public long     Id              { get; set; } // integer
+		[Column("event_guid"),        NotNull              ] public Guid     EventGuid       { get; set; } // guid
+		[Column("horse_id"),          NotNull              ] public long     HorseId         { get; set; } // integer
+		[Column("coach_id"),          NotNull              ] public long     CoachId         { get; set; } // integer
+		[Column("client_id"),         NotNull              ] public long     ClientId        { get; set; } // integer
+		[Column("service_id"),        NotNull              ] public long     ServiceId       { get; set; } // integer
+		[Column("is_deleted"),        NotNull              ] public bool     IsDeleted       { get; set; } // boolean
+		[Column("date_on"),           NotNull              ] public DateTime DateOn          { get; set; } // date
+		[Column("begin_time"),        NotNull              ] public DateTime BeginTime       { get; set; } // time
+		[Column("end_time"),          NotNull              ] public DateTime EndTime         { get; set; } // time
+		[Column("permanent_data_id"),    Nullable          ] public long?    PermanentDataId { get; set; } // integer
 
 		#region Associations
+
+		/// <summary>
+		/// FK_bookings_4_0
+		/// </summary>
+		[Association(ThisKey="PermanentDataId", OtherKey="PermanentDataId", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_4_0", BackReferenceName="Bookings")]
+		public BookingPatterns BookingPattern { get; set; }
 
 		/// <summary>
 		/// FK_booking_payments_0_0_BackReference
@@ -101,6 +110,62 @@ namespace DataModels
 		#endregion
 	}
 
+	[Table("booking_patterns")]
+	public partial class BookingPatterns
+	{
+		[Column("id"),                PrimaryKey, Identity] public long     Id              { get; set; } // integer
+		[Column("event_guid"),        NotNull             ] public Guid     EventGuid       { get; set; } // guid
+		[Column("horse_id"),          NotNull             ] public long     HorseId         { get; set; } // integer
+		[Column("coach_id"),          NotNull             ] public long     CoachId         { get; set; } // integer
+		[Column("client_id"),         NotNull             ] public long     ClientId        { get; set; } // integer
+		[Column("service_id"),        NotNull             ] public long     ServiceId       { get; set; } // integer
+		[Column("is_deleted"),        NotNull             ] public bool     IsDeleted       { get; set; } // boolean
+		[Column("date_on"),           NotNull             ] public DateTime DateOn          { get; set; } // date
+		[Column("begin_time"),        NotNull             ] public DateTime BeginTime       { get; set; } // time
+		[Column("end_time"),          NotNull             ] public DateTime EndTime         { get; set; } // time
+		[Column("permanent_data_id"), NotNull             ] public long     PermanentDataId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_booking_patterns_0_0
+		/// </summary>
+		[Association(ThisKey="PermanentDataId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_patterns_0_0", BackReferenceName="BookingPatterns")]
+		public BookingPermanentData BookingPermanentData { get; set; }
+
+		/// <summary>
+		/// FK_bookings_4_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PermanentDataId", OtherKey="PermanentDataId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Booking> Bookings { get; set; }
+
+		/// <summary>
+		/// FK_booking_patterns_4_0
+		/// </summary>
+		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_patterns_4_0", BackReferenceName="BookingPatterns")]
+		public Client Client { get; set; }
+
+		/// <summary>
+		/// FK_booking_patterns_3_0
+		/// </summary>
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_patterns_3_0", BackReferenceName="BookingPatterns")]
+		public Coach Coach { get; set; }
+
+		/// <summary>
+		/// FK_booking_patterns_2_0
+		/// </summary>
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_patterns_2_0", BackReferenceName="BookingPatterns")]
+		public Hors Hor { get; set; }
+
+		/// <summary>
+		/// FK_booking_patterns_1_0
+		/// </summary>
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_patterns_1_0", BackReferenceName="BookingPatterns")]
+		public Service Service { get; set; }
+
+		#endregion
+	}
+
 	[Table("booking_payments")]
 	public partial class BookingPayments
 	{
@@ -128,6 +193,24 @@ namespace DataModels
 		#endregion
 	}
 
+	[Table("booking_permanent_data")]
+	public partial class BookingPermanentData
+	{
+		[Column("id"),         PrimaryKey,  Identity] public long      Id        { get; set; } // integer
+		[Column("start_date"), NotNull              ] public DateTime  StartDate { get; set; } // date
+		[Column("end_date"),      Nullable          ] public DateTime? EndDate   { get; set; } // date
+
+		#region Associations
+
+		/// <summary>
+		/// FK_booking_patterns_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="PermanentDataId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPatterns> BookingPatterns { get; set; }
+
+		#endregion
+	}
+
 	[Table("clients")]
 	public partial class Client
 	{
@@ -142,6 +225,12 @@ namespace DataModels
 		[Column("is_deleted"),      NotNull              ] public bool   IsDeleted      { get; set; } // boolean
 
 		#region Associations
+
+		/// <summary>
+		/// FK_booking_patterns_4_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ClientId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPatterns> BookingPatterns { get; set; }
 
 		/// <summary>
 		/// FK_bookings_3_0_BackReference
@@ -162,6 +251,12 @@ namespace DataModels
 		[Column("is_deleted"), NotNull              ] public bool   IsDeleted { get; set; } // boolean
 
 		#region Associations
+
+		/// <summary>
+		/// FK_booking_patterns_3_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPatterns> BookingPatterns { get; set; }
 
 		/// <summary>
 		/// FK_bookings_2_0_BackReference
@@ -201,6 +296,12 @@ namespace DataModels
 		[Column("max_working_hours"), NotNull             ] public int    MaxWorkingHours { get; set; } // int
 
 		#region Associations
+
+		/// <summary>
+		/// FK_booking_patterns_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPatterns> BookingPatterns { get; set; }
 
 		/// <summary>
 		/// FK_bookings_1_0_BackReference
@@ -371,6 +472,12 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
+		/// FK_booking_patterns_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingPatterns> BookingPatterns { get; set; }
+
+		/// <summary>
 		/// FK_bookings_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
@@ -492,7 +599,19 @@ namespace DataModels
 				t.Id == Id);
 		}
 
+		public static BookingPatterns Find(this ITable<BookingPatterns> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
 		public static BookingPayments Find(this ITable<BookingPayments> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static BookingPermanentData Find(this ITable<BookingPermanentData> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

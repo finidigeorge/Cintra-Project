@@ -23,6 +23,10 @@ namespace Mapping
                     conf.CreateMissingTypeMaps = true;
                     conf.ReplaceMemberName("_", "");
 
+
+                    conf.CreateMap<Booking, BookingPatterns>();
+                    conf.CreateMap<BookingPatterns, Booking>();
+
                     conf.CreateMap<Booking, BookingDto>()                    
                     .AfterMap((db, vm) =>
                     {
