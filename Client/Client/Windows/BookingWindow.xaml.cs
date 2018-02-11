@@ -30,6 +30,7 @@ namespace Client.Windows
         public List<Event> RecurrentBookings { get; set; }
         public DateTime RecurentDateStart { get; set; }
         public int RecurrentWeekNumber { get; set; }
+        public bool IsPermanent { get; set; }
     };
 
     public class Grouping
@@ -72,13 +73,22 @@ namespace Client.Windows
                 var res = ShowScheduleEditor();
                 if (res.IsBooked)
                 {
+                    if (res.HasRecurrentBookings && res.IsPermanent && res.RecurrentBookings.Any())
+                    {
+                        res.Booking.BookingTemplateMetadata = new BookingTemplateMetadataDto()
+                        {
+                            StartDate = res.RecurentDateStart,
+                            BookingTemplates = MergePermanentEventData(res)
+                        };
+                    }
+
                     await Model.AddItemCommand.ExecuteAsync(res.Booking);
 
-                    if (res.HasRecurrentBookings && res.RecurrentBookings.Any())
+                    if (res.HasRecurrentBookings && !res.IsPermanent && res.RecurrentBookings.Any())
                     {
                         var items = MergeEventData(res);
-                        await Model.InserAll(items);
-                    }
+                        await Model.InsertAll(items);
+                    }                    
                 }
 
             }, (x) => true);
@@ -98,7 +108,28 @@ namespace Client.Windows
 
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
             {                
-                Model.BeginDeleteItemCommand.Execute(null);
+                if (Model.SelectedItem.BookingTemplateMetadata != null)
+                { 
+                    var dlg = new BookingDeleteWindow() { Owner = this };
+                    var res = dlg.ShowDialog() ?? false;
+                    if (res)
+                    {
+                        if (dlg.Model.DeleteRecurringBookings)
+                        {
+                            await Model.CancelAll(Model.SelectedItem.BookingTemplateMetadata.Id, dlg.Model.RecurringStartDate);
+                        }
+
+                        if (dlg.Model.DeleteSelectedBooking)
+                        {
+                            await Model.DeleteSelectedItemCommand.ExecuteAsync(Model.SelectedItem);
+                        }
+                    }
+                }
+                else
+                {
+                    Model.BeginDeleteItemCommand.Execute(null);                    
+                }
+
                 Model.SelectedItem = null;
                 await LoadSchedule();
 
@@ -125,6 +156,18 @@ namespace Client.Windows
                         result.Add(item);
                 }
             }
+            return result;
+        }
+
+        private List<BookingDto> MergePermanentEventData(BookingData data)
+        {
+            var result = new List<BookingDto>();            
+            foreach (var e in data.RecurrentBookings)
+            {
+                var item = ObjectMapper.Map<BookingDto>(data.Booking);                
+                result.Add(item);
+            }
+            
             return result;
         }
 
@@ -186,7 +229,8 @@ namespace Client.Windows
                 HasRecurrentBookings = editor.Model.EnableRecurringApointments,
                 RecurrentBookings = editor.Model.RecurrentScheduler.Events.ToList(),
                 RecurentDateStart = editor.Model.RecurringStartDate,
-                RecurrentWeekNumber = editor.Model.RecurringWeeksNumber
+                RecurrentWeekNumber = editor.Model.RecurringWeeksNumber,
+                IsPermanent = editor.Model.IsPermanent
             };
         }        
 

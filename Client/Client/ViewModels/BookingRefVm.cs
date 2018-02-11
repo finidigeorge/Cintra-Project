@@ -30,9 +30,14 @@ namespace Client.ViewModels
             return await _client.GetAllFiltered(CurrentDate.ToBinary(), CurrentDate.AddDays(NumDaysToLoad).ToBinary());
         }
 
-        public async Task InserAll(IEnumerable<BookingDto> bookings)
+        public async Task InsertAll(IEnumerable<BookingDto> bookings)
         {
             await _client.InsertAll(bookings.ToList());
+        }
+
+        public async Task CancelAll(long metadataId, DateTime fromDate)
+        {
+            await _client.CancelAllBookings(metadataId, fromDate.ToBinary());
         }
 
         //UI Event wrappers commands

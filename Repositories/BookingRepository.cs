@@ -19,37 +19,18 @@ namespace Repositories
         private async Task<List<Booking>> AccessFilter(List<Booking> bookings, CintraDB db)
         {
             foreach (var b in bookings)
-            {
-                if (b.EndTime.TruncateToDayStart() >= DateTime.Now.TruncateToDayStart())
-                {
-                    b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
-                    b.Service = b.Service.IsDeleted ? null : b.Service;
-                    b.Hor = b.Hor.IsDeleted || !(await IsHorseAvialableForBooking(b.Hor, b)) ? null : b.Hor;
-                    b.Coach = b.Coach.IsDeleted || !(await IsCoachAvialableForBooking(b.Coach, b)) ? null : b.Coach;
-                }
+            {                
+                b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
+                b.Service = b.Service.IsDeleted ? null : b.Service;
+                b.Hor = b.Hor.IsDeleted || !(await IsHorseAvialableForBooking(b.Hor, b)) ? null : b.Hor;
+                b.Coach = b.Coach.IsDeleted || !(await IsCoachAvialableForBooking(b.Coach, b)) ? null : b.Coach;
+
+                if (b.BookingsTemplateMetadata?.BookingTemplates != null)
+                    b.BookingsTemplateMetadata.BookingTemplates = b.BookingsTemplateMetadata.BookingTemplates.Where(x => x.IsDeleted == false);                
             }
 
             return bookings;
-        }
-
-        private List<SchedulesData> GetCoachSchedulesData(DateTime onDate, Schedule activeSchedule)
-        {
-            var result = new List<SchedulesData>();
-            result.AddRange(activeSchedule.SchedulesData.Where(x => x.DateOn == onDate));
- 
-            result.AddRange(activeSchedule.SchedulesData
-                    .Where(x => x.DayNumber != null && x.DayNumber == (long)onDate.DayOfWeek)
-                    .Select(x => 
-                    {
-                        var res = x;
-                        res.BeginTime = onDate.AddHours(x.BeginTime.Hour).AddMinutes(x.BeginTime.Minute);
-                        res.EndTime = onDate.AddHours(x.EndTime.Hour).AddMinutes(x.EndTime.Minute);
-
-                        return x;
-                    })
-                );
-            return result;
-        }
+        }        
 
         public async Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
         {
@@ -83,7 +64,7 @@ namespace Repositories
 
         public async Task<CheckResultDto> HasCoachScheduleFitBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
         {
-            return await RunWithinTransaction(async (db) =>
+            return await RunWithinTransaction((db) =>
             {               
                 var result = new CheckResultDto();
                 var activeSchedule = coach.Schedules?.FirstOrDefault(x => x.IsDeleted == false && x.IsActive);
@@ -105,7 +86,7 @@ namespace Repositories
                     result.ErrorMessage = "Coach is currently unavailable (check coach's schedule)";
                 }
 
-                return result;
+                return Task.FromResult<dynamic>(result);
 
             }, dbContext);
         }
@@ -225,8 +206,8 @@ namespace Repositories
 
         public async Task<CheckResultDto> HasHorseScheduleFitBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
         {
-            return await RunWithinTransaction(async (db) =>
-            {                
+            return await RunWithinTransaction((db) =>
+            {                                
                 bool passedScheduleCheck = !(horse.HorsesScheduleData?.Any() ?? false)
                     || !(horse.HorsesScheduleData.Any(x => x.IsDeleted == false && DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate, x.EndDate)));
 
@@ -237,7 +218,7 @@ namespace Repositories
                     result.ErrorMessage = "Horse is currently unavailable (check horse's schedule)";
                 }
 
-                return result;
+                return Task.FromResult<dynamic>(result);
             }, dbContext);
         }
 
@@ -263,6 +244,8 @@ namespace Repositories
             {
                 var result =  await Task.FromResult(
                     db.Bookings
+                        .LoadWith(x => x.BookingsTemplateMetadata)
+                        .LoadWith(x => x.BookingsTemplateMetadata.BookingTemplates)
                         .LoadWith(x => x.BookingPayments)
                         .LoadWith(x => x.BookingPayments.First().PaymentType)
                         .LoadWith(x => x.Client)
@@ -282,11 +265,12 @@ namespace Repositories
             }, dbContext);
         }
 
+        
         public override async Task Delete(long id, CintraDB dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {
-                db.BookingPayments.Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).Update();
+                await db.BookingPayments.Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsync();
                 await base.Delete(id, db);
 
                 return null;

@@ -12,6 +12,7 @@ using Mapping;
 using Repositories;
 using System.Linq;
 using Shared.Interfaces;
+using Shared.Extentions;
 
 namespace Controllers
 {
@@ -19,12 +20,20 @@ namespace Controllers
     [Route("/api/[controller]/values")]
     public class BookingsController : BaseController<Booking, BookingDto>, IBookingController
     {
-        private readonly BookingPaymentsRepository _paymentsRepository = new BookingPaymentsRepository();
+        private readonly IBookingPaymentsRepository _paymentsRepository;
+        private readonly IBookingTemplatesMetadataRepository _bookingsMetadataRepository;
+        private readonly IGenericRepository<BookingTemplates> _templatesRepository = new GenericRepository<BookingTemplates>();
+
+
         private IBookingRepository repository { get => (IBookingRepository)_repository; }
 
-
-        public BookingsController(IBookingRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
-        {            
+        public BookingsController(IBookingRepository repository, 
+                IBookingPaymentsRepository paymentsRepository,
+                IBookingTemplatesMetadataRepository bookingsMetadataRepository,                
+                ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+        {
+            _paymentsRepository = paymentsRepository;
+            _bookingsMetadataRepository = bookingsMetadataRepository;            
         }
 
         [HttpPost]
@@ -33,7 +42,18 @@ namespace Controllers
             try
             {
                 var booking = ObjectMapper.Map<Booking>(entity);
-                var bookingId = await _repository.Create(ObjectMapper.Map<Booking>(entity));
+                if (booking.BookingsTemplateMetadata != null)
+                {
+                    var metadataId = await _bookingsMetadataRepository.Create(booking.BookingsTemplateMetadata);
+                    foreach (var p in booking.BookingsTemplateMetadata.BookingTemplates) {
+                        p.TemplateMetadataId = metadataId;
+                        await _templatesRepository.Create(p);
+                    }
+
+                    booking.TemplateMetadataId = metadataId;
+                }
+
+                var bookingId = await _repository.Create(booking);
                 await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(entity.BookingPayment));
                 return bookingId;
             }
@@ -64,6 +84,21 @@ namespace Controllers
             }
         }
 
+        [HttpPost("/api/[controller]/CancelAllBookings/{metadataId}/{FromDate}")]
+        public async Task CancelAllBookings(long metadataId, long FromDate)
+        {
+            try
+            {
+                var _FromDate = DateTime.FromBinary(FromDate);
+                await _bookingsMetadataRepository.CancelAllBookings(metadataId, _FromDate);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message);
+                throw;
+            }
+        }
+
         [HttpGet("/api/[controller]/GetAllFiltered/{beginDate}/{endDate}")]
         public virtual async Task<List<BookingDto>> GetAllFiltered(long beginDate, long endDate)
         {
@@ -72,12 +107,23 @@ namespace Controllers
                 var _beginDate = DateTime.FromBinary(beginDate);
                 var _endDate = DateTime.FromBinary(endDate);
 
-                return await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
+                await ((BookingTemplatesMetadataRepository)_bookingsMetadataRepository).RunWithinTransaction(async (db) =>
                 {
-                    var tmp = (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate), db)).ToList();
-                    var res = tmp.Select(x => ObjectMapper.Map<BookingDto>(x)).ToList();
-                    return res;
-                });               
+                    
+                    var tmpDate = _beginDate.TruncateToDayStart();
+                    while (tmpDate < _endDate)
+                    {
+                        await _bookingsMetadataRepository.GenerateAllPermanentBookings(tmpDate, db);
+                        tmpDate = tmpDate.AddDays(1);
+                    }
+
+                    return null;
+                });
+                
+
+                var tmp = (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate))).ToList();
+                var res = tmp.Select(x => ObjectMapper.Map<BookingDto>(x)).ToList();
+                return res;                
                 
             }
             catch (Exception e)

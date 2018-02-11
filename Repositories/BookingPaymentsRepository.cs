@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using LinqToDB;
 using Repositories.Interfaces;
+using Shared.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
+    [PerScope]
     public class BookingPaymentsRepository: GenericPreservableRepository<BookingPayments>, IBookingPaymentsRepository
     {
         public override async Task<List<BookingPayments>> GetByParams(Func<BookingPayments, bool> where, CintraDB dbContext = null)

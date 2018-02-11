@@ -24,8 +24,25 @@ namespace Mapping
                     conf.ReplaceMemberName("_", "");
 
 
-                    conf.CreateMap<Booking, BookingPatterns>();
-                    conf.CreateMap<BookingPatterns, Booking>();
+                    conf.CreateMap<Booking, BookingTemplates>();
+                    conf.CreateMap<BookingTemplates, Booking>().AfterMap((s, d) =>
+                    {                        
+                        d.BookingsTemplateMetadata = s.BookingsTemplateMetadata;
+                        d.Id = 0;
+                    });
+
+                    conf.CreateMap<BookingsTemplateMetadata, BookingTemplateMetadataDto>();
+                    conf.CreateMap<BookingTemplateMetadataDto, BookingsTemplateMetadata>()
+                        .AfterMap((vm, db) =>
+                        {
+                            db.BookingTemplates = vm.BookingTemplates.Select(x => Map<BookingTemplates>(Map<Booking>(x)));
+                        });
+
+                    conf.CreateMap<BookingsTemplateMetadata, BookingTemplateMetadataDto>()
+                        .AfterMap((db, vm) =>
+                        {
+                            vm.BookingTemplates = db.BookingTemplates.Select(x => Map<BookingDto>(Map<BookingTemplates>(x))).ToList();
+                        });
 
                     conf.CreateMap<Booking, BookingDto>()                    
                     .AfterMap((db, vm) =>
@@ -35,7 +52,8 @@ namespace Mapping
                         vm.Horse = _mapper.Map<HorseDto>(db.Hor);
                         vm.Service = _mapper.Map<ServiceDto>(db.Service);
                         var payment = db.BookingPayments?.FirstOrDefault();
-                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(payment);                        
+                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(payment);  
+                        vm.BookingTemplateMetadata = _mapper.Map<BookingTemplateMetadataDto>(db.BookingsTemplateMetadata);
                     });
                     conf.CreateMap<BookingDto, Booking>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())                        
@@ -47,7 +65,10 @@ namespace Mapping
                             db.HorseId = vm.Horse?.Id ?? 0;
                             db.Hor = vm.Horse != null ? _mapper.Map<Hors>(vm.Horse) : null;
                             db.ServiceId = vm.Service?.Id ?? 0;
-                            db.Service = vm.Service != null ? _mapper.Map<Service>(vm.Horse) : null;
+                            db.Service = vm.Service != null ? _mapper.Map<Service>(vm.Service) : null;
+
+                            db.TemplateMetadataId = vm.BookingTemplateMetadata?.Id;
+                            db.BookingsTemplateMetadata = vm.BookingTemplateMetadata != null ? _mapper.Map<BookingsTemplateMetadata>(vm.BookingTemplateMetadata) : null;
 
                             //need for checks only
                             vm.Coach = _mapper.Map<CoachDto>(db.Coach);
@@ -142,7 +163,7 @@ namespace Mapping
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) => 
                         {
-                            db.HorsesScheduleData = vm.HorseScheduleData.Select(x => _mapper.Map<HorsesScheduleData>(x)).ToList() ?? new List<HorsesScheduleData>();
+                            db.HorsesScheduleData = vm.HorseScheduleData?.Select(x => _mapper.Map<HorsesScheduleData>(x)).ToList() ?? new List<HorsesScheduleData>();
                         });
 
                     conf.CreateMap<Service, ServiceDto>().AfterMap((db, vm) =>

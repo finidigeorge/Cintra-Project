@@ -129,6 +129,7 @@
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\ReportRunner.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
+    <Compile Include="ViewModels\BookingDeleteWindowVm.cs" />
     <Compile Include="ViewModels\BookingEditWindowVm.cs" />
     <Compile Include="ViewModels\BookingRefVm.cs" />
     <Compile Include="ViewModels\ClientsRefVm.cs" />
@@ -142,6 +143,9 @@
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
     <Compile Include="ViewModels\ServiceEditWindowVm.cs" />
     <Compile Include="ViewModels\TimePickerVm.cs" />
+    <Compile Include="Windows\BookingDeleteWindow.xaml.cs">
+      <DependentUpon>BookingDeleteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\BookingEditWindow.xaml.cs">
       <DependentUpon>BookingEditWindow.xaml</DependentUpon>
     </Compile>
@@ -237,6 +241,10 @@
     <Page Include="Controls\WpfScheduler\WeekScheduler.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\BookingDeleteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\BookingEditWindow.xaml">
       <SubType>Designer</SubType>

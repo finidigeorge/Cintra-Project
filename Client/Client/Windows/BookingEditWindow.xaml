@@ -7,12 +7,14 @@
         xmlns:viewModels="clr-namespace:Client.ViewModels"
         xmlns:controls="clr-namespace:Client.Controls"
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
+        
         mc:Ignorable="d"
         FontSize="14"
         Title="Booking Edit Window" MinHeight="700" Height="700" Width="720" WindowStartupLocation="CenterOwner"
     >
     <Window.Resources>
         <viewModels:BookingEditWindowVm x:Key="ViewModel" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True" Margin="0,0,0,-4">
         <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                  
@@ -138,24 +140,28 @@
                      IsReadOnly="True" Grid.ColumnSpan="2" Grid.Column="0" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Recurring appointments" Name="Appointments" TabIndex="1" IsEnabled="{Binding ShowRecurringTab}">
+            <TabItem Header="Permanent bookings" TabIndex="1" IsEnabled="{Binding ShowRecurringTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="60"/>
+                        <RowDefinition Height="30"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <CheckBox Content="Enable recurring appoiments" IsChecked="{Binding EnableRecurringApointments}"/>
-                        <Label  Content="Add appointments using the next weekly schedule pattern for " HorizontalAlignment="Left" Width="396" Margin="0,19,0,0" Height="30" VerticalAlignment="Top"/>
-                        <TextBox Text="{Binding RecurringWeeksNumber, Mode=TwoWay}" IsEnabled="{Binding EnableRecurringApointments}" HorizontalAlignment="Left" Width="32" Margin="396,23,0,0" Height="30" VerticalAlignment="Top"/>
-                        <Label Content="weeks, started from " RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="130" Margin="428,19,0,0" Height="30" VerticalAlignment="Top"/>
+                        <CheckBox Content="Enable recurring appoiments" IsChecked="{Binding EnableRecurringApointments}" HorizontalAlignment="Left" Width="706" Height="20" VerticalAlignment="Top"/>
+                        <Label  Content="Add appointments using the next weekly schedule for " HorizontalAlignment="Left" Width="341" Margin="0,19,0,0" Height="30" VerticalAlignment="Top"/>
+                        <TextBox Text="{Binding RecurringWeeksNumber, Mode=TwoWay}" IsEnabled="{Binding EnableNonPermanentRecurringApointments}" HorizontalAlignment="Left" Width="32" Margin="345,23,0,0" Height="30" VerticalAlignment="Top"/>
+                        <Label Content="weeks or " HorizontalAlignment="Left" Width="67" Margin="377,19,0,0" Height="30" VerticalAlignment="Top"/>
+                        <CheckBox IsChecked="{Binding IsPermanent}" Margin="444,25,0,5" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Width="105" Content="permanently" />
+
+                        <Label Content="Started from" HorizontalAlignment="Left" Width="87" Margin="0,54,0,-24" Height="30" VerticalAlignment="Top"/>
                         <DatePicker Name="datePickerRecurring" SelectedDate="{Binding Path=RecurringStartDate}" 
-                                    HorizontalAlignment="Left" Width="115"
-                                    IsEnabled="{Binding EnableRecurringApointments}" Margin="563,21,0,0" Height="30" VerticalAlignment="Top"
+                                    HorizontalAlignment="Left" Width="132"
+                                    IsEnabled="{Binding EnableRecurringApointments}" Margin="92,54,0,-24" Height="30" VerticalAlignment="Top" RenderTransformOrigin="0.854,0.249"
                                     />
                     </Grid>
-                    <Grid Margin="0,0,0,0" Grid.Row="1">
+                    <Grid Margin="0,0,0,0" Grid.Row="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="32"/>
                             <RowDefinition Height="*"/>

@@ -15,9 +15,9 @@ namespace DataModels
         }
     }
 
-    public partial class BookingPermanentData : IUniqueDto { }
+    public partial class BookingsTemplateMetadata : IUniqueDto { }
     public partial class Booking : IPreservable { }
-    public partial class BookingPatterns : IPreservable { }
+    public partial class BookingTemplates : IPreservable { }
     public partial class BookingPayments : IPreservable { }
     public partial class Coach : IPreservable {}
     public partial class Client : IPreservable { }

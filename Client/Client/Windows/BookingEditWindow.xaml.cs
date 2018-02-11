@@ -143,7 +143,7 @@ namespace Client.Windows
             if (sender is TabControl tc)
             {
                 var item = (TabItem)tc.SelectedItem;
-                if (item == null || (item.IsSelected && item.Name == "Booking"))
+                if (item == null || (item.IsSelected && item.TabIndex != 1))
                 {
                     Height = 700;
                     Width = 740;
@@ -152,7 +152,7 @@ namespace Client.Windows
                     return;
                 }
 
-                if (item.IsSelected && item.Name == "Appointments")
+                if (item.IsSelected &&  item.TabIndex == 1)
                 {
                     Height = 900;
                     Width = 1280;

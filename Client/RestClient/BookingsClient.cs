@@ -15,6 +15,10 @@ namespace RestClient
         {
         }
 
+        public async Task CancelAllBookings(long metadataId, long FromDate)
+        {
+            await SendRequest<object>($"api/{ControllerName}/CancelAllBookings/{metadataId}/{FromDate}", RestSharp.Method.POST);
+        }
 
         public async Task<List<BookingDto>> GetAllFiltered(long beginDate, long endDate)
         {

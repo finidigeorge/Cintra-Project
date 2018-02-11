@@ -17,6 +17,9 @@ namespace Shared.Dto
         [VmMeta(IsNullable = false)]
         public virtual DateTime EndTime { get; set; }
 
+        //only for transfer BookingDto -> BookingTemplate
+        public virtual int DayOfWeek { get; set; }
+        
         [VmMeta(IsNullable = false)]
         public virtual HorseDto Horse { get; set; }
         [VmMeta(IsNullable = false)]
@@ -26,6 +29,8 @@ namespace Shared.Dto
         [VmMeta(IsNullable = false)]
         public virtual ServiceDto Service { get; set; }
         public virtual BookingPaymentDto BookingPayment { get; set; }
+
+        public virtual BookingTemplateMetadataDto BookingTemplateMetadata { get; set; }
 
     }
 }

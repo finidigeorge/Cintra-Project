@@ -81,5 +81,11 @@ namespace Shared.Extentions
             int daysToAdd = ((int)day - (int)dt.DayOfWeek + 7) % 7;
             return dt.AddDays(daysToAdd).TruncateToDayStart();
         }
+
+        //return day of week numered from 0 to 6 started from MONDAY
+        public static int ToEuropeanDayNumber(this DateTime dt)
+        {
+            return ((int)dt.DayOfWeek) - 1 >= 0 ? ((int)dt.DayOfWeek) - 1 : 6;
+        }
     }
 }

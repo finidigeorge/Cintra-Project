@@ -41,7 +41,12 @@ namespace Client.ViewModels
         public bool IsEditMode { get; set; }
                
         public bool ShowRecurringTab { get => !IsEditMode && (BookingData?.IsValid ?? false); }
+        public bool ShowCancelRecurringTab { get => IsEditMode && BookingData?.BookingTemplateMetadata != null; }
+
         public bool EnableRecurringApointments { get; set; }
+        public bool IsPermanent { get; set; }
+        public bool EnableNonPermanentRecurringApointments { get => EnableRecurringApointments && !IsPermanent; }
+
         public int RecurringWeeksNumber { get; set; } = 10;
         public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToNextWeekday(DayOfWeek.Monday);
 

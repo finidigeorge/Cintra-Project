@@ -40,6 +40,8 @@ namespace Common.DtoMapping
 			public override ServiceDto Service { get; set; }
 				
 			public override BookingPaymentDto BookingPayment { get; set; }
+				
+			public override BookingTemplateMetadataDto BookingTemplateMetadata { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
