@@ -44,6 +44,10 @@ namespace Common.DtoMapping
 			public override BookingPaymentDto BookingPayment { get; set; }
 				
 			public override BookingTemplateMetadataDto BookingTemplateMetadata { get; set; }
+				
+			public override String ValidationErrors { get; set; }
+				
+			public override String ValidationWarnings { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -688,6 +692,12 @@ namespace Common.DtoMapping
 			public override Int64 Id { get; set; }
 				
 			public override String Name { get; set; }
+					
+			public override Int64? LengthMinutes { get; set; }
+					
+			public override DateTime? BeginTime { get; set; }
+					
+			public override DateTime? EndTime { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);

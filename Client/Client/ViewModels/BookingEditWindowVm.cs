@@ -99,6 +99,9 @@ namespace Client.ViewModels
                 await CoachesModel.RefreshDataCommand.ExecuteAsync(null);
 
                 SyncServiceDataModels();
+
+                _bookingData.EndTime = _bookingData.BeginTime.AddMinutes((int)service.LengthMinutes);
+                _bookingData.OnPropertyChanged("EndTime");
                 OnPropertyChanged(nameof(ShowRecurringTab));
             };
             HorsesModel.OnSelectedItemChanged += async (sender, horse) =>

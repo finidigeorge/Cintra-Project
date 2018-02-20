@@ -12,6 +12,10 @@ namespace Shared.Dto
         [VmMeta(IsNullable = false)]
         public virtual string Name { get; set; }
 
+        public virtual long? LengthMinutes { get; set; }
+        public virtual DateTime? BeginTime { get; set; }
+        public virtual DateTime? EndTime { get; set; }
+
         public virtual List<CoachDto> Coaches { get; set; } = new List<CoachDto>();
         public virtual List<HorseDto> Horses { get; set; } = new List<HorseDto>();
     }

@@ -46,7 +46,14 @@ namespace Client.Windows
             Model.IsEditMode = isEditMode;
             Model.RecurrentScheduler = WeeklyScheduler;
             BeginTimePicker.Model.CurrentTime = beginTime;
-            EndTimePicker.Model.CurrentTime = endTime;            
+            EndTimePicker.Model.CurrentTime = endTime;
+
+            Model.BookingData.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "EndTime")
+                {
+                    EndTimePicker.Model.CurrentTime = Model.BookingData.EndTime;
+                }
+            };
 
             BeginTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")

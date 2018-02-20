@@ -186,7 +186,19 @@ namespace Common.DtoMapping
         public event PropertyChangedEventHandler PropertyChanged;
         public string ApplyObjectLevelValidations()
         {
-            return string.Empty;
+            StringBuilder error = new StringBuilder();
+
+            if (BeginTime >= EndTime && (BeginTime != null && EndTime != null))
+            {
+                error.Append((error.Length != 0 ? ", " : "") + "Begin time and End time values are incorrect");
+            }
+
+            if (LengthMinutes == null)               
+            {
+                error.Append((error.Length != 0 ? ", " : "") + "Length in minutes should not be empty");
+            }
+
+            return error.ToString();
         }
 
         [DependsOn(nameof(Coaches))]

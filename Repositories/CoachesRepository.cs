@@ -18,6 +18,32 @@ namespace Repositories
             return db.Schedules.LoadWith(x => x.SchedulesData).Where(x => x.CoachId == coachId && x.IsDeleted == false);            
         }
 
+        public override async Task<long> Create(Coach entity, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                bool isNew = false;
+                if (entity.Id == 0)
+                {
+                    isNew = true;
+                }
+                
+                var coachId = await base.Create(entity, db);
+
+                //assign all services to the new coach
+                if (isNew)
+                {                   
+                    var serviceToCoachesLinks = db.Services.Where(x => !x.IsDeleted).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.Id });
+                    foreach (var c in serviceToCoachesLinks)
+                        await db.InsertWithIdentityAsync(c);
+                }                               
+
+                return coachId;
+            },
+            dbContext
+            );
+        }
+
 
         public override async Task<List<Coach>> GetByParams(Func<Coach, bool> where, CintraDB dbContext = null)
         {

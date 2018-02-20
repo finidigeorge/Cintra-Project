@@ -58,7 +58,7 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
-                <DataGridTemplateColumn IsReadOnly="True" Width="32">
+                <DataGridTemplateColumn IsReadOnly="True" Width="32" >
                     <DataGridTemplateColumn.CellTemplate >
                         <DataTemplate>
                             <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
@@ -72,6 +72,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name}"  Width="*" />
+                <DataGridTextColumn Header="Lession length (min)" Binding="{Binding Path = LengthMinutes}"  Width="150" />
             </DataGrid.Columns>
         </DataGrid>
         <Grid HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top">

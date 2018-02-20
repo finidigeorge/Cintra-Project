@@ -466,9 +466,12 @@ namespace DataModels
 	[Table("services")]
 	public partial class Service
 	{
-		[Column("id"),         PrimaryKey, Identity] public long   Id        { get; set; } // integer
-		[Column("name"),       NotNull             ] public string Name      { get; set; } // varchar(255)
-		[Column("is_deleted"), NotNull             ] public bool   IsDeleted { get; set; } // boolean
+		[Column("id"),             PrimaryKey,  Identity] public long      Id            { get; set; } // integer
+		[Column("name"),           NotNull              ] public string    Name          { get; set; } // varchar(255)
+		[Column("is_deleted"),     NotNull              ] public bool      IsDeleted     { get; set; } // boolean
+		[Column("length_minutes"),    Nullable          ] public long?     LengthMinutes { get; set; } // integer
+		[Column("begin_time"),        Nullable          ] public DateTime? BeginTime     { get; set; } // date
+		[Column("end_time"),          Nullable          ] public DateTime? EndTime       { get; set; } // date
 
 		#region Associations
 
