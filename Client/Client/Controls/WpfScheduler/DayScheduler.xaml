@@ -17,12 +17,12 @@
         <my:SchedulerGrid x:Name="EventsHeaderGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 18 0"
                           ShowCustomGridLines="True" GridLineBrush="#555555" GridLineThickness="0.5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 

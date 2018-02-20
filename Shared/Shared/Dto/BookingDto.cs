@@ -32,5 +32,8 @@ namespace Shared.Dto
 
         public virtual BookingTemplateMetadataDto BookingTemplateMetadata { get; set; }
 
+        public virtual string ValidationErrors { get; set; }
+        public virtual string ValidationWarnings { get; set; }
+
     }
 }

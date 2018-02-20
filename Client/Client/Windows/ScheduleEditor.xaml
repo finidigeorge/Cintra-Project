@@ -12,7 +12,7 @@
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="ScheduleEditor" Height="768" Width="1024"
+        Title="ScheduleEditor" Height="1048" Width="1600"
         FontSize="14">
     <Window.Resources>
         <viewModels:SchedulesRefVm x:Key="ViewModel" />

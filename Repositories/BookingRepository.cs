@@ -22,8 +22,8 @@ namespace Repositories
             {                
                 b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
                 b.Service = b.Service.IsDeleted ? null : b.Service;
-                b.Hor = b.Hor.IsDeleted || !(await IsHorseAvialableForBooking(b.Hor, b)) ? null : b.Hor;
-                b.Coach = b.Coach.IsDeleted || !(await IsCoachAvialableForBooking(b.Coach, b)) ? null : b.Coach;
+                b.Hor = b.Hor.IsDeleted ? null : b.Hor;
+                b.Coach = b.Coach.IsDeleted ? null : b.Coach;
 
                 if (b.BookingsTemplateMetadata?.BookingTemplates != null)
                     b.BookingsTemplateMetadata.BookingTemplates = b.BookingsTemplateMetadata.BookingTemplates.Where(x => x.IsDeleted == false);                
@@ -53,7 +53,7 @@ namespace Repositories
                 if (overlappedBooking != null)
                 {
                     result.Result = false;
-                    result.ErrorMessage = $"Coach has another booking during the selected time interval (Client: {overlappedBooking}, Horse: {overlappedBooking.Hor.Nickname}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                    result.ErrorMessage = $"Coach has another booking during the selected time interval (Client: {overlappedBooking.Client.Name}, Horse: {overlappedBooking.Hor.Nickname}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
                 }
 
                 return result;
@@ -68,17 +68,35 @@ namespace Repositories
             {               
                 var result = new CheckResultDto();
                 var activeSchedule = coach.Schedules?.FirstOrDefault(x => x.IsDeleted == false && x.IsActive);
+                var bookedDayOfWeek = DateTimeExtentions.ToEuropeanDayNumber(bookingData.DateOn);
 
                 if (activeSchedule != null && activeSchedule.SchedulesData != null)
                 {
-                    result.Result = activeSchedule.SchedulesData.Any(
-                        x => x.IsDeleted == false &&
-                        (bookingData.BeginTime >= x.BeginTime && bookingData.EndTime <= x.EndTime) && x.IsAvialable
-                    ) &&
-                     !activeSchedule.SchedulesData.Any(
-                        x => x.IsDeleted == false &&
-                        DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) && !x.IsAvialable
-                    );
+                    //day schedule check
+                    var dayScheduleChecks = 
+                        activeSchedule.SchedulesData.Any(
+                            x => x.IsDeleted == false &&
+                            (bookingData.DateOn == x.DateOn && bookingData.BeginTime >= x.BeginTime && bookingData.EndTime <= x.EndTime) && x.IsAvialable
+                        ) &&
+                         !activeSchedule.SchedulesData.Any(
+                            x => x.IsDeleted == false &&
+                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) && !x.IsAvialable
+                        );
+
+                    //week schedule check
+                    var weekScheduleChecks =
+                        activeSchedule.SchedulesData.Any(
+                            x => x.IsDeleted == false &&
+                            (bookedDayOfWeek == x.DayNumber && bookingData.BeginTime >= DateTimeExtentions.SetTime(bookingData.BeginTime, x.BeginTime) &&
+                                bookingData.EndTime <= DateTimeExtentions.SetTime(bookingData.EndTime, x.EndTime)) && x.IsAvialable
+                        ) &&
+                         !activeSchedule.SchedulesData.Any(
+                            x => x.IsDeleted == false && bookedDayOfWeek == x.DayNumber &&
+                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, DateTimeExtentions.SetTime(bookingData.BeginTime, x.EndTime), DateTimeExtentions.SetTime(bookingData.EndTime, x.EndTime))
+                            && !x.IsAvialable
+                        );
+
+                    result.Result = weekScheduleChecks || dayScheduleChecks;
                 }
 
                 if (!result.Result)
@@ -104,12 +122,18 @@ namespace Repositories
                 bool passedScheduleCheck = false;
                 var activeSchedule = coach.Schedules?.FirstOrDefault(x => x.IsDeleted == false && x.IsActive);
 
+                var bookedDayOfWeek = DateTimeExtentions.ToEuropeanDayNumber(bookingData.DateOn);
+
                 if (activeSchedule != null && activeSchedule.SchedulesData != null) {
-                    passedScheduleCheck = activeSchedule.SchedulesData.Any(
-                        x => x.IsDeleted == false && 
-                        DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) &&
-                        x.IsAvialable
-                    );
+                    passedScheduleCheck =
+                        //day schedule
+                        activeSchedule.SchedulesData.Any(
+                            x => x.IsDeleted == false &&
+                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) && x.IsAvialable) ||
+                        //week schedule
+                        activeSchedule.SchedulesData.Any(x => 
+                            (bookedDayOfWeek == x.DayNumber && bookingData.BeginTime >= DateTimeExtentions.SetTime(bookingData.BeginTime, x.BeginTime) &&
+                                bookingData.EndTime <= DateTimeExtentions.SetTime(bookingData.EndTime, x.EndTime) && x.IsAvialable));
                 }
                 return !hasOverlappedBookings && eligibleForService && passedScheduleCheck;
 
@@ -137,7 +161,7 @@ namespace Repositories
                 if (overlappedBooking != null)
                 {
                     result.Result = false;
-                    result.ErrorMessage = $"Horse has another booking during the selected time interval (Coach: {overlappedBooking.Coach.Name}, Client: {overlappedBooking}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                    result.ErrorMessage = $"Horse has another booking during the selected time interval (Coach: {overlappedBooking.Coach.Name}, Client: {overlappedBooking.Client.Name}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
                 }
 
                 return result;
@@ -191,7 +215,7 @@ namespace Repositories
 
                 if (lastBooking != null)
                 {
-                    var timediff = bookingData.BeginTime - lastBooking.BeginTime;
+                    var timediff = bookingData.BeginTime - lastBooking.EndTime;
                     if (timediff < Constants.HorseBreakTime)
                     {
                         result.Result = false;
@@ -278,7 +302,39 @@ namespace Repositories
             }, dbContext);
         }
 
-        
+        private void Append(StringBuilder sb, string message)
+        {
+            if (sb.Length > 0 && !string.IsNullOrEmpty(message))
+                sb.AppendFormat(", {0}", message);
+            else
+                sb.Append(message);            
+        }
+
+        public async Task<String> RunValidations(Booking booking, bool isErrors = true, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                var error = new StringBuilder();
+
+                if (isErrors)
+                {
+                    Append(error, (await HasCoachNotOverlappedBooking(booking.Coach, booking, db)).ToString());
+                    Append(error, (await HasCoachScheduleFitBooking(booking.Coach, booking, db)).ToString());
+
+                    Append(error, (await HasHorseNotOverlappedBooking(booking.Hor, booking, db)).ToString());
+                    Append(error, (await HasHorseScheduleFitBooking(booking.Hor, booking, db)).ToString());
+                }
+                else
+                {
+                    Append(error, (await HasHorseRequiredBreak(booking.Hor, booking, db)).ToString());
+                    Append(error, (await HasHorseWorkedLessThanAllowed(booking.Hor, booking, db)).ToString());
+                }
+
+                return error.ToString();
+            }, dbContext);
+        }
+
+
     }
 }
 

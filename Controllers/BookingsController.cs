@@ -97,7 +97,7 @@ namespace Controllers
                 _logger.LogError(null, e, e.Message);
                 throw;
             }
-        }
+        }        
 
         [HttpGet("/api/[controller]/GetAllFiltered/{beginDate}/{endDate}")]
         public virtual async Task<List<BookingDto>> GetAllFiltered(long beginDate, long endDate)
@@ -119,10 +119,16 @@ namespace Controllers
 
                     return null;
                 });
-                
+                              
+                var res = new List<BookingDto>();
 
-                var tmp = (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate))).ToList();
-                var res = tmp.Select(x => ObjectMapper.Map<BookingDto>(x)).ToList();
+                foreach (var b in (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate)))) {
+                    var item = ObjectMapper.Map<BookingDto>(b);
+                    item.ValidationErrors = await repository.RunValidations(b, true);
+                    item.ValidationWarnings = await repository.RunValidations(b, false);
+                    res.Add(item);
+                }
+
                 return res;                
                 
             }

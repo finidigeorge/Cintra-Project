@@ -82,6 +82,12 @@ namespace Shared.Extentions
             return dt.AddDays(daysToAdd).TruncateToDayStart();
         }
 
+        public static DateTime SetTime(this DateTime dt, DateTime time)
+        {
+            // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
+            return new DateTime(dt.Year, dt.Month, dt.Day, time.Hour, time.Minute, time.Second);
+        }
+
         //return day of week numered from 0 to 6 started from MONDAY
         public static int ToEuropeanDayNumber(this DateTime dt)
         {

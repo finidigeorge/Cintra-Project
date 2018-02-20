@@ -61,6 +61,11 @@ namespace Client
             {
                 new ClientLessonsReportWindow() { Owner = this }.ShowDialog();
             }, x => Model.AuthVm.IsAuthenticated && Model.AuthVm.IsAdmin);
+
+            Model.RunHorsesWorkloadReportCommand = new Command<object>(() =>
+            {
+                new HorsesWorkloadReportWindow() { Owner = this }.ShowDialog();
+            }, x => Model.AuthVm.IsAuthenticated && Model.AuthVm.IsAdmin);
         }
 
         private bool CheckAndWarnAuth()

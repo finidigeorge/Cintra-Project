@@ -1,6 +1,7 @@
 ﻿using Client.Commands;
 using Client.Extentions;
 using Client.ViewModels.Interfaces;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,10 @@ namespace Client.ViewModels.Reports
         public virtual void RunReport()
         {
             ReportRunner.RunReport(this);
-        }
+        }        
+
+        protected virtual string RunValidation() { return String.Empty; }        
+
+        public virtual string Error { get; }
     }
 }

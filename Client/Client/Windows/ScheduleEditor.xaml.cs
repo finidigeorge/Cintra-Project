@@ -27,8 +27,8 @@ namespace Client.Windows
     /// </summary>
     public partial class ScheduleEditor : Window
     {
-        private SolidColorBrush dailyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
-        private SolidColorBrush weeklyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
+        private SolidColorBrush eventNotWorkingBrush = new SolidColorBrush(Colors.WhiteSmoke);
+        private SolidColorBrush eventWorkingBrush = new SolidColorBrush(Colors.LightGreen);
 
         public SchedulesRefVm Model => (SchedulesRefVm)Resources["ViewModel"];
 
@@ -51,7 +51,7 @@ namespace Client.Windows
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Daily);
                 if (editorResult.Item1)
                 {
-                    var e = new Event() { Color = dailyEventBrush };
+                    var e = GetEvent(editorResult.Item2);
                     e.UpdateFromScheduleDtoData(editorResult.Item2);                   
                     e.MergeToScheduleDtoData(ref editorResult.Item2);
                     editorResult.Item2.IntervalId = ScheduleIntervalEnum.Daily;
@@ -92,7 +92,7 @@ namespace Client.Windows
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly);
                 if (editorResult.Item1)
                 {
-                    var e = new Event() { Color = weeklyEventBrush };
+                    var e = GetEvent(editorResult.Item2);
                     e.UpdateFromScheduleDtoData(editorResult.Item2);
                     e.MergeToScheduleDtoData(ref editorResult.Item2);
 
@@ -137,18 +137,22 @@ namespace Client.Windows
 
             foreach (var item in Model.ScheduleDailyDataModel.Items.Where(x => x.IntervalId == ScheduleIntervalEnum.Daily))
             {
-                var e = new Event() { Color = dailyEventBrush };
+                var e = GetEvent(item);
                 e.UpdateFromScheduleDtoData(item);
                 DailyScheduler.AddEvent(e);
             }
 
             foreach (var item in Model.ScheduleWeeklyDataModel.Items.Where(x => x.IntervalId == ScheduleIntervalEnum.Weekly))
             {
-                var e = new Event() { Color = weeklyEventBrush };
-                AddWeeklyEvent(item, e);
+                AddWeeklyEvent(item, GetEvent(item));
             }
 
 
+        }
+
+        private Event GetEvent(ScheduleDataDtoUi item)
+        {
+            return new Event() { Color = item.IsAvialable ? eventWorkingBrush : eventNotWorkingBrush };
         }
 
         private void AddWeeklyEvent(ScheduleDataDtoUi item, Event e)

@@ -29,6 +29,7 @@ namespace Client.ViewModels
                 {
                     if (_bookingData != null && e.PropertyName == nameof(_bookingData.BeginTime) || e.PropertyName == nameof(_bookingData.EndTime))
                     {
+                        _bookingData.ValidationErrors = "";
                         await RunHorseValidations();
                         await RunCoachValidations();
                     }

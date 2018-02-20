@@ -139,6 +139,7 @@
     <Compile Include="ViewModels\PaymentTypesRefVm.cs" />
     <Compile Include="ViewModels\Reports\BaseReportVm.cs" />
     <Compile Include="ViewModels\Reports\ClientLessonReportVm.cs" />
+    <Compile Include="ViewModels\Reports\HorsesWorkloadReportVm.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
     <Compile Include="ViewModels\ServiceEditWindowVm.cs" />
@@ -157,6 +158,9 @@
     </Compile>
     <Compile Include="Windows\HorseEditWindow.xaml.cs">
       <DependentUpon>HorseEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Reports\HorsesWorkloadReportWindow.xaml.cs">
+      <DependentUpon>HorsesWorkloadReportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Reports\ClientLessonsReportWindow.xaml.cs">
       <DependentUpon>ClientLessonsReportWindow.xaml</DependentUpon>
@@ -261,6 +265,10 @@
     <Page Include="Windows\HorseEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Reports\HorsesWorkloadReportWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Reports\ClientLessonsReportWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -368,6 +376,16 @@
     <Content Include="Reports\System.Data.SQLite.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Reports\HorsesWorkloadDaily.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Reports\HorsesWorkloadMonthly.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Reports\HorsesWorkloadWeekly.rdl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Resources\Images\WarningStatus.png" />
     <Resource Include="Resources\Images\ErrorStatus.png" />
     <Resource Include="Resources\Images\OkStatus.png" />
     <EmbeddedResource Include="Properties\Resources.resx">

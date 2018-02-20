@@ -22,19 +22,18 @@ namespace Client.Windows.Reports
     /// <summary>
     /// Interaction logic for BookingEditWindow.xaml
     /// </summary>
-    public partial class ClientLessonsReportWindow : Window
+    public partial class HorsesWorkloadReportWindow : Window
     {
-        public ClientLessonReportVm Model => (ClientLessonReportVm)Resources["ViewModel"];
+        public HorsesWorkloadReportVm Model => (HorsesWorkloadReportVm)Resources["ViewModel"];
 
-        public ClientLessonsReportWindow()
+        public HorsesWorkloadReportWindow()
         {
-            InitializeComponent();
-            Model.ClientsModel.RefreshDataCommand.Execute(null);
-        }        
+            InitializeComponent();            
+        }                
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            DialogResult = true;            
         }
     }
 }

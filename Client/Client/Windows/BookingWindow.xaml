@@ -13,12 +13,15 @@
         Loaded="Window_LoadedAsync">
     <Window.Resources>
         <viewModels:BookingRefVm x:Key="ViewModel" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
         <Grid Background="#FFE5E5E5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="32"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -99,11 +102,14 @@
                                         <Image.Style>
                                             <Style TargetType="{x:Type Image}">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsValid}" Value="True">
+                                                    <DataTrigger Binding="{Binding Status}" Value="0">
                                                         <Setter Property="Source" Value="/Resources/Images/OkStatus.png"/>
                                                     </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                                    <DataTrigger Binding="{Binding Status}" Value="-1">
                                                         <Setter Property="Source" Value="/Resources/Images/ErrorStatus.png"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="1">
+                                                        <Setter Property="Source" Value="/Resources/Images/WarningStatus.png"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -162,6 +168,22 @@
                 <Grid Grid.Column="8" x:Name="col8"/>
             </Grid>
 
+            <Grid HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Errors:  " Grid.Column="0"/>
+                <Label Content="{Binding SelectedItem.ValidationErrors}" Grid.Column="1"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Warinings:  " Grid.Column="0"/>
+                <Label Content="{Binding SelectedItem.ValidationWarnings}" Grid.Column="1"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

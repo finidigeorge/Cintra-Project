@@ -12,5 +12,10 @@ namespace Shared.Dto
     public class CheckResultDto : ErrorMessageDto
     {
         public bool Result { get; set; }
+
+        public override string ToString()
+        {
+            return Result ? String.Empty: ErrorMessage;
+        }
     }
 }

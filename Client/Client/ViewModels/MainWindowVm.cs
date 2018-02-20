@@ -20,6 +20,7 @@ namespace Client.ViewModels
         public ICommand ShowChangePasswordDialogCommand { get; set; }
         public ICommand ShowExitDialogCommand { get; set; }
         public ICommand RunClientHistoryReportCommand { get; set; }
+        public ICommand RunHorsesWorkloadReportCommand { get; set; }
 
         public AuthVm AuthVm { get; }
         public Dictionary<string, IEditableSelectableReference<object>> TabsDictionary = new Dictionary<string, IEditableSelectableReference<object>>();        

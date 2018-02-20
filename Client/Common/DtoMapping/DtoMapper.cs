@@ -35,18 +35,18 @@ namespace Common.DtoMapping
 #pragma warning disable CS0067
 
     public partial class BookingDtoUi : BookingDto, INotifyPropertyChanged
-    {                
+    {
         public event PropertyChangedEventHandler PropertyChanged;
-                
+
         public Func<StringBuilder, StringBuilder> ObjectLevelValidationCallback;
 
-        [DependsOn("BeginTime")]
+        [DependsOn(nameof(BeginTime))]
         public String BeginTimeFmtd => BeginTime.ToString("hh:mm tt");
 
-        [DependsOn("BeginTime")]
+        [DependsOn(nameof(BeginTime))]
         public String BeginTimeRoundedFmtd => BeginTime.RoundDown(TimeSpan.FromMinutes(60)).ToString("hh:mm tt");
 
-        [DependsOn("BeginTime", "EndTime")]
+        [DependsOn(nameof(BeginTime), nameof(EndTime))]
         public String LengthFmtd {
             get
             {
@@ -56,12 +56,18 @@ namespace Common.DtoMapping
             }
         }
 
-        [DependsOn("Client")]
+        [DependsOn(nameof(Client))]
         public ClientDtoUi ClientUi => ObjectMapper.Map<ClientDtoUi>(Client);
 
         public string ApplyObjectLevelValidations()
         {
             StringBuilder error = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(ValidationErrors))
+            {
+                error.Append(ValidationErrors);
+                return error.ToString();
+            }
 
             if (BeginTime >= EndTime)
             {
@@ -74,6 +80,26 @@ namespace Common.DtoMapping
             }
 
             return error.ToString();
+        }
+
+        [DependsOn(nameof(HasValidationWarnings))]
+        public bool HasValidationWarnings => !String.IsNullOrEmpty(ValidationWarnings);
+
+        [DependsOn(nameof(HasValidationWarnings), nameof(IsValid))]
+        public int Status {
+            get
+            {
+                if (!IsValid)
+                    return -1;
+
+                if (IsValid && !HasValidationWarnings)
+                    return 0;
+
+                if (IsValid && HasValidationWarnings)
+                    return 1;
+
+                throw new Exception("Unknown booking status");
+            }
         }
     }
 
@@ -108,7 +134,7 @@ namespace Common.DtoMapping
             return string.Empty;
         }
 
-        [DependsOn("Name", "Phone", "Email")]
+        [DependsOn(nameof(Name), nameof(Phone), nameof(Email))]
         public String NameFmtd => $"{Name}, ph/@: {Phone ?? Email}";
 
         public override string ToString() => NameFmtd;
@@ -163,7 +189,7 @@ namespace Common.DtoMapping
             return string.Empty;
         }
 
-        [DependsOn("Coaches")]
+        [DependsOn(nameof(Coaches))]
         public String SelectedCoaches {
             get
             {
@@ -171,7 +197,7 @@ namespace Common.DtoMapping
             }
         }
 
-        [DependsOn("Horses")]
+        [DependsOn(nameof(Horses))]
         public String SelectedHorses
         {
             get
@@ -220,7 +246,7 @@ namespace Common.DtoMapping
 
     public partial class HorseScheduleDataDtoUi : HorseScheduleDataDto, INotifyPropertyChanged
     {
-        [DependsOn("UnavailabilityType")]
+        [DependsOn(nameof(UnavailabilityType))]
         public int UnavailabilityReasonMapped {
             get => (int)UnavailabilityType;
             set

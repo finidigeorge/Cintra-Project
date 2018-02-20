@@ -31,6 +31,8 @@ namespace Common.DtoMapping
 				
 			public override DateTime EndTime { get; set; }
 				
+			public override Int32 DayOfWeek { get; set; }
+				
 			public override HorseDto Horse { get; set; }
 				
 			public override ClientDto Client { get; set; }

@@ -24,7 +24,7 @@
         <wpfScheduler:SchedulerGrid x:Name="EventsHeaderGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="8" Margin="0 0 18 0"
                           ShowCustomGridLines="True" GridLineBrush="#555555" GridLineThickness="0.5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40"></ColumnDefinition>
+                <ColumnDefinition Width="50"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -35,7 +35,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
@@ -63,7 +63,7 @@
                               ShowCustomGridLines="True" GridLineBrush="#555555" GridLineThickness="0.5">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40"></ColumnDefinition>
+                    <ColumnDefinition Width="50"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -103,30 +103,30 @@
 
                 
                 <!-- Hours -->
-                <Label Grid.Row="0" Grid.Column="0" Content="00:00"></Label>
-                <Label Grid.Row="1" Grid.Column="0" Content="01:00"></Label>
-                <Label Grid.Row="2" Grid.Column="0" Content="02:00"></Label>
-                <Label Grid.Row="3" Grid.Column="0" Content="03:00"></Label>
-                <Label Grid.Row="4" Grid.Column="0" Content="04:00"></Label>
-                <Label Grid.Row="5" Grid.Column="0" Content="05:00"></Label>
-                <Label Grid.Row="6" Grid.Column="0" Content="06:00"></Label>
-                <Label Grid.Row="7" Grid.Column="0" Content="07:00"></Label>
-                <Label Grid.Row="8" Grid.Column="0" Content="08:00"></Label>
-                <Label Grid.Row="9" Grid.Column="0" Content="09:00"></Label>
-                <Label Grid.Row="10" Grid.Column="0" Content="10:00"></Label>
-                <Label Grid.Row="11" Grid.Column="0" Content="11:00"></Label>
-                <Label Grid.Row="12" Grid.Column="0" Content="12:00"></Label>
-                <Label Grid.Row="13" Grid.Column="0" Content="13:00"></Label>
-                <Label Grid.Row="14" Grid.Column="0" Content="14:00"></Label>
-                <Label Grid.Row="15" Grid.Column="0" Content="15:00"></Label>
-                <Label Grid.Row="16" Grid.Column="0" Content="16:00"></Label>
-                <Label Grid.Row="17" Grid.Column="0" Content="17:00"></Label>
-                <Label Grid.Row="18" Grid.Column="0" Content="18:00"></Label>
-                <Label Grid.Row="19" Grid.Column="0" Content="19:00"></Label>
-                <Label Grid.Row="20" Grid.Column="0" Content="20:00"></Label>
-                <Label Grid.Row="21" Grid.Column="0" Content="21:00"></Label>
-                <Label Grid.Row="22" Grid.Column="0" Content="22:00"></Label>
-                <Label Grid.Row="23" Grid.Column="0" Content="23:00"></Label>
+                <Label Grid.Row="0" Grid.Column="0" Content="12 Am"></Label>
+                <Label Grid.Row="1" Grid.Column="0" Content="1 Am"></Label>
+                <Label Grid.Row="2" Grid.Column="0" Content="2 Am"></Label>
+                <Label Grid.Row="3" Grid.Column="0" Content="03 Am"></Label>
+                <Label Grid.Row="4" Grid.Column="0" Content="04 Am"></Label>
+                <Label Grid.Row="5" Grid.Column="0" Content="05 Am"></Label>
+                <Label Grid.Row="6" Grid.Column="0" Content="06 Am"></Label>
+                <Label Grid.Row="7" Grid.Column="0" Content="07 Am"></Label>
+                <Label Grid.Row="8" Grid.Column="0" Content="08 Am"></Label>
+                <Label Grid.Row="9" Grid.Column="0" Content="09 Am"></Label>
+                <Label Grid.Row="10" Grid.Column="0" Content="10 Am"></Label>
+                <Label Grid.Row="11" Grid.Column="0" Content="11 Am"></Label>
+                <Label Grid.Row="12" Grid.Column="0" Content="12 Pm"></Label>
+                <Label Grid.Row="13" Grid.Column="0" Content="1 Pm"></Label>
+                <Label Grid.Row="14" Grid.Column="0" Content="2 Pm"></Label>
+                <Label Grid.Row="15" Grid.Column="0" Content="3 Pm"></Label>
+                <Label Grid.Row="16" Grid.Column="0" Content="4 Pm"></Label>
+                <Label Grid.Row="17" Grid.Column="0" Content="5 Pm"></Label>
+                <Label Grid.Row="18" Grid.Column="0" Content="6 Pm"></Label>
+                <Label Grid.Row="19" Grid.Column="0" Content="7 Pm"></Label>
+                <Label Grid.Row="20" Grid.Column="0" Content="8 Pm"></Label>
+                <Label Grid.Row="21" Grid.Column="0" Content="9 Pm"></Label>
+                <Label Grid.Row="22" Grid.Column="0" Content="10 Pm"></Label>
+                <Label Grid.Row="23" Grid.Column="0" Content="11 Pm"></Label>
         
                 <!-- Start and end journey -->
                 <StackPanel x:Name="startJourney" Opacity="0.5" Background="LightCoral" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="7" Orientation="Horizontal" VerticalAlignment="Stretch"></StackPanel>

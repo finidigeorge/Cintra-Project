@@ -35,6 +35,7 @@
             </MenuItem>
             <MenuItem Header="Reports">
                 <MenuItem Header="Client Lessions" Command="{Binding RunClientHistoryReportCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Header="Horses Workload" Command="{Binding RunHorsesWorkloadReportCommand, UpdateSourceTrigger=PropertyChanged}"/>
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About"/>

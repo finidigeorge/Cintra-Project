@@ -13,7 +13,7 @@ namespace Client.ViewModels
         public bool DeleteSelectedBooking { get; set; } = true;
         public bool DeleteRecurringBookings { get; set; }
 
-        [DependsOn("DeleteSelectedBooking", "DeleteRecurringBookings")]
+        [DependsOn(nameof(DeleteSelectedBooking), nameof(DeleteRecurringBookings))]
         public bool CanDelete => DeleteSelectedBooking || DeleteRecurringBookings;
 
         public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToDayStart().AddDays(1);
