@@ -7,10 +7,13 @@
         xmlns:ext="clr-namespace:Client.Extentions"
         
         mc:Ignorable="d"
-        Title="Add Horse unavailable days" Height="280" Width="440"
+        Title="Add Horse unavailability days" Height="300" Width="440"
         WindowStartupLocation="CenterScreen"
         FontSize="14" ResizeMode="NoResize">
-    <Grid Margin="0,0,0,12" FocusManager.FocusedElement="{Binding ElementName=dateFromPicker}">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+        <Grid Margin="0,0,0,12" FocusManager.FocusedElement="{Binding ElementName=dateFromPicker}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="162"/>
             <ColumnDefinition/>
@@ -20,23 +23,45 @@
             <RowDefinition Height="Auto" MinHeight="24"/>
             <RowDefinition Height="Auto" MinHeight="24"/>
             <RowDefinition Height="Auto" MinHeight="24"/>
+            <RowDefinition Height="Auto" MinHeight="24"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        <CheckBox Content="Date interval" IsChecked="{Binding Path=IsDateInterval}" HorizontalAlignment="Left" Margin="82,7,0,0" Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="332"/>
 
-        <TextBlock Name="dateFromPickerLabel" Text="Date from" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+        <TextBlock Name="dayPickerLabel" Text="Day of week" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                   Visibility="{Binding Path=IsDayOfWeek, Converter={StaticResource BoolToVis}}"/>
+        <ComboBox Name="dayPicker" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,137,10" Width="120"
+                  SelectedIndex="{Binding DayOfWeek}"
+                  Visibility="{Binding Path=IsDayOfWeek, Converter={StaticResource BoolToVis}}"
+                  >
+            <ComboBoxItem>Monday</ComboBoxItem>
+            <ComboBoxItem>Tuesday</ComboBoxItem>
+            <ComboBoxItem>Wednesday</ComboBoxItem>
+            <ComboBoxItem>Thursday</ComboBoxItem>
+            <ComboBoxItem>Friday</ComboBoxItem>
+            <ComboBoxItem>Saturday</ComboBoxItem>
+            <ComboBoxItem>Sunday</ComboBoxItem>
+        </ComboBox>
+
+
+        <TextBlock Name="dateFromPickerLabel" Text="Date from" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                   Visibility="{Binding Path=IsDateInterval, Converter={StaticResource BoolToVis}}"
                    />
-        <DatePicker Name="dateFromPicker" Grid.Row="1" Grid.Column="1" Margin="10,10,95,10" SelectedDate="{Binding StartDate}" DisplayDateStart="{Binding StartDate}"
+        <DatePicker Name="dateFromPicker" Grid.Row="2" Grid.Column="1" Margin="10,10,95,10" SelectedDate="{Binding StartDate}" DisplayDateStart="{Binding StartDate}"
+                    Visibility="{Binding Path=IsDateInterval, Converter={StaticResource BoolToVis}}"
                     />
 
-        <TextBlock Name="dateToPickerLabel" Text="Date to" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+        <TextBlock Name="dateToPickerLabel" Text="Date to" Grid.Row="3" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                   Visibility="{Binding Path=IsDateInterval, Converter={StaticResource BoolToVis}}"
                    />
-        <DatePicker Name="dateToPicker" Grid.Row="2" Grid.Column="1" Margin="10,10,95,10" SelectedDate="{Binding EndDate}" DisplayDateStart="{Binding StartDate}"
+        <DatePicker Name="dateToPicker" Grid.Row="3" Grid.Column="1" Margin="10,10,95,10" SelectedDate="{Binding EndDate}" DisplayDateStart="{Binding StartDate}"
+                    Visibility="{Binding Path=IsDateInterval, Converter={StaticResource BoolToVis}}"
                     />
 
 
-        <TextBlock Text="Reason" Grid.Row="3" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-        <ComboBox Name="reasonPicker" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="242"  
+        <TextBlock Text="Reason" Grid.Row="4" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+        <ComboBox Name="reasonPicker" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="242"  
                   SelectedIndex="{Binding UnavailabilityReasonMapped}"
                   >
             <ComboBoxItem>On Holiday</ComboBoxItem>

@@ -119,7 +119,14 @@ namespace Common.DtoMapping
 
         public string ApplyObjectLevelValidations()
         {
-            return string.Empty;
+            StringBuilder error = new StringBuilder();
+
+            if (CoachRole == null)
+            {
+                error.Append((error.Length != 0 ? ", " : "") + "Staff Role should not be empty");
+            }
+
+            return error.ToString();
         }
 
         public override string ToString() => Name;
@@ -171,7 +178,7 @@ namespace Common.DtoMapping
 
     public partial class HorseDtoUi : HorseDto, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;        
 
         public string ApplyObjectLevelValidations()
         {
@@ -187,12 +194,7 @@ namespace Common.DtoMapping
         public string ApplyObjectLevelValidations()
         {
             StringBuilder error = new StringBuilder();
-
-            if (BeginTime >= EndTime && (BeginTime != null && EndTime != null))
-            {
-                error.Append((error.Length != 0 ? ", " : "") + "Begin time and End time values are incorrect");
-            }
-
+            
             if (LengthMinutes == null)               
             {
                 error.Append((error.Length != 0 ? ", " : "") + "Length in minutes should not be empty");
@@ -266,6 +268,15 @@ namespace Common.DtoMapping
                 UnavailabilityType = (HorsesUnavailabilityEnum)value;
             }
         }
+
+        public bool IsDateInterval { get; set; }
+
+        [DependsOn(nameof(IsDateInterval))]
+        public bool IsDayOfWeek { get => !IsDateInterval; }
+
+        [DependsOn(nameof(DayOfWeek))]
+        public string DayOfWeekStr { get => DayOfWeek.HasValue ? DateTimeExtentions.DayNumberToString((int)DayOfWeek.Value) : String.Empty; }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public string ApplyObjectLevelValidations()
         {
@@ -279,7 +290,14 @@ namespace Common.DtoMapping
             return error.ToString();
         }
 
-        public override string ToString() => $"{UnavailabilityType.ToString()} {StartDate.ToString("dd/MM/yyyy")} {EndDate.ToString("dd/MM/yyyy")}";
+        public override string ToString()
+        {
+            if (DayOfWeek.HasValue)
+                return $"{UnavailabilityType.ToString()} {((DayOfWeek)(DayOfWeek.Value + 1 < 7 ? DayOfWeek.Value + 1 : 0))}";
+
+            else 
+                return $"{UnavailabilityType.ToString()} {StartDate.Value.ToString("dd/MM/yyyy")} {EndDate.Value.ToString("dd/MM/yyyy")}";
+        }
     }
 
 #pragma warning restore CS0067 

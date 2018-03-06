@@ -230,6 +230,8 @@ namespace Common.DtoMapping
 			public override String Email { get; set; }
 				
 			public override String Phone { get; set; }
+					
+			public override CoachRolesEnum? CoachRole { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
@@ -1059,9 +1061,9 @@ namespace Common.DtoMapping
 				
 			public override HorsesUnavailabilityEnum UnavailabilityType { get; set; }
 				
-			public override DateTime StartDate { get; set; }
+			public override DateTime? StartDate { get; set; }
 				
-			public override DateTime EndDate { get; set; }
+			public override DateTime? EndDate { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);

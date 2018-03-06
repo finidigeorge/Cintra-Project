@@ -11,12 +11,16 @@ using System.Windows.Input;
 using Shared.Extentions;
 using PropertyChanged;
 using Client.Controls.WpfScheduler;
+using Client.Commands;
+using System.Collections.ObjectModel;
+using Common;
 
 namespace Client.ViewModels
 {
     public class BookingEditWindowVm: BaseVm
     {
         BookingsClient bookingsClient = new BookingsClient();
+        CoachesClient coachesClient = new CoachesClient();
 
         private BookingDtoUi _bookingData;
         public BookingDtoUi BookingData {
@@ -38,6 +42,8 @@ namespace Client.ViewModels
                 RefreshAllModels();                               
             }
         }
+
+        public bool DisplayOnlyAssignedCoaches { get; set; }
 
         public bool IsEditMode { get; set; }
                
@@ -96,7 +102,7 @@ namespace Client.ViewModels
             ServicesModel.OnSelectedItemChanged += async (sender, service) => {
                 _bookingData.Service = service;
                 await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
-                await CoachesModel.RefreshDataCommand.ExecuteAsync(null);
+                await CoachesModel.RefreshDataCommand.ExecuteAsync(DisplayOnlyAssignedCoaches ? service.Id : (long?)null);
 
                 SyncServiceDataModels();
 
@@ -114,6 +120,28 @@ namespace Client.ViewModels
                 _bookingData.Coach = coach;
                 await RunCoachValidations();
             };
+
+            CoachesModel.GetItemsCommand = new AsyncCommand<object>(async (x) =>
+            {
+                long selectedItemId = 0;
+                if (CoachesModel.SelectedItem != null)
+                    selectedItemId = CoachesModel.SelectedItem.Id;
+
+                if (CoachesModel.Items == null)
+                    CoachesModel.Items = new ObservableCollection<CoachDtoUi>();
+                else
+                    CoachesModel.Items.Clear();
+
+                if (_bookingData.Service != null)
+                    foreach (var item in (await coachesClient.GetAllByService(_bookingData.Service.Id, DisplayOnlyAssignedCoaches)).ToList<CoachDto, CoachDtoUi>())
+                        CoachesModel.Items.Add(item);
+
+                if (selectedItemId != 0)
+                {
+                    CoachesModel.SelectedItem = CoachesModel.Items.FirstOrDefault(i => i.Id == selectedItemId);
+                }
+            });
+
             PaymentTypesModel.OnSelectedItemChanged += (sender, paymentType) => { _bookingData.BookingPayment.PaymentType = paymentType; };
         }
 

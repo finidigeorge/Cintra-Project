@@ -231,9 +231,26 @@ namespace Repositories
         public async Task<CheckResultDto> HasHorseScheduleFitBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
         {
             return await RunWithinTransaction((db) =>
-            {                                
-                bool passedScheduleCheck = !(horse.HorsesScheduleData?.Any() ?? false)
-                    || !(horse.HorsesScheduleData.Any(x => x.IsDeleted == false && DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate, x.EndDate)));
+            {
+                bool passedScheduleCheck = !(horse.HorsesScheduleData?.Any() ?? false);
+
+                if (!passedScheduleCheck) {
+
+                    //day schedule check
+                    var dayScheduleChecks =
+                        horse.HorsesScheduleData.Any(x => x.IsDeleted == false && x.StartDate.HasValue && x.EndDate.HasValue &&
+                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.StartDate.Value, x.EndDate.Value));
+
+                    var bookedDayOfWeek = DateTimeExtentions.ToEuropeanDayNumber(bookingData.DateOn);
+
+                    //week schedule check
+                    var weekScheduleChecks =
+                        horse.HorsesScheduleData.Any(x => x.IsDeleted == false && x.DayOfWeek.HasValue && x.DayOfWeek == bookedDayOfWeek
+                            );
+
+                    //Horses schedule can have only not working intervals
+                    passedScheduleCheck = !(weekScheduleChecks || dayScheduleChecks);
+                }
 
                 var result = new CheckResultDto() { Result = passedScheduleCheck };
 

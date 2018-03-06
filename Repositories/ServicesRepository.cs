@@ -17,21 +17,8 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-
-
-                bool isNew = false;
-                if (entity.Id == 0)
-                {
-                    isNew = true;                
-                }
                 
                 var serviceId = await base.Create(entity, db);
-
-                //assign all coaches to the new service
-                if (isNew)
-                {
-                    entity.ServiceToCoachesLinks = db.Coaches.Where(x => !x.IsDeleted).Select(x => new ServiceToCoachesLink() { CoachId = x.Id, ServiceId = serviceId });
-                }
 
                 await db.ServiceToCoachesLink
                     .Where(x => x.ServiceId == entity.Id)

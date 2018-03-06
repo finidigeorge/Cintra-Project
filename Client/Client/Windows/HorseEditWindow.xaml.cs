@@ -43,14 +43,26 @@ namespace Client.Windows
                 {
                     StartDate = DateTime.Now.TruncateToDayStart(), EndDate = DateTime.Now.TruncateToDayStart().AddDays(1).AddSeconds(-1),
                     UnavailabilityType = Shared.HorsesUnavailabilityEnum.DayOff,
-                    HorseId = Model.HorseData.Id
+                    HorseId = Model.HorseData.Id,                   
                 }
             };
 
 
             if ((editor.ShowDialog() ?? false) == true)
             {
-                Model.HorsesScheduleModel.AddItemCommand.Execute((HorseScheduleDataDtoUi)editor.DataContext);
+                var data = (HorseScheduleDataDtoUi)editor.DataContext;
+                if (data.IsDayOfWeek)
+                {
+                    data.StartDate = null;
+                    data.EndDate = null;
+                }
+
+                if (data.IsDateInterval)
+                {
+                    data.DayOfWeek = null;                    
+                }
+
+                Model.HorsesScheduleModel.AddItemCommand.Execute(data);
             }
         }
 

@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
         FontSize="14"
-        Title="Horse Edit Window" MinHeight="480" Width="640" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="Horse Edit Window" MinHeight="480" Width="740" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
     <Window.Resources>
         <viewModels:HorsesEditWindowVm x:Key="ViewModel" />
     </Window.Resources>
@@ -31,7 +31,7 @@
                 <Image Source="/Resources/Images/Delete.ico" Width="21" />
             </StackPanel>
         </Button>
-        <ListView x:Name="SchedluleList" HorizontalAlignment="Left" Margin="10,82,0,66" ItemsSource="{Binding HorsesScheduleModel.ItemsCollectionView}" SelectedItem="{Binding HorsesScheduleModel.SelectedItem, Mode=TwoWay}" Width="614">
+        <ListView x:Name="SchedluleList" HorizontalAlignment="Left" Margin="10,82,0,66" ItemsSource="{Binding HorsesScheduleModel.ItemsCollectionView}" SelectedItem="{Binding HorsesScheduleModel.SelectedItem, Mode=TwoWay}" Width="714">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="BorderBrush" Value="LightGray" />
@@ -44,7 +44,8 @@
                 <GridView>
                     <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding Path=StartDate, StringFormat='dd/MM/yyyy'}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
                     <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding Path=EndDate, StringFormat='dd/MM/yyyy'}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
-                    <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding Path=UnavailabilityType}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
+                    <GridViewColumn Header="Day of Week" DisplayMemberBinding="{Binding Path=DayOfWeekStr}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
+                    <GridViewColumn Header="Reason" DisplayMemberBinding="{Binding Path=UnavailabilityType}" Width="{Binding ElementName=col3, Path=ActualWidth}"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -53,12 +54,14 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" x:Name="col0"/>
             <Grid Grid.Column="1" x:Name="col1"/>
             <Grid Grid.Column="2" x:Name="col2"/>
+            <Grid Grid.Column="3" x:Name="col3"/>
         </Grid>
 
         <Button Content="Close"                

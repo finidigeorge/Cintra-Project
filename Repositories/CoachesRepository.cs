@@ -30,10 +30,10 @@ namespace Repositories
                 
                 var coachId = await base.Create(entity, db);
 
-                //assign all services to the new coach
-                if (isNew)
+                //assign all services to the new staff member
+                if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
                 {                   
-                    var serviceToCoachesLinks = db.Services.Where(x => !x.IsDeleted).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.Id });
+                    var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == entity.CoachRoleId).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId });
                     foreach (var c in serviceToCoachesLinks)
                         await db.InsertWithIdentityAsync(c);
                 }                               
@@ -50,7 +50,10 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.Coaches.Where(where).Where(x => x.IsDeleted == false).Select(x =>
+                    db.Coaches
+                    .LoadWith(x => x.ServiceToCoachesLinks)
+                    .Where(where)                    
+                    .Where(x => x.IsDeleted == false).Select(x =>
                     {
                         var res = x;
                         res.Schedules = LoadSchedules(x.Id, db).ToList();

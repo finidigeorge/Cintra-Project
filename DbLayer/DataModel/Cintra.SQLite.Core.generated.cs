@@ -26,6 +26,9 @@ namespace DataModels
 		public ITable<BookingTemplates>          BookingTemplates          { get { return this.GetTable<BookingTemplates>(); } }
 		public ITable<Client>                    Clients                   { get { return this.GetTable<Client>(); } }
 		public ITable<Coach>                     Coaches                   { get { return this.GetTable<Coach>(); } }
+		public ITable<CoachRoles>                CoachRoles                { get { return this.GetTable<CoachRoles>(); } }
+		public ITable<CoachRolesToServicesLink>  CoachRolesToServicesLink  { get { return this.GetTable<CoachRolesToServicesLink>(); } }
+		public ITable<CoachSchedules>            CoachSchedules            { get { return this.GetTable<CoachSchedules>(); } }
 		public ITable<DbUpdatesLog>              DbUpdatesLog              { get { return this.GetTable<DbUpdatesLog>(); } }
 		public ITable<Hors>                      Horses                    { get { return this.GetTable<Hors>(); } }
 		public ITable<HorsesScheduleData>        HorsesScheduleData        { get { return this.GetTable<HorsesScheduleData>(); } }
@@ -245,11 +248,12 @@ namespace DataModels
 	[Table("coaches")]
 	public partial class Coach
 	{
-		[Column("id"),         PrimaryKey,  Identity] public long   Id        { get; set; } // integer
-		[Column("name"),       NotNull              ] public string Name      { get; set; } // varchar(128)
-		[Column("email"),         Nullable          ] public string Email     { get; set; } // varchar(50)
-		[Column("phone"),         Nullable          ] public string Phone     { get; set; } // varchar(50)
-		[Column("is_deleted"), NotNull              ] public bool   IsDeleted { get; set; } // boolean
+		[Column("id"),            PrimaryKey,  Identity] public long   Id          { get; set; } // integer
+		[Column("name"),          NotNull              ] public string Name        { get; set; } // varchar(128)
+		[Column("email"),            Nullable          ] public string Email       { get; set; } // varchar(50)
+		[Column("phone"),            Nullable          ] public string Phone       { get; set; } // varchar(50)
+		[Column("is_deleted"),    NotNull              ] public bool   IsDeleted   { get; set; } // boolean
+		[Column("coach_role_id"),    Nullable          ] public long?  CoachRoleId { get; set; } // integer
 
 		#region Associations
 
@@ -266,6 +270,12 @@ namespace DataModels
 		public IEnumerable<BookingTemplates> BookingTemplates { get; set; }
 
 		/// <summary>
+		/// FK_coaches_0_0
+		/// </summary>
+		[Association(ThisKey="CoachRoleId", OtherKey="Id", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_coaches_0_0", BackReferenceName="Coaches")]
+		public CoachRoles CoachRole { get; set; }
+
+		/// <summary>
 		/// FK_schedules_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
@@ -278,6 +288,64 @@ namespace DataModels
 		public IEnumerable<ServiceToCoachesLink> ServiceToCoachesLinks { get; set; }
 
 		#endregion
+	}
+
+	[Table("coach_roles")]
+	public partial class CoachRoles
+	{
+		[Column("id"),   PrimaryKey, NotNull] public long   Id   { get; set; } // integer
+		[Column("name"),             NotNull] public string Name { get; set; } // varchar(255)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_coaches_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="CoachRoleId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Coach> Coaches { get; set; }
+
+		/// <summary>
+		/// FK_coach_roles_to_services_link_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="CoachRoleId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<CoachRolesToServicesLink> CoachRolesToServicesLinks { get; set; }
+
+		#endregion
+	}
+
+	[Table("coach_roles_to_services_link")]
+	public partial class CoachRolesToServicesLink
+	{
+		[Column("id"),            PrimaryKey, Identity] public long Id          { get; set; } // integer
+		[Column("coach_role_id"), NotNull             ] public long CoachRoleId { get; set; } // integer
+		[Column("service_id"),    NotNull             ] public long ServiceId   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_coach_roles_to_services_link_1_0
+		/// </summary>
+		[Association(ThisKey="CoachRoleId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_coach_roles_to_services_link_1_0", BackReferenceName="CoachRolesToServicesLinks")]
+		public CoachRoles CoachRole { get; set; }
+
+		/// <summary>
+		/// FK_coach_roles_to_services_link_0_0
+		/// </summary>
+		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_coach_roles_to_services_link_0_0", BackReferenceName="CoachRolesToServicesLinks")]
+		public Service Service { get; set; }
+
+		#endregion
+	}
+
+	[Table("coach_schedules")]
+	public partial class CoachSchedules
+	{
+		[Column("id"),                  PrimaryKey, Identity] public long     Id                 { get; set; } // integer
+		[Column("trainer_id"),          NotNull             ] public long     TrainerId          { get; set; } // integer
+		[Column("is_avialable"),        NotNull             ] public bool     IsAvialable        { get; set; } // boolean
+		[Column("availability_status"), NotNull             ] public string   AvailabilityStatus { get; set; } // varchar(50)
+		[Column("begin_time"),          NotNull             ] public DateTime BeginTime          { get; set; } // time
+		[Column("end_time"),            NotNull             ] public DateTime EndTime            { get; set; } // time
 	}
 
 	[Table("db_updates_log")]
@@ -328,12 +396,13 @@ namespace DataModels
 	[Table("horses_schedule_data")]
 	public partial class HorsesScheduleData
 	{
-		[Column("id"),                     PrimaryKey, Identity] public long     Id                   { get; set; } // integer
-		[Column("horse_id"),               NotNull             ] public long     HorseId              { get; set; } // integer
-		[Column("unavailability_type_id"), NotNull             ] public long     UnavailabilityTypeId { get; set; } // integer
-		[Column("is_deleted"),             NotNull             ] public bool     IsDeleted            { get; set; } // boolean
-		[Column("start_date"),             NotNull             ] public DateTime StartDate            { get; set; } // date
-		[Column("end_date"),               NotNull             ] public DateTime EndDate              { get; set; } // date
+		[Column("id"),                     PrimaryKey,  Identity] public long      Id                   { get; set; } // integer
+		[Column("horse_id"),               NotNull              ] public long      HorseId              { get; set; } // integer
+		[Column("unavailability_type_id"), NotNull              ] public long      UnavailabilityTypeId { get; set; } // integer
+		[Column("is_deleted"),             NotNull              ] public bool      IsDeleted            { get; set; } // boolean
+		[Column("day_of_week"),               Nullable          ] public long?     DayOfWeek            { get; set; } // integer
+		[Column("start_date"),                Nullable          ] public DateTime? StartDate            { get; set; } // date
+		[Column("end_date"),                  Nullable          ] public DateTime? EndDate              { get; set; } // date
 
 		#region Associations
 
@@ -488,6 +557,12 @@ namespace DataModels
 		public IEnumerable<BookingTemplates> BookingTemplates { get; set; }
 
 		/// <summary>
+		/// FK_coach_roles_to_services_link_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<CoachRolesToServicesLink> CoachRolesToServicesLinks { get; set; }
+
+		/// <summary>
 		/// FK_service_to_coaches_link_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ServiceId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
@@ -628,6 +703,24 @@ namespace DataModels
 		}
 
 		public static Coach Find(this ITable<Coach> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static CoachRoles Find(this ITable<CoachRoles> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static CoachRolesToServicesLink Find(this ITable<CoachRolesToServicesLink> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static CoachSchedules Find(this ITable<CoachSchedules> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

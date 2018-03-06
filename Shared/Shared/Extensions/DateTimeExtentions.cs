@@ -93,5 +93,11 @@ namespace Shared.Extentions
         {
             return ((int)dt.DayOfWeek) - 1 >= 0 ? ((int)dt.DayOfWeek) - 1 : 6;
         }
+
+        public static string DayNumberToString(int dayNumber)
+        {
+            var usDayNumber = dayNumber + 1 < 6 ? dayNumber + 1 : 0;
+            return ((DayOfWeek)usDayNumber).ToString();
+        }
     }
 }

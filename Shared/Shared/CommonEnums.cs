@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
 
 namespace Shared
@@ -34,6 +36,13 @@ namespace Shared
         DayOff
     }
 
+    public enum CoachRolesEnum
+    {
+        Coach = 1,
+        [Description("Staff member")]
+        StaffMember = 2
+    }
+
     public static class enUserRoles
     {
         public const string Administrator = "Administrator";
@@ -51,6 +60,8 @@ namespace Shared
 
             throw new Exception($"Can't parse string value {value} as a enum {typeof(T).Name}");
         }
+
+        public static IEnumerable<CoachRolesEnum> GetCoachRolesEnumItems => Enum.GetValues(typeof(CoachRolesEnum)).Cast<CoachRolesEnum>();
     }
 
 

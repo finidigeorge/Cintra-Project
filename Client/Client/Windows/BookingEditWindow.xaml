@@ -40,6 +40,7 @@
                         <RowDefinition Height="Auto" MinHeight="24"/>
                         <RowDefinition Height="Auto" MinHeight="24"/>
                         <RowDefinition Height="Auto" MinHeight="24"/>
+                        <RowDefinition Height="Auto" MinHeight="24"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
@@ -59,47 +60,6 @@
                                          x:Name="EndTimePicker" HorizontalAlignment="Left" Width="114"
                                           />
 
-                    <TextBlock Text="Client" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ComboBox Name="clientPicker" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
-                              ItemsSource="{Binding ClientsModel.Items}"
-                              SelectedItem="{Binding ClientsModel.SelectedItem}"
-                              >
-                    </ComboBox>
-                    <Button Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
-                            VerticalAlignment="Top" Width="24" Height="24"
-                            Command="{Binding GetClientsCommand}" ToolTip="Refresh data">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/Images/Refresh.ico" RenderTransformOrigin="7.874,0.37" Width="20" />
-                        </StackPanel>
-                    </Button>
-
-                    <TextBlock Text="Coach" Grid.Row="5" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ComboBox Name="coachPicker" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
-                              ItemsSource="{Binding CoachesModel.Items}"
-                              SelectedItem="{Binding CoachesModel.SelectedItem}"
-                              >
-                    </ComboBox>
-                    <Button Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
-                            VerticalAlignment="Top" Width="24" Height="24"
-                            Command="{Binding GetCoachesCommand}" ToolTip="Refresh data">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/Images/Refresh.ico" />
-                        </StackPanel>
-                    </Button>
-
-                    <TextBlock Text="Horse" Grid.Row="6" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ComboBox Name="horsePicker" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
-                              ItemsSource="{Binding HorsesModel.Items}"
-                              SelectedItem="{Binding HorsesModel.SelectedItem}"
-                              >
-                    </ComboBox>
-                    <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
-                            VerticalAlignment="Top" Width="24" Height="24"
-                            Command="{Binding GetHorsesCommand}" ToolTip="Refresh data">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/Images/Refresh.ico" />
-                        </StackPanel>
-                    </Button>
 
                     <TextBlock Text="Service" Grid.Row="4" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
                     <ComboBox Name="servicePicker" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
@@ -115,24 +75,73 @@
                         </StackPanel>
                     </Button>
 
+                    <CheckBox Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,118,0" Grid.Row="5"
+                              IsChecked="{Binding Path=BookingData.BookingPayment.DisplayOnlyAssignedCoaches, Mode=TwoWay}" Height="27" VerticalAlignment="Top" Width="428">
+                        <TextBlock Text="Display only assigned staff members" Margin="0,-3,0,0" FontSize="16" Width="396" Height="38" />
+                    </CheckBox>
 
-                    <CheckBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,10,10" Grid.Row="8"
+                    <TextBlock Text="Coach" Grid.Row="6" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                    <ComboBox Name="coachPicker" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+                              ItemsSource="{Binding CoachesModel.Items}"
+                              SelectedItem="{Binding CoachesModel.SelectedItem}"
+                              >
+                    </ComboBox>
+                    <Button Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
+                            VerticalAlignment="Top" Width="24" Height="24"
+                            Command="{Binding GetCoachesCommand}" ToolTip="Refresh data">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/Refresh.ico" />
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock Text="Horse" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                    <ComboBox Name="horsePicker" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+                              ItemsSource="{Binding HorsesModel.Items}"
+                              SelectedItem="{Binding HorsesModel.SelectedItem}"
+                              >
+                    </ComboBox>
+                    <Button Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
+                            VerticalAlignment="Top" Width="24" Height="24"
+                            Command="{Binding GetHorsesCommand}" ToolTip="Refresh data">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/Refresh.ico" />
+                        </StackPanel>
+                    </Button>
+
+                    <TextBlock Text="Client" Grid.Row="8" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                    <ComboBox Name="clientPicker" Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+                              ItemsSource="{Binding ClientsModel.Items}"
+                              SelectedItem="{Binding ClientsModel.SelectedItem}"
+                              >
+                    </ComboBox>
+                    <Button Grid.Row="8" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
+                            VerticalAlignment="Top" Width="24" Height="24"
+                            Command="{Binding GetClientsCommand}" ToolTip="Refresh data">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/Refresh.ico" RenderTransformOrigin="7.874,0.37" Width="20" />
+                        </StackPanel>
+                    </Button>
+
+
+
+
+                    <CheckBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,10,10" Grid.Row="9"
                               IsChecked="{Binding Path=BookingData.BookingPayment.IsPaid, Mode=TwoWay}">
                         <TextBlock Text="Is Paid" Margin="0,-3,0,0" FontSize="16"/>
                     </CheckBox>
 
-                    <TextBlock Text="Payment Type" Grid.Row="9" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ComboBox Name="paymentTypes" Grid.Row="9" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
+                    <TextBlock Text="Payment Type" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                    <ComboBox Name="paymentTypes" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
                               ItemsSource="{Binding PaymentTypesModel.Items}"
                               SelectedItem="{Binding PaymentTypesModel.SelectedItem}">
                     </ComboBox>
 
-                    <TextBlock Text="Notes" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <TextBox Grid.Row="10" Grid.Column="1" Margin="10,10,10,170" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}" Grid.RowSpan="2"/>
+                    <TextBlock Text="Notes" Grid.Row="11" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                    <TextBox Grid.Row="11" Grid.Column="1" Margin="10,10,10,170" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}" Grid.RowSpan="2"/>
 
 
 
-                    <TextBox Text="{Binding Path=BookingData.Error, Mode=OneWay}" Grid.Row="11" FontSize="14" Margin="80,45,10,60" 
+                    <TextBox Text="{Binding Path=BookingData.Error, Mode=OneWay}" Grid.Row="12" FontSize="14" Margin="80,10,10,60" 
                      Foreground="Red" 
                      BorderThickness="0" 
                      Background="Transparent" 

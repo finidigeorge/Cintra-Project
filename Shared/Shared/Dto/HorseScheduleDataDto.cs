@@ -9,9 +9,10 @@ namespace Shared.Dto
         public virtual long Id { get; set; }
         public virtual long HorseId { get; set; }
         public virtual HorsesUnavailabilityEnum UnavailabilityType { get; set; }
-        [VmMeta(IsNullable = false)]
-        public virtual DateTime StartDate{ get; set; }
-        [VmMeta(IsNullable = false)]
-        public virtual DateTime EndDate { get; set; }
+
+        public virtual long? DayOfWeek { get; set; }
+
+        public virtual DateTime? StartDate { get; set; }        
+        public virtual DateTime? EndDate { get; set; }
     }
 }
