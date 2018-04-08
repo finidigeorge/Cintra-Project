@@ -30,10 +30,10 @@ namespace Repositories
                 
                 var coachId = await base.Create(entity, db);
 
-                //assign all services to the new staff member
+                //assign all staff services to the new staff member
                 if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
                 {                   
-                    var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == entity.CoachRoleId).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId });
+                    var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId });
                     foreach (var c in serviceToCoachesLinks)
                         await db.InsertWithIdentityAsync(c);
                 }                               

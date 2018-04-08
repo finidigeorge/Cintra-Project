@@ -6,9 +6,6 @@ CREATE TABLE services(
 	name varchar(255) not null	
 );
 
-insert into services(name) values ('Park Ride');
-insert into services(name) values ('Beginners raiding lession');
-
 drop table horses;
 
 CREATE TABLE horses(
@@ -16,4 +13,3 @@ CREATE TABLE horses(
 	nickname varchar(255) not null
 );
 
-insert into horses(nickname) values ('BB');
