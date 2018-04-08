@@ -39,9 +39,12 @@ namespace Client.Controls
 
         public object EditCommandParam { get; set; }
 
+        public ICommand RefreshCommand { get; set; }
+
         public string DeleteTooltip { get; set; } = "Delete selected item from the reference";
         public string AddTooltip { get; set; } = "Add new item to the reference";
         public string EditTooltip { get; set; } = "Edit selected item of the reference";
+        public string RefreshTooltip { get; set; } = "Refresh reference data";
 
     }
 }

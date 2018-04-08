@@ -22,6 +22,7 @@
                 DeleteCommand="{Binding Path=DeleteSelectedItemCommand}"
                 EditCommand="{Binding Path=BeginEditItemCommand}"
                 NewCommand="{Binding Path=BeginAddItemCommand}"
+                RefreshCommand="{Binding Path=RefreshDataCommand}"
             />
         </ToolBarPanel>
         <DataGrid Name="ItemsDataGrid" 

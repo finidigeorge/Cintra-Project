@@ -30,5 +30,12 @@
                 <TextBlock VerticalAlignment="Center">Delete</TextBlock>
             </StackPanel>
         </Button>
+        <Button Command="{Binding RefreshCommand, ElementName=referencesToolbar}"                 
+                ToolTip="{Binding RefreshTooltip, ElementName=referencesToolbar}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Resources/Images/Refresh.ico" />
+                <TextBlock VerticalAlignment="Center">Refresh</TextBlock>
+            </StackPanel>
+        </Button>
     </ToolBar>
 </UserControl>

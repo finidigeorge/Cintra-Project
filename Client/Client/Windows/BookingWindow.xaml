@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:Client.Controls"
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
         mc:Ignorable="d"
-        Title="Bookings" Height="900" Width="1280" WindowStartupLocation="CenterScreen"
+        Title="Bookings" Height="900" Width="1600" WindowStartupLocation="CenterScreen"
         FontSize="14"
         Loaded="Window_LoadedAsync">
     <Window.Resources>
@@ -55,7 +55,8 @@
                                 DeleteTooltip="Delete booking from today's schedule"
                                 AddTooltip="Add new today's booking"
                                 EditTooltip="Edit selected booking"
-                                NewCommand="{Binding Path=AddDailyScheduledIntervalCommand}"                                
+                                NewCommand="{Binding Path=AddDailyScheduledIntervalCommand}"   
+                                RefreshCommand="{Binding Path=RefreshDataCommand}"
                             />
                 </ToolBarPanel>
 

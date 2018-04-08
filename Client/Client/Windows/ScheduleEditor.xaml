@@ -12,8 +12,9 @@
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="ScheduleEditor" Height="1048" Width="1600"
-        FontSize="14">
+        Title="Coach Schedule Editor" Height="1048" Width="1600"
+        FontSize="14"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <viewModels:SchedulesRefVm x:Key="ViewModel" />
     </Window.Resources>
@@ -35,7 +36,11 @@
                   ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                   Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" 
                   FocusManager.IsFocusScope="True"
-                  CanUserAddRows="False" CanUserDeleteRows="True" >
+                  CanUserAddRows="False" CanUserDeleteRows="True" 
+                  >
+            <DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightBlue"/>
+            </DataGrid.Resources>
             <DataGrid.RowValidationRules>
                 <extentions:RowDataInfoValidationRule ValidationStep="UpdatedValue" />
             </DataGrid.RowValidationRules>

@@ -19,6 +19,7 @@ using Common.DtoMapping;
 using Shared.Dto;
 using Shared;
 using Shared.Extentions;
+using System.Threading;
 
 namespace Client.Windows
 {
@@ -35,6 +36,7 @@ namespace Client.Windows
         public ScheduleEditor()
         {
             InitializeComponent();            
+
             #region Day Scheduler
             Model.NextDayCommand = new Command<object>(() =>
             {
@@ -117,11 +119,11 @@ namespace Client.Windows
 
             }, (x) => Model.ScheduleWeeklyDataModel.CanDeleteSelectedItem);
 
-            #endregion
+            #endregion            
 
             Model.OnSelectedItemChanged += OnSelectedScheduleChanged;
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);
-
+            
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);                                  
         }
 
         private async void OnSelectedScheduleChanged(object sender, ScheduleDtoUi s)
@@ -191,6 +193,13 @@ namespace Client.Windows
         private void WeeklyScheduler_OnEventClick(object sender, Event e)
         {
             Model.ScheduleWeeklyDataModel.SelectedItem = Model.ScheduleWeeklyDataModel.Items.FirstOrDefault(x => x.EventGuid == e.Id);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Model.SelectedItem = Model.Items.FirstOrDefault();
+            if (Model.SelectedItem != null)
+                ItemsDataGrid.SelectedIndex = 0;
         }
     }
 }

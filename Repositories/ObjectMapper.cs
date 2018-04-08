@@ -133,14 +133,14 @@ namespace Mapping
                     conf.CreateMap<Coach, CoachDto>().AfterMap((db, vm) =>
                     {
                         vm.Schedules = _mapper.Map<List<ScheduleDto>>(db.Schedules);
-                        vm.CoachRole = (CoachRolesEnum)db.CoachRoleId;
+                        vm.CoachRole = (CoachRolesEnum?)db.CoachRoleId;
                     });
                     conf.CreateMap<CoachDto, Coach>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                         .AfterMap((vm, db) =>
                         {
                             db.Schedules = _mapper.Map<List<Schedule>>(vm.Schedules);
-                            db.CoachRoleId = (int)vm.CoachRole;
+                            db.CoachRoleId = (long?)vm.CoachRole;
                         });
 
 
