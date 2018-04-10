@@ -8,7 +8,7 @@
         xmlns:viewModels="clr-namespace:Client.ViewModels"
         mc:Ignorable="d"
         Title="Sydney Horses Management" Height="800" Width="1280" WindowState="Maximized" WindowStartupLocation="CenterScreen"
-        FontSize="16">
+        FontSize="16" Closing="Window_Closing">
     <Window.Resources>
         <viewModels:MainWindowVm x:Key="ViewModel" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

@@ -20,28 +20,29 @@ namespace DataModels
 	/// </summary>
 	public partial class CintraDB : LinqToDB.Data.DataConnection
 	{
-		public ITable<Booking>                   Bookings                  { get { return this.GetTable<Booking>(); } }
-		public ITable<BookingPayments>           BookingPayments           { get { return this.GetTable<BookingPayments>(); } }
-		public ITable<BookingsTemplateMetadata>  BookingsTemplateMetadata  { get { return this.GetTable<BookingsTemplateMetadata>(); } }
-		public ITable<BookingTemplates>          BookingTemplates          { get { return this.GetTable<BookingTemplates>(); } }
-		public ITable<Client>                    Clients                   { get { return this.GetTable<Client>(); } }
-		public ITable<Coach>                     Coaches                   { get { return this.GetTable<Coach>(); } }
-		public ITable<CoachRoles>                CoachRoles                { get { return this.GetTable<CoachRoles>(); } }
-		public ITable<CoachRolesToServicesLink>  CoachRolesToServicesLink  { get { return this.GetTable<CoachRolesToServicesLink>(); } }
-		public ITable<CoachSchedules>            CoachSchedules            { get { return this.GetTable<CoachSchedules>(); } }
-		public ITable<DbUpdatesLog>              DbUpdatesLog              { get { return this.GetTable<DbUpdatesLog>(); } }
-		public ITable<Hors>                      Horses                    { get { return this.GetTable<Hors>(); } }
-		public ITable<HorsesScheduleData>        HorsesScheduleData        { get { return this.GetTable<HorsesScheduleData>(); } }
-		public ITable<HorsesUnavailabilityTypes> HorsesUnavailabilityTypes { get { return this.GetTable<HorsesUnavailabilityTypes>(); } }
-		public ITable<PaymentTypes>              PaymentTypes              { get { return this.GetTable<PaymentTypes>(); } }
-		public ITable<Schedule>                  Schedules                 { get { return this.GetTable<Schedule>(); } }
-		public ITable<SchedulesData>             SchedulesData             { get { return this.GetTable<SchedulesData>(); } }
-		public ITable<SchedulesInterval>         SchedulesInterval         { get { return this.GetTable<SchedulesInterval>(); } }
-		public ITable<Service>                   Services                  { get { return this.GetTable<Service>(); } }
-		public ITable<ServiceToCoachesLink>      ServiceToCoachesLink      { get { return this.GetTable<ServiceToCoachesLink>(); } }
-		public ITable<ServiceToHorsesLink>       ServiceToHorsesLink       { get { return this.GetTable<ServiceToHorsesLink>(); } }
-		public ITable<User>                      Users                     { get { return this.GetTable<User>(); } }
-		public ITable<UserRoles>                 UserRoles                 { get { return this.GetTable<UserRoles>(); } }
+		public ITable<Booking>                       Bookings                      { get { return this.GetTable<Booking>(); } }
+		public ITable<BookingPayments>               BookingPayments               { get { return this.GetTable<BookingPayments>(); } }
+		public ITable<BookingsTemplateMetadata>      BookingsTemplateMetadata      { get { return this.GetTable<BookingsTemplateMetadata>(); } }
+		public ITable<BookingsToCoachesLink>         BookingsToCoachesLink         { get { return this.GetTable<BookingsToCoachesLink>(); } }
+		public ITable<BookingTemplates>              BookingTemplates              { get { return this.GetTable<BookingTemplates>(); } }
+		public ITable<BookingTemplatesToCoachesLink> BookingTemplatesToCoachesLink { get { return this.GetTable<BookingTemplatesToCoachesLink>(); } }
+		public ITable<Client>                        Clients                       { get { return this.GetTable<Client>(); } }
+		public ITable<Coach>                         Coaches                       { get { return this.GetTable<Coach>(); } }
+		public ITable<CoachRoles>                    CoachRoles                    { get { return this.GetTable<CoachRoles>(); } }
+		public ITable<CoachRolesToServicesLink>      CoachRolesToServicesLink      { get { return this.GetTable<CoachRolesToServicesLink>(); } }
+		public ITable<DbUpdatesLog>                  DbUpdatesLog                  { get { return this.GetTable<DbUpdatesLog>(); } }
+		public ITable<Hors>                          Horses                        { get { return this.GetTable<Hors>(); } }
+		public ITable<HorsesScheduleData>            HorsesScheduleData            { get { return this.GetTable<HorsesScheduleData>(); } }
+		public ITable<HorsesUnavailabilityTypes>     HorsesUnavailabilityTypes     { get { return this.GetTable<HorsesUnavailabilityTypes>(); } }
+		public ITable<PaymentTypes>                  PaymentTypes                  { get { return this.GetTable<PaymentTypes>(); } }
+		public ITable<Schedule>                      Schedules                     { get { return this.GetTable<Schedule>(); } }
+		public ITable<SchedulesData>                 SchedulesData                 { get { return this.GetTable<SchedulesData>(); } }
+		public ITable<SchedulesInterval>             SchedulesInterval             { get { return this.GetTable<SchedulesInterval>(); } }
+		public ITable<Service>                       Services                      { get { return this.GetTable<Service>(); } }
+		public ITable<ServiceToCoachesLink>          ServiceToCoachesLink          { get { return this.GetTable<ServiceToCoachesLink>(); } }
+		public ITable<ServiceToHorsesLink>           ServiceToHorsesLink           { get { return this.GetTable<ServiceToHorsesLink>(); } }
+		public ITable<User>                          Users                         { get { return this.GetTable<User>(); } }
+		public ITable<UserRoles>                     UserRoles                     { get { return this.GetTable<UserRoles>(); } }
 
 		public CintraDB()
 		{
@@ -63,7 +64,6 @@ namespace DataModels
 		[Column("id"),                   PrimaryKey,  Identity] public long     Id                 { get; set; } // integer
 		[Column("event_guid"),           NotNull              ] public Guid     EventGuid          { get; set; } // guid
 		[Column("horse_id"),             NotNull              ] public long     HorseId            { get; set; } // integer
-		[Column("coach_id"),             NotNull              ] public long     CoachId            { get; set; } // integer
 		[Column("client_id"),            NotNull              ] public long     ClientId           { get; set; } // integer
 		[Column("service_id"),           NotNull              ] public long     ServiceId          { get; set; } // integer
 		[Column("is_deleted"),           NotNull              ] public bool     IsDeleted          { get; set; } // boolean
@@ -82,22 +82,22 @@ namespace DataModels
 		public IEnumerable<BookingPayments> BookingPayments { get; set; }
 
 		/// <summary>
-		/// FK_bookings_4_0
+		/// FK_bookings_3_0
 		/// </summary>
-		[Association(ThisKey="TemplateMetadataId", OtherKey="Id", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_4_0", BackReferenceName="Bookings")]
+		[Association(ThisKey="TemplateMetadataId", OtherKey="Id", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_3_0", BackReferenceName="Bookings")]
 		public BookingsTemplateMetadata BookingsTemplateMetadata { get; set; }
 
 		/// <summary>
-		/// FK_bookings_3_0
+		/// FK_bookings_to_coaches_link_1_0_BackReference
 		/// </summary>
-		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_3_0", BackReferenceName="Bookings")]
-		public Client Client { get; set; }
+		[Association(ThisKey="Id", OtherKey="BookingId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingsToCoachesLink> BookingsToCoachesLinks { get; set; }
 
 		/// <summary>
 		/// FK_bookings_2_0
 		/// </summary>
-		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_2_0", BackReferenceName="Bookings")]
-		public Coach Coach { get; set; }
+		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_2_0", BackReferenceName="Bookings")]
+		public Client Client { get; set; }
 
 		/// <summary>
 		/// FK_bookings_1_0
@@ -151,7 +151,7 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
-		/// FK_bookings_4_0_BackReference
+		/// FK_bookings_3_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="TemplateMetadataId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Booking> Bookings { get; set; }
@@ -165,13 +165,36 @@ namespace DataModels
 		#endregion
 	}
 
+	[Table("bookings_to_coaches_link")]
+	public partial class BookingsToCoachesLink
+	{
+		[Column("id"),         PrimaryKey, Identity] public long Id        { get; set; } // integer
+		[Column("booking_id"), NotNull             ] public long BookingId { get; set; } // integer
+		[Column("coach_id"),   NotNull             ] public long CoachId   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_bookings_to_coaches_link_1_0
+		/// </summary>
+		[Association(ThisKey="BookingId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_to_coaches_link_1_0", BackReferenceName="BookingsToCoachesLinks")]
+		public Booking Booking { get; set; }
+
+		/// <summary>
+		/// FK_bookings_to_coaches_link_0_0
+		/// </summary>
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_bookings_to_coaches_link_0_0", BackReferenceName="BookingsToCoachesLinks")]
+		public Coach Coach { get; set; }
+
+		#endregion
+	}
+
 	[Table("booking_templates")]
 	public partial class BookingTemplates
 	{
 		[Column("id"),                   PrimaryKey, Identity] public long     Id                 { get; set; } // integer
 		[Column("event_guid"),           NotNull             ] public Guid     EventGuid          { get; set; } // guid
 		[Column("horse_id"),             NotNull             ] public long     HorseId            { get; set; } // integer
-		[Column("coach_id"),             NotNull             ] public long     CoachId            { get; set; } // integer
 		[Column("client_id"),            NotNull             ] public long     ClientId           { get; set; } // integer
 		[Column("service_id"),           NotNull             ] public long     ServiceId          { get; set; } // integer
 		[Column("is_deleted"),           NotNull             ] public bool     IsDeleted          { get; set; } // boolean
@@ -189,16 +212,16 @@ namespace DataModels
 		public BookingsTemplateMetadata BookingsTemplateMetadata { get; set; }
 
 		/// <summary>
-		/// FK_booking_templates_4_0
+		/// FK_booking_templates_to_coaches_link_1_0_BackReference
 		/// </summary>
-		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_4_0", BackReferenceName="BookingTemplates")]
-		public Client Client { get; set; }
+		[Association(ThisKey="Id", OtherKey="BookingTemplateId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingTemplatesToCoachesLink> BookingTemplatesToCoachesLinks { get; set; }
 
 		/// <summary>
 		/// FK_booking_templates_3_0
 		/// </summary>
-		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_3_0", BackReferenceName="BookingTemplates")]
-		public Coach Coach { get; set; }
+		[Association(ThisKey="ClientId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_3_0", BackReferenceName="BookingTemplates")]
+		public Client Client { get; set; }
 
 		/// <summary>
 		/// FK_booking_templates_2_0
@@ -211,6 +234,30 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="ServiceId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_1_0", BackReferenceName="BookingTemplates")]
 		public Service Service { get; set; }
+
+		#endregion
+	}
+
+	[Table("booking_templates_to_coaches_link")]
+	public partial class BookingTemplatesToCoachesLink
+	{
+		[Column("id"),                  PrimaryKey, Identity] public long Id                { get; set; } // integer
+		[Column("booking_template_id"), NotNull             ] public long BookingTemplateId { get; set; } // integer
+		[Column("coach_id"),            NotNull             ] public long CoachId           { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_booking_templates_to_coaches_link_1_0
+		/// </summary>
+		[Association(ThisKey="BookingTemplateId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_to_coaches_link_1_0", BackReferenceName="BookingTemplatesToCoachesLinks")]
+		public BookingTemplates BookingTemplate { get; set; }
+
+		/// <summary>
+		/// FK_booking_templates_to_coaches_link_0_0
+		/// </summary>
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_to_coaches_link_0_0", BackReferenceName="BookingTemplatesToCoachesLinks")]
+		public Coach Coach { get; set; }
 
 		#endregion
 	}
@@ -231,13 +278,13 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
-		/// FK_bookings_3_0_BackReference
+		/// FK_bookings_2_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ClientId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<Booking> Bookings { get; set; }
 
 		/// <summary>
-		/// FK_booking_templates_4_0_BackReference
+		/// FK_booking_templates_3_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="ClientId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<BookingTemplates> BookingTemplates { get; set; }
@@ -258,16 +305,16 @@ namespace DataModels
 		#region Associations
 
 		/// <summary>
-		/// FK_bookings_2_0_BackReference
+		/// FK_bookings_to_coaches_link_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Booking> Bookings { get; set; }
+		public IEnumerable<BookingsToCoachesLink> BookingsToCoachesLinks { get; set; }
 
 		/// <summary>
-		/// FK_booking_templates_3_0_BackReference
+		/// FK_booking_templates_to_coaches_link_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<BookingTemplates> BookingTemplates { get; set; }
+		public IEnumerable<BookingTemplatesToCoachesLink> BookingTemplatesToCoachesLinks { get; set; }
 
 		/// <summary>
 		/// FK_coaches_0_0
@@ -335,17 +382,6 @@ namespace DataModels
 		public Service Service { get; set; }
 
 		#endregion
-	}
-
-	[Table("coach_schedules")]
-	public partial class CoachSchedules
-	{
-		[Column("id"),                  PrimaryKey, Identity] public long     Id                 { get; set; } // integer
-		[Column("trainer_id"),          NotNull             ] public long     TrainerId          { get; set; } // integer
-		[Column("is_avialable"),        NotNull             ] public bool     IsAvialable        { get; set; } // boolean
-		[Column("availability_status"), NotNull             ] public string   AvailabilityStatus { get; set; } // varchar(50)
-		[Column("begin_time"),          NotNull             ] public DateTime BeginTime          { get; set; } // time
-		[Column("end_time"),            NotNull             ] public DateTime EndTime            { get; set; } // time
 	}
 
 	[Table("db_updates_log")]
@@ -690,7 +726,19 @@ namespace DataModels
 				t.Id == Id);
 		}
 
+		public static BookingsToCoachesLink Find(this ITable<BookingsToCoachesLink> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
 		public static BookingTemplates Find(this ITable<BookingTemplates> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static BookingTemplatesToCoachesLink Find(this ITable<BookingTemplatesToCoachesLink> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
@@ -715,12 +763,6 @@ namespace DataModels
 		}
 
 		public static CoachRolesToServicesLink Find(this ITable<CoachRolesToServicesLink> table, long Id)
-		{
-			return table.FirstOrDefault(t =>
-				t.Id == Id);
-		}
-
-		public static CoachSchedules Find(this ITable<CoachSchedules> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

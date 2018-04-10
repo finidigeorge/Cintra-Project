@@ -376,6 +376,7 @@
     <Content Include="Reports\System.Data.SQLite.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Images\plus.png" />
     <None Include="Reports\HorsesWorkloadDaily.rdl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

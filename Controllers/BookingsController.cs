@@ -140,15 +140,24 @@ namespace Controllers
 
         }
 
-        [HttpPost("/api/[controller]/HasCoachNotOverlappedBooking")]
-        public async Task<CheckResultDto> HasCoachNotOverlappedBooking([FromBody] BookingDto entity)
+        [HttpPost("/api/[controller]/HasCoachesNotOverlappedBooking")]
+        public async Task<CheckResultDto> HasCoachesNotOverlappedBooking([FromBody] BookingDto entity)
         {
             try
             {
                 var booking = ObjectMapper.Map<Booking>(entity);
-                var coach = booking.Coach;
+                var result = new CheckResultDto();
 
-                return await repository.HasCoachNotOverlappedBooking(coach, booking);
+                foreach (var link in booking.BookingsToCoachesLinks)
+                {
+                    var check = await repository.HasCoachNotOverlappedBooking(link.Coach, booking);
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
             }
             catch (Exception e)
             {
@@ -225,16 +234,26 @@ namespace Controllers
             }
         }
 
-        [HttpPost("/api/[controller]/HasCoachScheduleFitBooking")]
-        public async Task<CheckResultDto> HasCoachScheduleFitBooking([FromBody] BookingDto entity)
+        [HttpPost("/api/[controller]/HasCoachesScheduleFitBooking")]
+        public async Task<CheckResultDto> HasCoachesScheduleFitBooking([FromBody] BookingDto entity)
         {
             try
             {
                 var booking = ObjectMapper.Map<Booking>(entity);
-                var coach = booking.Coach;
+                var result = new CheckResultDto();
 
-                return await repository.HasCoachScheduleFitBooking(coach, booking);
+                foreach (var link in booking.BookingsToCoachesLinks)
+                {
+                    var check = await repository.HasCoachScheduleFitBooking(link.Coach, booking); ;
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
             }
+
             catch (Exception e)
             {
                 _logger.LogError(null, e, e.Message, entity);

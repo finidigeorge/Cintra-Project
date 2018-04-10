@@ -22,42 +22,42 @@ namespace RestClient
 
         public async Task<List<BookingDto>> GetAllFiltered(long beginDate, long endDate)
         {
-            return await SendRequest<List<BookingDto>>($"api/{ControllerName}/GetAllFiltered/{beginDate}/{endDate}");
+            return await SendRequest<List<BookingDto>>($"api/{ControllerName}/{nameof(IBookingController.GetAllFiltered)}/{beginDate}/{endDate}");
         }
 
-        public async Task<CheckResultDto> HasCoachNotOverlappedBooking(BookingDto entity)
+        public async Task<CheckResultDto> HasCoachesNotOverlappedBooking(BookingDto entity)
         {
-            return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasCoachNotOverlappedBooking", RestSharp.Method.POST, entity);
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasCoachesNotOverlappedBooking)}", RestSharp.Method.POST, entity);
         }
 
-        public async Task<CheckResultDto> HasCoachScheduleFitBooking(BookingDto entity)
+        public async Task<CheckResultDto> HasCoachesScheduleFitBooking(BookingDto entity)
         {
-            return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasCoachScheduleFitBooking", RestSharp.Method.POST, entity);
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasCoachesScheduleFitBooking)}", RestSharp.Method.POST, entity);
         }
 
         public async Task<CheckResultDto> HasHorseNotOverlappedBooking(BookingDto entity)
         {
-            return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasHorseNotOverlappedBooking", RestSharp.Method.POST, entity);
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorseNotOverlappedBooking)}", RestSharp.Method.POST, entity);
         }
 
         public async Task<CheckResultDto> HasHorseRequiredBreak(BookingDto entity)
         {
-            return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasHorseRequiredBreak", RestSharp.Method.POST, entity);
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorseRequiredBreak)}", RestSharp.Method.POST, entity);
         }
 
         public async Task<CheckResultDto> HasHorseScheduleFitBooking(BookingDto entity)
         {
-            return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasHorseScheduleFitBooking", RestSharp.Method.POST, entity);
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorseScheduleFitBooking)}", RestSharp.Method.POST, entity);
         }
 
         public async Task<CheckResultDto> HasHorseWorkedLessThanAllowed(BookingDto entity)
         {
-            return await SendRequest<CheckResultDto>($"api/{ControllerName}/HasHorseWorkedLessThanAllowed", RestSharp.Method.POST, entity);
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorseWorkedLessThanAllowed)}", RestSharp.Method.POST, entity);
         }
 
         public async Task InsertAll(List<BookingDto> entityList)
         {
-            await SendRequest<CheckResultDto>($"api/{ControllerName}/InsertAll", RestSharp.Method.POST, entityList);
+            await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.InsertAll)}", RestSharp.Method.POST, entityList);
         }
     }
 }

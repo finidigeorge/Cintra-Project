@@ -10,7 +10,8 @@ namespace Shared.Interfaces
     {
         Task<List<BookingDto>> GetAllFiltered(long beginDate, long endDate);
 
-        Task<CheckResultDto> HasCoachNotOverlappedBooking(BookingDto entity);
+        Task<CheckResultDto> HasCoachesNotOverlappedBooking(BookingDto entity);
+        Task<CheckResultDto> HasCoachesScheduleFitBooking(BookingDto entity);
 
         Task<CheckResultDto> HasHorseNotOverlappedBooking(BookingDto entity);
 
@@ -19,7 +20,6 @@ namespace Shared.Interfaces
         Task<CheckResultDto> HasHorseWorkedLessThanAllowed(BookingDto entity);
 
         Task<CheckResultDto> HasHorseScheduleFitBooking(BookingDto entity);
-        Task<CheckResultDto> HasCoachScheduleFitBooking(BookingDto entity);
 
         Task CancelAllBookings(long metadataId, long FromDate);
 

@@ -18,7 +18,7 @@ namespace RestClient
 
         public async Task<IList<ScheduleDataDto>> GetBySchedule(long scheduleId)
         {
-            return await SendRequest<List<ScheduleDataDto>>($"api/{ControllerName}/getBySchedule/{scheduleId}");
+            return await SendRequest<List<ScheduleDataDto>>($"api/{ControllerName}/{nameof(IScheduleDataController.GetBySchedule)}/{scheduleId}");
         }
     }
 }   

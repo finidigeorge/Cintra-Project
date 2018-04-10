@@ -25,7 +25,7 @@ namespace Shared.Dto
         [VmMeta(IsNullable = false)]
         public virtual ClientDto Client { get; set; }
         [VmMeta(IsNullable = false)]
-        public virtual CoachDto Coach { get; set; }
+        public virtual List<CoachDto> Coaches { get; set; }
         [VmMeta(IsNullable = false)]
         public virtual ServiceDto Service { get; set; }
         public virtual BookingPaymentDto BookingPayment { get; set; }

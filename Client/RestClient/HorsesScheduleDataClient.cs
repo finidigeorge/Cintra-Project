@@ -15,7 +15,7 @@ namespace RestClient
 
         public async Task<IList<HorseScheduleDataDto>> GetByHorse(long horseId)
         {
-            return await SendRequest<List<HorseScheduleDataDto>>($"api/{ControllerName}/GetByHorse/{horseId}");
+            return await SendRequest<List<HorseScheduleDataDto>>($"api/{ControllerName}/{nameof(IHorseScheduleDataController.GetByHorse)}/{horseId}");
         }
     }
 }

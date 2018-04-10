@@ -20,6 +20,7 @@ using Shared.Dto;
 using Common.Annotations;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Common.DtoMapping
 {

@@ -8,7 +8,6 @@ CREATE TABLE bookings (
 	id INTEGER PRIMARY KEY AUTOINCREMENT not null,	
 	event_guid guid not null,
 	horse_id INTEGER not null,
-	coach_id INTEGER not null,
 	client_id INTEGER not null,
 	service_id INTEGER not null,
 	is_deleted BOOLEAN default false not null,
@@ -17,7 +16,6 @@ CREATE TABLE bookings (
 	end_time time NOT NULL,	
 	CHECK(begin_time < end_time),
 	foreign key (client_id) REFERENCES clients(id),
-	foreign key (coach_id) REFERENCES coaches(id),
 	foreign key (horse_id) REFERENCES horses(id),
 	foreign key (service_id) REFERENCES services(id)
 );
@@ -50,8 +48,6 @@ CREATE TABLE booking_payments (
 drop index if exists i1_bookings;
 create index i1_bookings on bookings(horse_id);
 
-drop index if exists i2_bookings;
-create index i2_bookings on bookings(coach_id);
 
 drop index if exists i3_bookings;
 create index i3_bookings on bookings(client_id);

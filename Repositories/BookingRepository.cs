@@ -23,7 +23,7 @@ namespace Repositories
                 b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
                 b.Service = b.Service.IsDeleted ? null : b.Service;
                 b.Hor = b.Hor.IsDeleted ? null : b.Hor;
-                b.Coach = b.Coach.IsDeleted ? null : b.Coach;
+                b.BookingsToCoachesLinks = b.BookingsToCoachesLinks.Where(x => !x.Coach.IsDeleted);
 
                 if (b.BookingsTemplateMetadata?.BookingTemplates != null)
                     b.BookingsTemplateMetadata.BookingTemplates = b.BookingsTemplateMetadata.BookingTemplates.Where(x => x.IsDeleted == false);                
@@ -44,7 +44,7 @@ namespace Repositories
                         .LoadWith(x => x.Hor)
                         .Where(
                             x => x.IsDeleted == false &&
-                                 x.CoachId == coach.Id &&
+                                 x.BookingsToCoachesLinks.Any(c => c.CoachId == coach.Id) &&
                                  x.DateOn == bookingData.DateOn &&
                                  x.Id != bookingData.Id
                          ).ToListAsync())
@@ -149,7 +149,8 @@ namespace Repositories
                 var overlappedBooking =
                 (await db.Bookings
                     .LoadWith(x => x.Client)
-                    .LoadWith(x => x.Coach)
+                    .LoadWith(x => x.BookingsToCoachesLinks)
+                    .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
                     .Where(
                         x => x.IsDeleted == false &&
                                 x.HorseId == horse.Id &&
@@ -161,7 +162,7 @@ namespace Repositories
                 if (overlappedBooking != null)
                 {
                     result.Result = false;
-                    result.ErrorMessage = $"Horse has another booking during the selected time interval (Coach: {overlappedBooking.Coach.Name}, Client: {overlappedBooking.Client.Name}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                    result.ErrorMessage = $"Horse has another booking during the selected time interval (Coach: {overlappedBooking.BookingsToCoachesLinks.First().Coach.Name}, Client: {overlappedBooking.Client.Name}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
                 }
 
                 return result;
@@ -290,9 +291,10 @@ namespace Repositories
                         .LoadWith(x => x.BookingPayments)
                         .LoadWith(x => x.BookingPayments.First().PaymentType)
                         .LoadWith(x => x.Client)
-                        .LoadWith(x => x.Coach)
-                        .LoadWith(x => x.Coach.Schedules)
-                        .LoadWith(x => x.Coach.Schedules.First().SchedulesData)
+                        .LoadWith(x => x.BookingsToCoachesLinks)
+                        .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
+                        .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules)
+                        .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules.First().SchedulesData)
                         .LoadWith(x => x.Service)                        
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)
@@ -327,20 +329,24 @@ namespace Repositories
                 sb.Append(message);            
         }
 
-        public async Task<String> RunValidations(Booking booking, bool isErrors = true, CintraDB dbContext = null)
+        public async Task<String> RunValidations(Booking booking, bool ErrorsValidation = true, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var error = new StringBuilder();
 
-                if (isErrors)
+                if (ErrorsValidation)
                 {
-                    Append(error, (await HasCoachNotOverlappedBooking(booking.Coach, booking, db)).ToString());
-                    Append(error, (await HasCoachScheduleFitBooking(booking.Coach, booking, db)).ToString());
+                    foreach (var coach in booking.BookingsToCoachesLinks.Select(x => x.Coach))
+                    {
+                        Append(error, (await HasCoachNotOverlappedBooking(coach, booking, db)).ToString());
+                        Append(error, (await HasCoachScheduleFitBooking(coach, booking, db)).ToString());
+                    }
 
                     Append(error, (await HasHorseNotOverlappedBooking(booking.Hor, booking, db)).ToString());
                     Append(error, (await HasHorseScheduleFitBooking(booking.Hor, booking, db)).ToString());
                 }
+                //just Warnings
                 else
                 {
                     Append(error, (await HasHorseRequiredBreak(booking.Hor, booking, db)).ToString());

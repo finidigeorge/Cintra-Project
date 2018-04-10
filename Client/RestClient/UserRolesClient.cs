@@ -19,7 +19,7 @@ namespace RestApi
 
         public async Task<IList<UserRoleDto>> GetByUser(string login)
         {
-            return await SendRequest<List<UserRoleDto>>($"api/{ControllerName}/getByUser/{login}");
+            return await SendRequest<List<UserRoleDto>>($"api/{ControllerName}/{nameof(IUserRolesController.GetByUser)}/{login}");
         }
     }
 }

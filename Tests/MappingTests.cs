@@ -24,7 +24,7 @@ namespace Tests
             {
                 BookingPayment = new BookingPaymentDto(),
                 Client = new ClientDto(),
-                Coach = new CoachDto() { Schedules = new List<ScheduleDto>() },
+                Coaches = new List<CoachDto>() { new CoachDto() { Schedules = new List<ScheduleDto>() } },
                 Horse = new HorseDto(),
                 Service = new ServiceDto()
             };

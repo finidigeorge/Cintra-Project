@@ -17,9 +17,10 @@ namespace Repositories
                 return await Task.FromResult(
                     db.BookingTemplates                                                
                         .LoadWith(x => x.Client)
-                        .LoadWith(x => x.Coach)
-                        .LoadWith(x => x.Coach.Schedules)
-                        .LoadWith(x => x.Coach.Schedules.First().SchedulesData)
+                        .LoadWith(x => x.BookingTemplatesToCoachesLinks)
+                        .LoadWith(x => x.BookingTemplatesToCoachesLinks.First().Coach)
+                        .LoadWith(x => x.BookingTemplatesToCoachesLinks.First().Coach.Schedules)
+                        .LoadWith(x => x.BookingTemplatesToCoachesLinks.First().Coach.Schedules.First().SchedulesData)
                         .LoadWith(x => x.Service)
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)

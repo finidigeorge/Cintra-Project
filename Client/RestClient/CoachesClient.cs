@@ -15,7 +15,7 @@ namespace RestClient
 
         public async Task<List<CoachDto>> GetAllByService(long serviceId, bool onlyAssignedCoaches)
         {
-            return await SendRequest<List<CoachDto>>($"api/{ControllerName}/GetAllByService/{serviceId}/{onlyAssignedCoaches}");
+            return await SendRequest<List<CoachDto>>($"api/{ControllerName}/{nameof(ICoachController.GetAllByService)}/{serviceId}/{onlyAssignedCoaches}");
         }
     }
 }

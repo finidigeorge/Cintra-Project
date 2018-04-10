@@ -7,6 +7,7 @@ using Shared.Dto;
 using Common.Annotations;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Common.DtoMapping
 {
@@ -37,7 +38,7 @@ namespace Common.DtoMapping
 				
 			public override ClientDto Client { get; set; }
 				
-			public override CoachDto Coach { get; set; }
+			public override List<CoachDto> Coaches { get; set; }
 				
 			public override ServiceDto Service { get; set; }
 				
@@ -1060,9 +1061,11 @@ namespace Common.DtoMapping
 			public override Int64 HorseId { get; set; }
 				
 			public override HorsesUnavailabilityEnum UnavailabilityType { get; set; }
-				
+					
+			public override Int64? DayOfWeek { get; set; }
+					
 			public override DateTime? StartDate { get; set; }
-				
+					
 			public override DateTime? EndDate { get; set; }
 			
 			public bool IsEditing { get; set; } = false;

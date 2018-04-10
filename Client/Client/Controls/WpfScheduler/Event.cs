@@ -1,6 +1,7 @@
 ﻿using Common.DtoMapping;
 using Shared.Dto;
 using System;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Client.Controls.WpfScheduler
@@ -59,7 +60,7 @@ namespace Client.Controls.WpfScheduler
             AllDay = false;
             string paymentInfo = booking.BookingPayment.IsPaid ? "Paid" : "Not paid";
 
-            Subject = $"Client: {booking.Client.Name}, Coach: {booking.Coach.Name}, Horse: {booking.Horse.NickName}, Service: {booking.Service.Name} \n" + 
+            Subject = $"Client: {booking.Client.Name}, Coach: {booking.Coaches.FirstOrDefault()?.Name}, Horse: {booking.Horse.NickName}, Service: {booking.Service.Name} \n" + 
                 $"{paymentInfo}";
         }
 

@@ -22,6 +22,8 @@ namespace Client
         bool bookingWindowIsRunning = false;
         private string selectedTab = "Horses";
 
+        private BookingWindow bookingWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,7 +32,7 @@ namespace Client
             {
                 var thread = new Thread(() =>
                 {
-                    var bookingWindow = new BookingWindow();
+                    bookingWindow = new BookingWindow();
                     bookingWindowIsRunning = true;
                     bookingWindow.Show();
 
@@ -90,6 +92,14 @@ namespace Client
             if (result == MessageBoxResult.Yes)
             {
                 Application.Current.Shutdown();
+                try
+                {
+                    if (bookingWindow != null)
+                        bookingWindow.Dispatcher.BeginInvoke((Action)bookingWindow.Close);
+                }
+                catch (Exception)
+                {                    
+                }
             }
         }        
 
@@ -119,6 +129,13 @@ namespace Client
                     }
                 }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ExitAppCommandAction();
+
+            e.Cancel = true;
         }
     }
 }

@@ -151,8 +151,7 @@ namespace Client.Windows
             {
                 var item = (TabItem)tc.SelectedItem;
                 if (item == null || (item.IsSelected && item.TabIndex != 1))
-                {
-                    Height = 700;
+                {                    
                     Width = 740;
 
                     CenterWindowOnScreen();
