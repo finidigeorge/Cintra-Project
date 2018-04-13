@@ -55,6 +55,7 @@
     <Compile Include="BaseRestApiClient.cs" />
     <Compile Include="BookingsClient.cs" />
     <Compile Include="CoachesClient.cs" />
+    <Compile Include="HorsesClient.cs" />
     <Compile Include="HorsesScheduleDataClient.cs" />
     <Compile Include="RestClientFactory.cs" />
     <Compile Include="JsonNetSerializer.cs" />

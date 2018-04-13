@@ -15,8 +15,9 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.BookingTemplates                                                
-                        .LoadWith(x => x.Client)
+                    db.BookingTemplates
+                        .LoadWith(x => x.BookingTemplatesToClientsLinks)
+                        .LoadWith(x => x.BookingTemplatesToClientsLinks.First().Client)
                         .LoadWith(x => x.BookingTemplatesToCoachesLinks)
                         .LoadWith(x => x.BookingTemplatesToCoachesLinks.First().Coach)
                         .LoadWith(x => x.BookingTemplatesToCoachesLinks.First().Coach.Schedules)
@@ -24,8 +25,9 @@ namespace Repositories
                         .LoadWith(x => x.Service)
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)
-                        .LoadWith(x => x.Hor)
-                        .LoadWith(x => x.Hor.HorsesScheduleData)
+                        .LoadWith(x => x.BookingTemplatesToHorsesLinks)
+                        .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor)
+                        .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor.HorsesScheduleData)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );                
 

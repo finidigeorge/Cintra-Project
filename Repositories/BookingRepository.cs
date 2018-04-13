@@ -22,7 +22,7 @@ namespace Repositories
             {                
                 b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
                 b.Service = b.Service.IsDeleted ? null : b.Service;
-                b.Hor = b.Hor.IsDeleted ? null : b.Hor;
+                b.BookingsToHorsesLinks = b.BookingsToHorsesLinks.Where(x => !x.Hor.IsDeleted);
                 b.BookingsToCoachesLinks = b.BookingsToCoachesLinks.Where(x => !x.Coach.IsDeleted);
 
                 if (b.BookingsTemplateMetadata?.BookingTemplates != null)
@@ -40,8 +40,7 @@ namespace Repositories
 
                 var overlappedBooking =
                     (await db.Bookings
-                        .LoadWith(x => x.Client)
-                        .LoadWith(x => x.Hor)
+                        .LoadWith(x => x.Service)                        
                         .Where(
                             x => x.IsDeleted == false &&
                                  x.BookingsToCoachesLinks.Any(c => c.CoachId == coach.Id) &&
@@ -53,7 +52,7 @@ namespace Repositories
                 if (overlappedBooking != null)
                 {
                     result.Result = false;
-                    result.ErrorMessage = $"Coach has another booking during the selected time interval (Client: {overlappedBooking.Client.Name}, Horse: {overlappedBooking.Hor.Nickname}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                    result.ErrorMessage = $"Coach has another booking during the selected time interval: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")}, Service: {overlappedBooking.Service.Name}";
                 }
 
                 return result;
@@ -148,12 +147,12 @@ namespace Repositories
 
                 var overlappedBooking =
                 (await db.Bookings
-                    .LoadWith(x => x.Client)
+                    .LoadWith(x => x.BookingsToHorsesLinks)
                     .LoadWith(x => x.BookingsToCoachesLinks)
                     .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
                     .Where(
                         x => x.IsDeleted == false &&
-                                x.HorseId == horse.Id &&
+                                x.BookingsToHorsesLinks.Any(h => h.HorseId == horse.Id) &&
                                 x.DateOn == bookingData.DateOn &&
                                 x.Id != bookingData.Id
                         ).ToListAsync())
@@ -162,7 +161,7 @@ namespace Repositories
                 if (overlappedBooking != null)
                 {
                     result.Result = false;
-                    result.ErrorMessage = $"Horse has another booking during the selected time interval (Coach: {overlappedBooking.BookingsToCoachesLinks.First().Coach.Name}, Client: {overlappedBooking.Client.Name}, Time: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")})";
+                    result.ErrorMessage = $"Horse has another booking during the selected time interval: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")}, Service: {overlappedBooking.Service.Name}";
                 }
 
                 return result;
@@ -179,7 +178,7 @@ namespace Repositories
                 (await db.Bookings
                     .Where(
                         x => x.IsDeleted == false &&
-                                x.HorseId == horse.Id &&
+                                x.BookingsToHorsesLinks.Any(h => h.HorseId == horse.Id) &&
                                 x.DateOn == bookingData.DateOn &&
                                 x.Id != bookingData.Id
                         ).ToListAsync())
@@ -206,7 +205,7 @@ namespace Repositories
                     (await
                         db.Bookings                                                
                         .Where(x => x.IsDeleted == false &&
-                              x.HorseId == horse.Id &&
+                              x.BookingsToHorsesLinks.Any(h => h.HorseId == horse.Id) &&
                               x.DateOn == bookingData.DateOn &&
                               x.BeginTime < bookingData.BeginTime                        
                         )
@@ -290,7 +289,8 @@ namespace Repositories
                         .LoadWith(x => x.BookingsTemplateMetadata.BookingTemplates)
                         .LoadWith(x => x.BookingPayments)
                         .LoadWith(x => x.BookingPayments.First().PaymentType)
-                        .LoadWith(x => x.Client)
+                        .LoadWith(x => x.BookingsToClientsLinks)
+                        .LoadWith(x => x.BookingsToClientsLinks.First().Client)
                         .LoadWith(x => x.BookingsToCoachesLinks)
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules)
@@ -298,8 +298,9 @@ namespace Repositories
                         .LoadWith(x => x.Service)                        
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)
-                        .LoadWith(x => x.Hor)
-                        .LoadWith(x => x.Hor.HorsesScheduleData)
+                        .LoadWith(x => x.BookingsToHorsesLinks)
+                        .LoadWith(x => x.BookingsToHorsesLinks.First().Hor)
+                        .LoadWith(x => x.BookingsToHorsesLinks.First().Hor.HorsesScheduleData)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
                 );
 
@@ -343,14 +344,20 @@ namespace Repositories
                         Append(error, (await HasCoachScheduleFitBooking(coach, booking, db)).ToString());
                     }
 
-                    Append(error, (await HasHorseNotOverlappedBooking(booking.Hor, booking, db)).ToString());
-                    Append(error, (await HasHorseScheduleFitBooking(booking.Hor, booking, db)).ToString());
+                    foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor))
+                    {
+                        Append(error, (await HasHorseNotOverlappedBooking(horse, booking, db)).ToString());
+                        Append(error, (await HasHorseScheduleFitBooking(horse, booking, db)).ToString());
+                    }
                 }
                 //just Warnings
                 else
                 {
-                    Append(error, (await HasHorseRequiredBreak(booking.Hor, booking, db)).ToString());
-                    Append(error, (await HasHorseWorkedLessThanAllowed(booking.Hor, booking, db)).ToString());
+                    foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor))
+                    {
+                        Append(error, (await HasHorseRequiredBreak(horse, booking, db)).ToString());
+                        Append(error, (await HasHorseWorkedLessThanAllowed(horse, booking, db)).ToString());
+                    }
                 }
 
                 return error.ToString();

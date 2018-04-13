@@ -23,9 +23,9 @@ namespace Tests
             var dto = new BookingDto()
             {
                 BookingPayment = new BookingPaymentDto(),
-                Client = new ClientDto(),
+                Clients = new List<ClientDto>() { new ClientDto() },
                 Coaches = new List<CoachDto>() { new CoachDto() { Schedules = new List<ScheduleDto>() } },
-                Horse = new HorseDto(),
+                Horses = new List<HorseDto>() { new HorseDto() },
                 Service = new ServiceDto()
             };
 

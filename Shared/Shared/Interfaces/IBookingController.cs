@@ -13,13 +13,13 @@ namespace Shared.Interfaces
         Task<CheckResultDto> HasCoachesNotOverlappedBooking(BookingDto entity);
         Task<CheckResultDto> HasCoachesScheduleFitBooking(BookingDto entity);
 
-        Task<CheckResultDto> HasHorseNotOverlappedBooking(BookingDto entity);
+        Task<CheckResultDto> HasHorsesNotOverlappedBooking(BookingDto entity);
 
-        Task<CheckResultDto> HasHorseRequiredBreak(BookingDto entity);
+        Task<CheckResultDto> HasHorsesRequiredBreak(BookingDto entity);
 
-        Task<CheckResultDto> HasHorseWorkedLessThanAllowed(BookingDto entity);
+        Task<CheckResultDto> HasHorsesWorkedLessThanAllowed(BookingDto entity);
 
-        Task<CheckResultDto> HasHorseScheduleFitBooking(BookingDto entity);
+        Task<CheckResultDto> HasHorsesScheduleFitBooking(BookingDto entity);
 
         Task CancelAllBookings(long metadataId, long FromDate);
 

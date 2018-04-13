@@ -56,9 +56,6 @@ namespace Common.DtoMapping
             }
         }
 
-        [DependsOn(nameof(Client))]
-        public ClientDtoUi ClientUi => ObjectMapper.Map<ClientDtoUi>(Client);
-
         public string ApplyObjectLevelValidations()
         {
             StringBuilder error = new StringBuilder();

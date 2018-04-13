@@ -60,7 +60,7 @@ namespace Client.Controls.WpfScheduler
             AllDay = false;
             string paymentInfo = booking.BookingPayment.IsPaid ? "Paid" : "Not paid";
 
-            Subject = $"Client: {booking.Client.Name}, Coach: {booking.Coaches.FirstOrDefault()?.Name}, Horse: {booking.Horse.NickName}, Service: {booking.Service.Name} \n" + 
+            Subject = $"Clients: {string.Join(", ", booking.Clients.Select(x => x.Name))}, Coach: {string.Join(", ", booking.Coaches.Select(x => x.Name))}, Horse: {string.Join(", ", booking.Horses.Select(x => x.NickName))}, Service: {booking.Service.Name} \n" + 
                 $"{paymentInfo}";
         }
 

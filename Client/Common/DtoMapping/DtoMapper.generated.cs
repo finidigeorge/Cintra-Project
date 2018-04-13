@@ -34,9 +34,9 @@ namespace Common.DtoMapping
 				
 			public override Int32 DayOfWeek { get; set; }
 				
-			public override HorseDto Horse { get; set; }
+			public override List<HorseDto> Horses { get; set; }
 				
-			public override ClientDto Client { get; set; }
+			public override List<ClientDto> Clients { get; set; }
 				
 			public override List<CoachDto> Coaches { get; set; }
 				

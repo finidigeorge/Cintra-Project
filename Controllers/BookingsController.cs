@@ -166,15 +166,24 @@ namespace Controllers
             }
         }
 
-        [HttpPost("/api/[controller]/HasHorseNotOverlappedBooking")]
-        public async Task<CheckResultDto> HasHorseNotOverlappedBooking([FromBody] BookingDto entity)
+        [HttpPost("/api/[controller]/HasHorsesNotOverlappedBooking")]
+        public async Task<CheckResultDto> HasHorsesNotOverlappedBooking([FromBody] BookingDto entity)
         {
             try
             {
-                var booking = ObjectMapper.Map<Booking>(entity);
-                var horse = booking.Hor;
+                var booking = ObjectMapper.Map<Booking>(entity);                
+                var result = new CheckResultDto();
 
-                return await repository.HasHorseNotOverlappedBooking(horse, booking);
+                foreach (var link in booking.BookingsToHorsesLinks)
+                {
+                    var check = await repository.HasHorseNotOverlappedBooking(link.Hor, booking);
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
             }
             catch (Exception e)
             {
@@ -183,15 +192,24 @@ namespace Controllers
             }
         }
 
-        [HttpPost("/api/[controller]/HasHorseRequiredBreak")]
-        public async Task<CheckResultDto> HasHorseRequiredBreak([FromBody] BookingDto entity)
+        [HttpPost("/api/[controller]/HasHorsesRequiredBreak")]
+        public async Task<CheckResultDto> HasHorsesRequiredBreak([FromBody] BookingDto entity)
         {
             try
             {
                 var booking = ObjectMapper.Map<Booking>(entity);
-                var horse = booking.Hor;
+                var result = new CheckResultDto();
 
-                return await repository.HasHorseRequiredBreak(horse, booking);
+                foreach (var link in booking.BookingsToHorsesLinks)
+                {
+                    var check = await repository.HasHorseRequiredBreak(link.Hor, booking);
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
             }
             catch (Exception e)
             {
@@ -200,15 +218,24 @@ namespace Controllers
             }
         }
 
-        [HttpPost("/api/[controller]/HasHorseWorkedLessThanAllowed")]
-        public async Task<CheckResultDto> HasHorseWorkedLessThanAllowed([FromBody] BookingDto entity)
+        [HttpPost("/api/[controller]/HasHorsesWorkedLessThanAllowed")]
+        public async Task<CheckResultDto> HasHorsesWorkedLessThanAllowed([FromBody] BookingDto entity)
         {
             try
             {
                 var booking = ObjectMapper.Map<Booking>(entity);
-                var horse = booking.Hor;
+                var result = new CheckResultDto();
 
-                return await repository.HasHorseWorkedLessThanAllowed(horse, booking);
+                foreach (var link in booking.BookingsToHorsesLinks)
+                {
+                    var check = await repository.HasHorseWorkedLessThanAllowed(link.Hor, booking);
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
             }
             catch (Exception e)
             {
@@ -217,15 +244,24 @@ namespace Controllers
             }
         }
 
-        [HttpPost("/api/[controller]/HasHorseScheduleFitBooking")]
-        public async Task<CheckResultDto> HasHorseScheduleFitBooking([FromBody] BookingDto entity)
+        [HttpPost("/api/[controller]/HasHorsesScheduleFitBooking")]
+        public async Task<CheckResultDto> HasHorsesScheduleFitBooking([FromBody] BookingDto entity)
         {
             try
             {
                 var booking = ObjectMapper.Map<Booking>(entity);
-                var horse = booking.Hor;
+                var result = new CheckResultDto();
 
-                return await repository.HasHorseScheduleFitBooking(horse, booking);
+                foreach (var link in booking.BookingsToHorsesLinks)
+                {
+                    var check = await repository.HasHorseScheduleFitBooking(link.Hor, booking);
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
             }
             catch (Exception e)
             {

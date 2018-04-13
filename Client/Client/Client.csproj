@@ -130,6 +130,9 @@
     <Compile Include="Extentions\ReportRunner.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
     <Compile Include="ViewModels\BookingDeleteWindowVm.cs" />
+    <Compile Include="ViewModels\BookingEditClientVm.cs" />
+    <Compile Include="ViewModels\BookingEditCoachVm.cs" />
+    <Compile Include="ViewModels\BookingEditHorseVm.cs" />
     <Compile Include="ViewModels\BookingEditWindowVm.cs" />
     <Compile Include="ViewModels\BookingRefVm.cs" />
     <Compile Include="ViewModels\ClientsRefVm.cs" />

@@ -21,9 +21,9 @@ namespace Shared.Dto
         public virtual int DayOfWeek { get; set; }
         
         [VmMeta(IsNullable = false)]
-        public virtual HorseDto Horse { get; set; }
+        public virtual List<HorseDto> Horses { get; set; }
         [VmMeta(IsNullable = false)]
-        public virtual ClientDto Client { get; set; }
+        public virtual List<ClientDto> Clients { get; set; }
         [VmMeta(IsNullable = false)]
         public virtual List<CoachDto> Coaches { get; set; }
         [VmMeta(IsNullable = false)]

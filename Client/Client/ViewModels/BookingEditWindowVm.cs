@@ -17,80 +17,10 @@ using Common;
 
 namespace Client.ViewModels
 {
-    public class BookingEditCoachVm : BaseVm
-    {
-        public Guid Id { get; private set; } = new Guid();
-        private CoachesClient coachesClient = new CoachesClient();        
-        private readonly BookingEditWindowVm _parentVm;
-        public CoachesRefVm CoachesModel { get; set; } = new CoachesRefVm();
-
-        public CoachDtoUi Coach { get; set; } = new CoachDtoUi();
-
-        public bool DisplayOnlyAssignedCoaches { get; set; } = true;
-
-        public IAsyncCommand GetCoachesCommand { get => CoachesModel.RefreshDataCommand; }
-        public ICommand AddCoachCommand { get => _parentVm.AddCoachCommand; }
-        public ICommand DeleteCoachCommand { get; set; }
-
-        public BookingEditCoachVm(BookingEditWindowVm parentVm)
-        {
-            _parentVm = parentVm;
-            
-            CoachesModel.OnSelectedItemChanged += async (sender, coach) =>
-            {
-                Coach = coach;
-                await _parentVm.RunCoachValidations();
-            };
-
-            CoachesModel.GetItemsCommand = new AsyncCommand<object>(async (x) =>
-            {
-                long selectedItemId = 0;
-                if (CoachesModel.SelectedItem != null)
-                    selectedItemId = CoachesModel.SelectedItem.Id;
-
-                if (CoachesModel.Items == null)
-                    CoachesModel.Items = new ObservableCollection<CoachDtoUi>();
-                else
-                    CoachesModel.Items.Clear();
-
-                if (_parentVm.BookingData.Service != null)
-                    foreach (var item in (await coachesClient.GetAllByService(_parentVm.BookingData.Service.Id, DisplayOnlyAssignedCoaches)).ToList<CoachDto, CoachDtoUi>())
-                        CoachesModel.Items.Add(item);
-
-                if (selectedItemId != 0)
-                {
-                    CoachesModel.SelectedItem = CoachesModel.Items.FirstOrDefault(i => i.Id == selectedItemId);
-                }
-            });
-
-            DeleteCoachCommand = new AsyncCommand<object>(async (param) =>
-            {
-                await _parentVm.DeleteCoachCommand.ExecuteAsync(Id);
-            }, (x) => _parentVm.CanDeleteCoach);
-
-            PropertyChanged += (sender, args) => {
-                if (args.PropertyName == nameof(DisplayOnlyAssignedCoaches))
-                {
-                    GetCoachesCommand.Execute(null);
-                }
-            };
-        }
-
-        public void SyncToParentVmService()
-        {
-            if (_parentVm.BookingData.Service != null)
-            {                
-                var linkedItems = new HashSet<long>(_parentVm.BookingData.Service.Coaches.Select(x => x.Id));
-                foreach (var c in CoachesModel.Items.Where(x => !linkedItems.Contains(x.Id)).ToList())
-                    CoachesModel.Items.Remove(c);
-            }
-        }
-    }
 
     public class BookingEditWindowVm : BaseVm
     {
         BookingsClient bookingsClient = new BookingsClient();
-        CoachesClient coachesClient = new CoachesClient();
 
         private BookingDtoUi _bookingData;
         public BookingDtoUi BookingData {
@@ -131,21 +61,25 @@ namespace Client.ViewModels
         public ICommand UpdateWeeklyScheduledIntervalCommand { get; set; }
         public ICommand DeleteWeeklyScheduledIntervalCommand { get; set; }
 
-        public ICommand GetClientsCommand { get => ClientsModel.RefreshDataCommand; }
         public ICommand GetServicesCommand { get => ServicesModel.RefreshDataCommand; }
-        public ICommand GetHorsesCommand { get => HorsesModel.RefreshDataCommand; }
+
 
         public ICommand AddCoachCommand { get; set; }
         public IAsyncCommand DeleteCoachCommand { get; set; }
-
         public bool CanDeleteCoach { get => CoachesVms.Count > 1; }
+
+        public ICommand AddHorseCommand { get; set; }
+        public IAsyncCommand DeleteHorseCommand { get; set; }
+        public bool CanDeleteHorse { get => HorsesVms.Count > 1; }
+
+        public ICommand AddClientCommand { get; set; }
+        public IAsyncCommand DeleteClientCommand { get; set; }
+        public bool CanDeleteClient { get => CoachesVms.Count > 1; }
 
 
         public Scheduler RecurrentScheduler { get; set; }
 
-        public ClientsRefVm ClientsModel { get; set; } = new ClientsRefVm();
-        public ServicesRefVm ServicesModel { get; set; } = new ServicesRefVm();
-        public HorsesRefVm HorsesModel { get; set; } = new HorsesRefVm();        
+        public ServicesRefVm ServicesModel { get; set; } = new ServicesRefVm();        
         public PaymentTypesRefVm PaymentTypesModel { get; set; } = new PaymentTypesRefVm();
 
         private String horseValidationError;
@@ -166,33 +100,25 @@ namespace Client.ViewModels
         }
 
         public ObservableCollection<BookingEditCoachVm> CoachesVms { get; set; } = new ObservableCollection<BookingEditCoachVm>();
+        public ObservableCollection<BookingEditHorseVm> HorsesVms { get; set; } = new ObservableCollection<BookingEditHorseVm>();
+        public ObservableCollection<BookingEditClientVm> ClientsVms { get; set; } = new ObservableCollection<BookingEditClientVm>();
 
         public BookingEditWindowVm()
-        {            
-            ClientsModel.OnSelectedItemChanged += (sender, client) => {
-                _bookingData.Client = client;
-
-                OnPropertyChanged(nameof(ShowRecurringTab));
-            };
+        {                        
             ServicesModel.OnSelectedItemChanged += async (sender, service) => {
                 _bookingData.Service = service;
-                await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
+
+                foreach (var c in HorsesVms)
+                    await c.GetHorsesCommand.ExecuteAsync(null);                
 
                 foreach(var c in CoachesVms)
                     await c.GetCoachesCommand.ExecuteAsync(c.DisplayOnlyAssignedCoaches ? service.Id : (long?)null);
-
-                SyncServiceDataModels();
 
                 _bookingData.EndTime = _bookingData.BeginTime.AddMinutes((int)service.LengthMinutes);
                 _bookingData.OnPropertyChanged("EndTime");
                 OnPropertyChanged(nameof(ShowRecurringTab));
             };
-            HorsesModel.OnSelectedItemChanged += async (sender, horse) =>
-            {
-                _bookingData.Horse = horse;
-                await RunHorseValidations();                
-            };
-            
+                        
             PaymentTypesModel.OnSelectedItemChanged += (sender, paymentType) => { _bookingData.BookingPayment.PaymentType = paymentType; };
             
 
@@ -204,9 +130,33 @@ namespace Client.ViewModels
             DeleteCoachCommand = new AsyncCommand<Guid>(async (param) =>
             {
                 CoachesVms.Remove(CoachesVms.First(x => x.Id == param));                
-            }, (x) => CoachesVms.Count > 1);
+            }, (x) => CanDeleteCoach);
+
+            
+            AddHorseCommand = new Command<object>(() =>
+            {
+                HorsesVms.Add(new BookingEditHorseVm(this));
+            }, (x) => HorsesVms.Count < 5);
+
+            DeleteHorseCommand = new AsyncCommand<Guid>(async (param) =>
+            {
+                HorsesVms.Remove(HorsesVms.First(x => x.Id == param));
+            }, (x) => CanDeleteHorse);
+
+            AddClientCommand = new Command<object>(() =>
+            {
+                ClientsVms.Add(new BookingEditClientVm(this));
+            }, (x) => ClientsVms.Count < 5);
+
+            DeleteClientCommand = new AsyncCommand<Guid>(async (param) =>
+            {
+                ClientsVms.Remove(ClientsVms.First(x => x.Id == param));
+            }, (x) => CanDeleteClient);
+
 
             AddCoachCommand.Execute(null);
+            AddHorseCommand.Execute(null);
+            AddClientCommand.Execute(null);
         }
 
         public async Task RunCoachValidations()
@@ -230,80 +180,46 @@ namespace Client.ViewModels
             OnPropertyChanged(nameof(ShowRecurringTab));
         }
 
-        private async Task RunHorseValidations()
+        public async Task RunHorseValidations()
         {
             var dto = ObjectMapper.Map<BookingDto>(_bookingData);
-            if (dto.Horse != null)
+            if (dto.Horses?.Any() ?? false)
             {
                 horseValidationError = null;
                 HorseValidationHoursPerDayWarning = null;
                 HorseValidationHoursInRowWarning = null;
 
-                var res = await bookingsClient.HasHorseNotOverlappedBooking(dto);
+                var res = await bookingsClient.HasHorsesNotOverlappedBooking(dto);
                 if (!res.Result)
                     horseValidationError = res.ErrorMessage;
 
-                res = await bookingsClient.HasHorseScheduleFitBooking(dto);
+                res = await bookingsClient.HasHorsesScheduleFitBooking(dto);
                 if (!res.Result)
                     horseValidationError = horseValidationError + (!string.IsNullOrEmpty(horseValidationError) ? ", " : "") + res.ErrorMessage;
 
-                res = await bookingsClient.HasHorseRequiredBreak(dto);
+                res = await bookingsClient.HasHorsesRequiredBreak(dto);
                 if (!res.Result)
                     HorseValidationHoursInRowWarning = res.ErrorMessage;
 
-                res = await bookingsClient.HasHorseWorkedLessThanAllowed(dto);
+                res = await bookingsClient.HasHorsesWorkedLessThanAllowed(dto);
                 if (!res.Result)
                     HorseValidationHoursPerDayWarning = res.ErrorMessage;
 
             }
 
             //to raise validation checks
-            _bookingData.OnPropertyChanged(nameof(_bookingData.Horse));
+            _bookingData.OnPropertyChanged(nameof(_bookingData.Horses));
             OnPropertyChanged(nameof(ShowRecurringTab));
         }
 
         private async void RefreshAllModels()
         {
-            await ClientsModel.RefreshDataCommand.ExecuteAsync(null);
-            await ServicesModel.RefreshDataCommand.ExecuteAsync(null);
-            await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
-            
-            await PaymentTypesModel.RefreshDataCommand.ExecuteAsync(null);
-            SyncAllDataToModels();
-        }
-
-        private void SyncServiceDataModels()
-        {
-            if (BookingData.Service != null)
-            {                
-                var linkedItems = new HashSet<long>(BookingData.Service.Horses.Select(x => x.Id));
-                foreach (var h in HorsesModel.Items.Where(x => !linkedItems.Contains(x.Id)).ToList())
-                    HorsesModel.Items.Remove(h);
-
-                /*foreach (var vm in CoachesVms)
-                    vm.SyncToParentVmService();*/
-            }
-
-            if (BookingData.Horse != null)
-            {
-                HorsesModel.SelectedItem = HorsesModel.Items.FirstOrDefault(x => x.Id == BookingData.Horse.Id);
-            }                      
-        }
-
-        private void SyncAllDataToModels()
-        {
-            if (BookingData.Client != null)
-            {                
-                ClientsModel.SelectedItem = ClientsModel.Items.FirstOrDefault(x => x.Id == BookingData.Client.Id);
-            }
-
-            SyncServiceDataModels();
-
             if (BookingData.BookingPayment?.PaymentType != null)
             {
                 PaymentTypesModel.SelectedItem = PaymentTypesModel.Items.FirstOrDefault(x => x.Id == BookingData.BookingPayment.PaymentType.Id);
             }
-        }
 
+            await PaymentTypesModel.RefreshDataCommand.ExecuteAsync(null);
+        }        
     }
 }

@@ -45,8 +45,7 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.Horses
-                        .LoadWith(x => x.Bookings)
+                    db.Horses                        
                         .LoadWith(x => x.HorsesScheduleData)
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
