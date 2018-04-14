@@ -13,11 +13,15 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
-        <CommandText>SELECT date_on, begin_time, end_time, h.nickname as horse, c.name as coach
-FROM bookings b,  coaches c, horses h
-WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client_id = @ClientId and b.date_on between @StartDate and @EndDate</CommandText>
+        <CommandText>SELECT date_on, begin_time, end_time, 
+	(select h.nickname from horses h, bookings_to_horses_link hl where b.id = hl.booking_id and h.id = hl.horse_id LIMIT 1) as horse, 
+	(select c.name from coaches c, bookings_to_coaches_link cl where b.id = cl.booking_id and cl.coach_id = c.id LIMIT 1) as coach
+FROM bookings b, bookings_to_clients_link cll
+WHERE  b.is_deleted = 0 and 	   
+	   b.id = cll.booking_id and cll.client_id = @ClientId and 
+	   b.date_on between @StartDate and @EndDate</CommandText>
         <QueryParameters>
           <QueryParameter Name="ClientId">
             <Value>={?ClientId}</Value>
@@ -30,7 +34,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="date_on">
           <DataField>date_on</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
@@ -69,7 +73,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
           <BorderStyle />
           <BorderColor />
           <BorderWidth />
-          <FontFamily >Segoe UI</FontFamily>
+          <FontFamily>Segoe UI</FontFamily>
         </Style>
       </Textbox>
       <Textbox Name="Textbox8">
@@ -96,7 +100,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
         <Top>7.30pt</Top>
         <Style>
           <FontSize>15pt</FontSize>
-          <FontFamily >Segoe UI</FontFamily>
+          <FontFamily>Segoe UI</FontFamily>
         </Style>
       </Textbox>
     </ReportItems>
@@ -145,7 +149,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -160,7 +164,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -175,7 +179,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -190,7 +194,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -205,7 +209,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <FontWeight>Bold</FontWeight>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -230,7 +234,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -245,7 +249,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -260,7 +264,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -275,7 +279,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -290,7 +294,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
                           <Default>Solid</Default>
                         </BorderStyle>
                         <PaddingLeft>2pt</PaddingLeft>
-                        <FontFamily >Segoe UI</FontFamily>
+                        <FontFamily>Segoe UI</FontFamily>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -315,7 +319,7 @@ WHERE  b.is_deleted = 0 and b.horse_id = h.id and b.coach_id = c.id and b.client
         <Style>
           <FontSize>10pt</FontSize>
           <FontWeight>Normal</FontWeight>
-          <FontFamily >Segoe UI</FontFamily>
+          <FontFamily>Segoe UI</FontFamily>
         </Style>
       </Textbox>
     </ReportItems>

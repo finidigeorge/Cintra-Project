@@ -17,12 +17,13 @@
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT b.date_on, h.nickname as horse, Sum(strftime('%s',b.end_time) - strftime('%s', b.begin_time)) as workload, 
        s.name as service
-FROM bookings b, horses h, services s
+FROM bookings b, horses h, bookings_to_horses_link hl, services s
 WHERE  b.is_deleted = 0 and 
-	b.horse_id = h.id and	
+	b.id = hl.booking_id and
+	hl.horse_id = h.id and
 	b.service_id = s.id and
 	b.date_on between @StartDate and @EndDate
-group by b.date_on, s.name</CommandText>
+group by b.date_on, s.name	</CommandText>
         <QueryParameters>
           <QueryParameter Name="StartDate">
             <Value>=Convert.ToDateTime({?StartDate})</Value>
@@ -283,7 +284,7 @@ Round((Fields!workload.Value - Round(Fields!workload.Value/3600)*3600) / 60) + '
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <BackgroundColor >WhiteSmoke</BackgroundColor>
+                        <BackgroundColor>WhiteSmoke</BackgroundColor>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -298,7 +299,7 @@ Round((Fields!workload.Value - Round(Fields!workload.Value/3600)*3600) / 60) + '
                         <BorderStyle>
                           <Default>Solid</Default>
                         </BorderStyle>
-                        <BackgroundColor >WhiteSmoke</BackgroundColor>
+                        <BackgroundColor>WhiteSmoke</BackgroundColor>
                       </Style>
                     </Textbox>
                   </ReportItems>
@@ -412,7 +413,7 @@ Round((Sum(Fields!workload.Value) - Round(Sum(Fields!workload.Value)/3600)*3600)
                             <BorderStyle>
                               <Default>Solid</Default>
                             </BorderStyle>
-                            <BackgroundColor >WhiteSmoke</BackgroundColor>
+                            <BackgroundColor>WhiteSmoke</BackgroundColor>
                           </Style>
                         </Textbox>
                       </ReportItems>
@@ -443,7 +444,7 @@ Round((Sum(Fields!workload.Value) - Round(Sum(Fields!workload.Value)/3600)*3600)
                             <BorderStyle>
                               <Default>Solid</Default>
                             </BorderStyle>
-                            <BackgroundColor >WhiteSmoke</BackgroundColor>
+                            <BackgroundColor>WhiteSmoke</BackgroundColor>
                           </Style>
                         </Textbox>
                       </ReportItems>

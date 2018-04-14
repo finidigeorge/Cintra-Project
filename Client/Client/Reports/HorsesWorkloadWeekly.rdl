@@ -31,12 +31,13 @@ SELECT  date(b.date_on, 'weekday 1') weekStart,
 	h.nickname as horse, 
 	s.name as service,
 	Sum(strftime('%s',b.end_time) - strftime('%s', b.begin_time)) as workload        	
-FROM bookings b, horses h, services s
+FROM bookings b, horses h, bookings_to_horses_link hl, services s
 WHERE  b.is_deleted = 0 and 
-	b.horse_id = h.id and	
+	b.id = hl.booking_id and
+	hl.horse_id = h.id and
 	b.service_id = s.id and
 	b.date_on between @StartDate and @EndDate
-group by b.date_on, s.name, h.nickname
+group by b.date_on, s.name
 )  t</CommandText>
         <QueryParameters>
           <QueryParameter Name="StartDate">

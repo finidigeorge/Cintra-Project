@@ -13,14 +13,15 @@
   <BottomMargin>.25in</BottomMargin>
   <DataSets>
     <DataSet Name="Data">
-      <Query>
+      <Query >
         <DataSourceName>DS1</DataSourceName>
         <CommandText>SELECT case strftime('%m',  b.date_on) when '01' then 'January' when '02' then 'Febuary' when '03' then 'March' when '04' then 'April' when '05' then 'May' when '06' then 'June' when '07' then 'July' when '08' then 'August' when '09' then 'September' when '10' then 'October' when '11' then 'November' when '12' then 'December' else '' end
  	as date_on, h.nickname as horse, Sum(strftime('%s',b.end_time) - strftime('%s', b.begin_time)) as workload, 
        s.name as service
-FROM bookings b, horses h, services s
+FROM bookings b, horses h, bookings_to_horses_link hl, services s
 WHERE  b.is_deleted = 0 and 
-	b.horse_id = h.id and	
+	b.id = hl.booking_id and
+	hl.horse_id = h.id and
 	b.service_id = s.id and
 	b.date_on between @StartDate and @EndDate
 group by b.date_on, s.name</CommandText>
@@ -33,7 +34,7 @@ group by b.date_on, s.name</CommandText>
           </QueryParameter>
         </QueryParameters>
       </Query>
-      <Fields>
+      <Fields >
         <Field Name="date_on">
           <DataField>date_on</DataField>
           <rd:TypeName>System.String</rd:TypeName>
