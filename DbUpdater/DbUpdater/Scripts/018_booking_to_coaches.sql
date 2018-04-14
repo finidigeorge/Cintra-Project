@@ -3,6 +3,7 @@ CREATE TABLE bookings_to_coaches_link (
 	id INTEGER PRIMARY KEY AUTOINCREMENT not null,
 	booking_id INTEGER NOT NULL,
 	coach_id INTEGER NOT NULL,
+	show_only_assiigned_coaches boolean not null,
 	foreign key (booking_id) REFERENCES bookings(id),
 	foreign key (coach_id) REFERENCES coaches(id)	
 );

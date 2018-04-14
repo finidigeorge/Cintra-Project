@@ -194,9 +194,10 @@ namespace DataModels
 	[Table("bookings_to_coaches_link")]
 	public partial class BookingsToCoachesLink
 	{
-		[Column("id"),         PrimaryKey, Identity] public long Id        { get; set; } // integer
-		[Column("booking_id"), NotNull             ] public long BookingId { get; set; } // integer
-		[Column("coach_id"),   NotNull             ] public long CoachId   { get; set; } // integer
+		[Column("id"),                          PrimaryKey, Identity] public long Id                       { get; set; } // integer
+		[Column("booking_id"),                  NotNull             ] public long BookingId                { get; set; } // integer
+		[Column("coach_id"),                    NotNull             ] public long CoachId                  { get; set; } // integer
+		[Column("show_only_assiigned_coaches"), NotNull             ] public bool ShowOnlyAssiignedCoaches { get; set; } // boolean
 
 		#region Associations
 

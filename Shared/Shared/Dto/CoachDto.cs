@@ -17,5 +17,7 @@ namespace Shared.Dto
         public virtual CoachRolesEnum? CoachRole { get; set; }
 
         public virtual List<ScheduleDto> Schedules { get; set; } = new List<ScheduleDto>();
+
+        public virtual bool ShowOnlyAssignedCoaches { get; set; } = true;
     }
 }

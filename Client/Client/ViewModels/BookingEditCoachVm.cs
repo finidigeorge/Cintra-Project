@@ -20,7 +20,7 @@ namespace Client.ViewModels
         private readonly BookingEditWindowVm _parentVm;
         public CoachesRefVm Model { get; set; } = new CoachesRefVm();
 
-        public bool DisplayOnlyAssignedCoaches { get; set; } = true;
+        public bool DisplayOnlyAssignedCoaches { get; set; }
 
         public IAsyncCommand GetCoachesCommand { get => Model.RefreshDataCommand; }
         public ICommand AddCoachCommand { get => _parentVm.AddCoachCommand; }
@@ -31,9 +31,12 @@ namespace Client.ViewModels
             _parentVm = parentVm;
             Model.RefreshDataCommand.Execute(null);
             Model.SelectedItem = coach;
+            DisplayOnlyAssignedCoaches = coach?.ShowOnlyAssignedCoaches ?? true;
 
             Model.OnSelectedItemChanged += async (sender, c) =>
-            {                
+            {
+                if (c != null)
+                    c.ShowOnlyAssignedCoaches = DisplayOnlyAssignedCoaches;
                 _parentVm.SyncCoachesCommand.Execute(null);
                 await _parentVm.RunCoachValidations();
             };

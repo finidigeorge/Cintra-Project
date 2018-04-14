@@ -30,7 +30,7 @@ namespace Client.ViewModels
             Model.RefreshDataCommand.Execute(null);
             Model.SelectedItem = clientDto;
 
-            Model.OnSelectedItemChanged += async (sender, client) =>
+            Model.OnSelectedItemChanged += (sender, client) =>
             {                
                 _parentVm.SyncClientsCommand.Execute(null);
                 _parentVm.RunClientValidations();

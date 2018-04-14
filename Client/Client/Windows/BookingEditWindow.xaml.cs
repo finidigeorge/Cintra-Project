@@ -42,8 +42,8 @@ namespace Client.Windows
         public BookingEditWindow(DateTime beginTime, DateTime endTime, BookingDtoUi bookindData, bool isEditMode)
         {
             InitializeComponent();
-            Model.BookingData = bookindData;
             Model.IsEditMode = isEditMode;
+            Model.BookingData = bookindData;            
             Model.RecurrentScheduler = WeeklyScheduler;
             BeginTimePicker.Model.CurrentTime = beginTime;
             EndTimePicker.Model.CurrentTime = endTime;

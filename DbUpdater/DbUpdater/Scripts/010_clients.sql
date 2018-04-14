@@ -5,11 +5,10 @@ create table clients(
 	name varchar(50) not null,
 	email varchar(50),
 	phone varchar(50),
-	age number not null,
+	age number,
 	weight varchar(10),
 	height varchar(10),
 	contact_details varchar(200),
-	is_deleted BOOLEAN default FALSE not null,
-	CHECK((email is not null) OR (phone is not null))
+	is_deleted BOOLEAN default FALSE not null
 );
 

@@ -59,7 +59,7 @@ namespace Mapping
                     .AfterMap((db, vm) =>
                     {
                         vm.Clients = db.BookingsToClientsLinks.Select(x => _mapper.Map<ClientDto>(x.Client)).ToList(); 
-                        vm.Coaches = db.BookingsToCoachesLinks.Select(x => _mapper.Map<CoachDto>(x.Coach)).ToList();
+                        vm.Coaches = db.BookingsToCoachesLinks.Select(x => { var c = _mapper.Map<CoachDto>(x.Coach); c.ShowOnlyAssignedCoaches = x.ShowOnlyAssiignedCoaches;  return c; }).ToList();
                         vm.Horses = db.BookingsToHorsesLinks.Select(x => _mapper.Map<HorseDto>(x.Hor)).ToList(); 
                         vm.Service = _mapper.Map<ServiceDto>(db.Service);
                         var payment = db.BookingPayments?.FirstOrDefault();
@@ -76,7 +76,7 @@ namespace Mapping
                             db.TemplateMetadataId = vm.BookingTemplateMetadata?.Id;
                             db.BookingsTemplateMetadata = vm.BookingTemplateMetadata != null ? _mapper.Map<BookingsTemplateMetadata>(vm.BookingTemplateMetadata) : null;
 
-                            db.BookingsToCoachesLinks = vm.Coaches?.Select(x => new BookingsToCoachesLink() { CoachId = x.Id, BookingId = db.Id, Coach = _mapper.Map<Coach>(x), Booking = db });
+                            db.BookingsToCoachesLinks = vm.Coaches?.Select(x => new BookingsToCoachesLink() { CoachId = x.Id, BookingId = db.Id, Coach = _mapper.Map<Coach>(x), Booking = db, ShowOnlyAssiignedCoaches = x.ShowOnlyAssignedCoaches });
                             db.BookingsToClientsLinks = vm.Clients?.Select(x => new BookingsToClientsLink() { ClientId = x.Id, BookingId = db.Id, Client = _mapper.Map<Client>(x), Booking = db });
                             db.BookingsToHorsesLinks = vm.Horses?.Select(x => new BookingsToHorsesLink() { HorseId = x.Id, BookingId = db.Id, Hor = _mapper.Map<Hors>(x), Booking = db });
 

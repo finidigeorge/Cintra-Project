@@ -34,12 +34,6 @@ namespace Common.DtoMapping
 				
 			public override Int32 DayOfWeek { get; set; }
 				
-			public override List<HorseDto> Horses { get; set; }
-				
-			public override List<ClientDto> Clients { get; set; }
-				
-			public override List<CoachDto> Coaches { get; set; }
-				
 			public override ServiceDto Service { get; set; }
 				
 			public override BookingPaymentDto BookingPayment { get; set; }
@@ -233,6 +227,8 @@ namespace Common.DtoMapping
 			public override String Phone { get; set; }
 					
 			public override CoachRolesEnum? CoachRole { get; set; }
+				
+			public override Boolean ShowOnlyAssignedCoaches { get; set; }
 			
 			public bool IsEditing { get; set; } = false;
 			public string this[string propertyName] => _adapter.HandleMetadataValiadations(propertyName);
