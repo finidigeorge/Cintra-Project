@@ -153,7 +153,7 @@ namespace Client.Windows
                 if (item == null || (item.IsSelected && item.TabIndex != 1))
                 {                    
                     Width = 740;
-
+                    MaxHeight = 875;
                     CenterWindowOnScreen();
                     return;
                 }
@@ -161,6 +161,7 @@ namespace Client.Windows
                 if (item.IsSelected &&  item.TabIndex == 1)
                 {
                     Height = 900;
+                    MaxHeight = 900;
                     Width = 1280;
 
                     CenterWindowOnScreen();

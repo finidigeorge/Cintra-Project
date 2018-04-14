@@ -76,9 +76,9 @@ namespace Mapping
                             db.TemplateMetadataId = vm.BookingTemplateMetadata?.Id;
                             db.BookingsTemplateMetadata = vm.BookingTemplateMetadata != null ? _mapper.Map<BookingsTemplateMetadata>(vm.BookingTemplateMetadata) : null;
 
-                            db.BookingsToCoachesLinks = vm.Coaches?.Select(x => new BookingsToCoachesLink() { CoachId = x.Id, BookingId = db.Id });
-                            db.BookingsToClientsLinks = vm.Clients?.Select(x => new BookingsToClientsLink() { ClientId = x.Id, BookingId = db.Id });
-                            db.BookingsToHorsesLinks = vm.Horses?.Select(x => new BookingsToHorsesLink() { HorseId = x.Id, BookingId = db.Id });
+                            db.BookingsToCoachesLinks = vm.Coaches?.Select(x => new BookingsToCoachesLink() { CoachId = x.Id, BookingId = db.Id, Coach = _mapper.Map<Coach>(x), Booking = db });
+                            db.BookingsToClientsLinks = vm.Clients?.Select(x => new BookingsToClientsLink() { ClientId = x.Id, BookingId = db.Id, Client = _mapper.Map<Client>(x), Booking = db });
+                            db.BookingsToHorsesLinks = vm.Horses?.Select(x => new BookingsToHorsesLink() { HorseId = x.Id, BookingId = db.Id, Hor = _mapper.Map<Hors>(x), Booking = db });
 
                         });
 

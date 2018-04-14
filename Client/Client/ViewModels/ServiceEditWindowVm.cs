@@ -51,7 +51,7 @@ namespace Client.ViewModels
         public ICommand UnselectAllCoachesCommand { get; set; }
         public ICommand SelectAllCoachesCommand { get; set; }
 
-        private async Task RefreshAllModels()
+        private async void RefreshAllModels()
         {
             await HorsesModel.RefreshDataCommand.ExecuteAsync(null);
             Horses.Clear();

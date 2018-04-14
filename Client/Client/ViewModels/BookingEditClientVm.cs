@@ -5,6 +5,7 @@ using Shared.Dto;
 using Shared.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,27 +18,28 @@ namespace Client.ViewModels
         public Guid Id { get; private set; } = new Guid();
         private IBaseController<ClientDto> clientsClient = RestClientFactory.GetClient<ClientDto>();
         private readonly BookingEditWindowVm _parentVm;
-        public ClientsRefVm ClientsModel { get; set; } = new ClientsRefVm();
+        public ClientsRefVm Model { get; set; } = new ClientsRefVm();
 
-        public ClientDtoUi Client { get; set; } = new ClientDtoUi();
-
-        public IAsyncCommand GetClientsCommand { get => ClientsModel.RefreshDataCommand; }
+        public IAsyncCommand GetClientsCommand { get => Model.RefreshDataCommand; }
         public ICommand AddClientCommand { get => _parentVm.AddClientCommand; }
         public ICommand DeleteClientCommand { get; set; }
 
-        public BookingEditClientVm(BookingEditWindowVm parentVm)
+        public BookingEditClientVm(BookingEditWindowVm parentVm, ClientDtoUi clientDto)
         {
             _parentVm = parentVm;
+            Model.RefreshDataCommand.Execute(null);
+            Model.SelectedItem = clientDto;
 
-            ClientsModel.OnSelectedItemChanged += async (sender, client) =>
-            {
-                Client = client;                
+            Model.OnSelectedItemChanged += async (sender, client) =>
+            {                
+                _parentVm.SyncClientsCommand.Execute(null);
+                _parentVm.RunClientValidations();
             };
 
             DeleteClientCommand = new AsyncCommand<object>(async (param) =>
             {
                 await _parentVm.DeleteClientCommand.ExecuteAsync(Id);
-            }, (x) => _parentVm.CanDeleteClient);
+            }, (x) => _parentVm.CanDeleteClient);            
         }
     }
 }

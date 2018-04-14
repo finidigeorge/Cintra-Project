@@ -80,8 +80,19 @@ namespace Common.DtoMapping
                 //do checks
                 if (isNullable != null && !(bool)isNullable.Value.TypedValue.Value)
                 {
+
                     if (property.GetValue(_observableVm) == null || string.IsNullOrEmpty(property.GetValue(_observableVm).ToString()))
                         return $"{propertyName} cannot be null or empty";
+
+                    //if collection
+                    if (typeof(IEnumerable).IsAssignableFrom(property.DeclaringType)) {
+                        var v = (property.GetValue(_observableVm) as IEnumerable).GetEnumerator();
+
+                        if (!v.MoveNext())
+                        {
+                            return $"{propertyName} cannot be null or empty";
+                        }
+                    }
                 }
             }
 

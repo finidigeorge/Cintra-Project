@@ -129,6 +129,7 @@
     <Compile Include="Extentions\ReferenceVmHelper.cs" />
     <Compile Include="Extentions\ReportRunner.cs" />
     <Compile Include="Extentions\RowDataInfoValidationRule.cs" />
+    <Compile Include="Extentions\StringExtensions.cs" />
     <Compile Include="ViewModels\BookingDeleteWindowVm.cs" />
     <Compile Include="ViewModels\BookingEditClientVm.cs" />
     <Compile Include="ViewModels\BookingEditCoachVm.cs" />

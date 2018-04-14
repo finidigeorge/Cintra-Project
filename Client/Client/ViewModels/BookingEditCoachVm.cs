@@ -18,44 +18,50 @@ namespace Client.ViewModels
         public Guid Id { get; private set; } = new Guid();
         private CoachesClient coachesClient = new CoachesClient();
         private readonly BookingEditWindowVm _parentVm;
-        public CoachesRefVm CoachesModel { get; set; } = new CoachesRefVm();
-
-        public CoachDtoUi Coach { get; set; } = new CoachDtoUi();
+        public CoachesRefVm Model { get; set; } = new CoachesRefVm();
 
         public bool DisplayOnlyAssignedCoaches { get; set; } = true;
 
-        public IAsyncCommand GetCoachesCommand { get => CoachesModel.RefreshDataCommand; }
+        public IAsyncCommand GetCoachesCommand { get => Model.RefreshDataCommand; }
         public ICommand AddCoachCommand { get => _parentVm.AddCoachCommand; }
         public ICommand DeleteCoachCommand { get; set; }
 
-        public BookingEditCoachVm(BookingEditWindowVm parentVm)
+        public BookingEditCoachVm(BookingEditWindowVm parentVm, CoachDtoUi coach)
         {
             _parentVm = parentVm;
+            Model.RefreshDataCommand.Execute(null);
+            Model.SelectedItem = coach;
 
-            CoachesModel.OnSelectedItemChanged += async (sender, coach) =>
-            {
-                Coach = coach;
+            Model.OnSelectedItemChanged += async (sender, c) =>
+            {                
+                _parentVm.SyncCoachesCommand.Execute(null);
                 await _parentVm.RunCoachValidations();
             };
 
-            CoachesModel.GetItemsCommand = new AsyncCommand<object>(async (x) =>
+            Model.GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
-                long selectedItemId = 0;
-                if (CoachesModel.SelectedItem != null)
-                    selectedItemId = CoachesModel.SelectedItem.Id;
+                if (_parentVm?.BookingData?.Service == null)
+                {
+                    Model.Items?.Clear();
+                    return;
+                }
 
-                if (CoachesModel.Items == null)
-                    CoachesModel.Items = new ObservableCollection<CoachDtoUi>();
+                long selectedItemId = 0;
+                if (Model.SelectedItem != null)
+                    selectedItemId = Model.SelectedItem.Id;
+
+                if (Model.Items == null)
+                    Model.Items = new ObservableCollection<CoachDtoUi>();
                 else
-                    CoachesModel.Items.Clear();
+                    Model.Items.Clear();
 
                 if (_parentVm.BookingData.Service != null)
                     foreach (var item in (await coachesClient.GetAllByService(_parentVm.BookingData.Service.Id, DisplayOnlyAssignedCoaches)).ToList<CoachDto, CoachDtoUi>())
-                        CoachesModel.Items.Add(item);
+                        Model.Items.Add(item);
 
                 if (selectedItemId != 0)
                 {
-                    CoachesModel.SelectedItem = CoachesModel.Items.FirstOrDefault(i => i.Id == selectedItemId);
+                    Model.SelectedItem = Model.Items.FirstOrDefault(i => i.Id == selectedItemId);
                 }
             });
 
@@ -69,7 +75,7 @@ namespace Client.ViewModels
                 {
                     GetCoachesCommand.Execute(null);
                 }
-            };
+            };            
         }
     }
 

@@ -16,8 +16,44 @@ namespace Repositories
     [PerScope]
     public class BookingRepository : GenericPreservableRepository<Booking>, IBookingRepository
     {
-        private async Task<List<Booking>> AccessFilter(List<Booking> bookings, CintraDB db)
+        public override async Task<long> Create(Booking entity, CintraDB dbContext = null)
         {
+            return await RunWithinTransaction(async (db) =>
+            {
+                if (entity.Id == 0)
+                    entity.Id = (long)(await db.InsertWithIdentityAsync(entity));
+                else
+                {
+                    await db.BookingsToHorsesLink.DeleteAsync(x => x.BookingId == entity.Id);
+                    await db.BookingsToClientsLink.DeleteAsync(x => x.BookingId == entity.Id);
+                    await db.BookingsToCoachesLink.DeleteAsync(x => x.BookingId == entity.Id);
+                    await db.UpdateAsync(entity);
+                }
+
+                foreach (var c in entity.BookingsToClientsLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsync(c);
+                }
+
+                foreach (var c in entity.BookingsToCoachesLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsync(c);
+                }
+
+                foreach (var c in entity.BookingsToHorsesLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsync(c);
+                }
+
+                return entity.Id;
+            }, dbContext);
+        }
+
+        private async Task<List<Booking>> AccessFilter(List<Booking> bookings, CintraDB db)
+        {            
             foreach (var b in bookings)
             {                
                 b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
@@ -29,7 +65,7 @@ namespace Repositories
                     b.BookingsTemplateMetadata.BookingTemplates = b.BookingsTemplateMetadata.BookingTemplates.Where(x => x.IsDeleted == false);                
             }
 
-            return bookings;
+            return await Task.FromResult(bookings);
         }        
 
         public async Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
@@ -40,7 +76,8 @@ namespace Repositories
 
                 var overlappedBooking =
                     (await db.Bookings
-                        .LoadWith(x => x.Service)                        
+                        .LoadWith(x => x.Service)
+                        .LoadWith(x => x.BookingsToCoachesLinks)
                         .Where(
                             x => x.IsDeleted == false &&
                                  x.BookingsToCoachesLinks.Any(c => c.CoachId == coach.Id) &&
@@ -147,9 +184,7 @@ namespace Repositories
 
                 var overlappedBooking =
                 (await db.Bookings
-                    .LoadWith(x => x.BookingsToHorsesLinks)
-                    .LoadWith(x => x.BookingsToCoachesLinks)
-                    .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
+                    .LoadWith(x => x.BookingsToHorsesLinks)                    
                     .Where(
                         x => x.IsDeleted == false &&
                                 x.BookingsToHorsesLinks.Any(h => h.HorseId == horse.Id) &&

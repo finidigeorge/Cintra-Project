@@ -120,11 +120,47 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Time" DisplayMemberBinding="{Binding Path=BeginTimeFmtd}" Width="{Binding ElementName=col0, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Horse" DisplayMemberBinding="{Binding Path=Horse.NickName}" Width="{Binding ElementName=col1, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Horse" Width="{Binding ElementName=col1, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=HorsesFmtd}" TextAlignment="Left" TextTrimming="CharacterEllipsis">
+                                        <TextBlock.ToolTip >
+                                            <ToolTip>
+                                                <TextBlock Text="{Binding Path=HorsesFmtdToolTip}"></TextBlock>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                </TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Service" DisplayMemberBinding="{Binding Path=Service.Name}" Width="{Binding ElementName=col2, Path=ActualWidth}"/>
                         <GridViewColumn Header="Length" DisplayMemberBinding="{Binding Path=LengthFmtd}" Width="{Binding ElementName=col3, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Coach" DisplayMemberBinding="{Binding Path=Coach.Name}" Width="{Binding ElementName=col4, Path=ActualWidth}"/>
-                        <GridViewColumn Header="Client" DisplayMemberBinding="{Binding Path=ClientUi.NameFmtd}" Width="{Binding ElementName=col5, Path=ActualWidth}"/>
+                        <GridViewColumn Header="Coach"  Width="{Binding ElementName=col4, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=CoachesFmtd}" TextAlignment="Left" TextTrimming="CharacterEllipsis">
+                                        <TextBlock.ToolTip >
+                                            <ToolTip>
+                                                <TextBlock Text="{Binding Path=CoachesFmtdToolTip}"></TextBlock>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                </TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Client" Width="{Binding ElementName=col5, Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=ClientsFmtd}" TextAlignment="Left" TextTrimming="CharacterEllipsis">
+                                        <TextBlock.ToolTip >
+                                            <ToolTip>
+                                                <TextBlock Text="{Binding Path=ClientsFmtdToolTip}"></TextBlock>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                </TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Is Paid" Width="{Binding ElementName=col6, Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>

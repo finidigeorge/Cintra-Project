@@ -10,6 +10,8 @@ using Shared.Extentions;
 using Mapping;
 using Shared;
 using Newtonsoft.Json;
+using Shared.Dto.Interfaces;
+using System.Linq.Expressions;
 
 
 /*
@@ -39,6 +41,45 @@ namespace Common.DtoMapping
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Func<StringBuilder, StringBuilder> ObjectLevelValidationCallback;
+
+        private string GetCollectionTooltip<T>(List<T> collection, string description, Func<T, string> selectFunc)
+        where T : IUniqueDto
+        {
+            if (!(collection?.Any() ?? false))
+                return null;
+
+            return $"{description}: {String.Join(", ", collection.Select(x => selectFunc(x)))}";
+        }
+
+        private string GetCollectionStringRepresentation<T>(List<T> collection, Func<T, string> selectFunc)
+        where T: IUniqueDto
+        {
+            if (!(collection?.Any() ?? false))
+                return null;
+
+            return String.Join(", ", collection.Select(x => selectFunc(x)));
+        }
+
+        [DependsOn(nameof(Clients))]
+        public String ClientsFmtd => GetCollectionStringRepresentation(Clients, (x) => x.Name);
+
+        [DependsOn(nameof(Clients))]
+        public String ClientsFmtdToolTip => GetCollectionTooltip(Clients, nameof(Clients), (x) => x.Name);        
+
+
+        [DependsOn(nameof(Horses))]        
+        public String HorsesFmtd => GetCollectionStringRepresentation(Horses, (x) => x.NickName);
+
+        [DependsOn(nameof(Horses))]
+        public String HorsesFmtdToolTip => GetCollectionTooltip(Horses, nameof(Horses), (x) => x.NickName);
+
+
+        [DependsOn(nameof(Coaches))]
+        public String CoachesFmtd => GetCollectionStringRepresentation(Coaches, (x) => x.Name);
+
+        [DependsOn(nameof(Horses))]
+        public String CoachesFmtdToolTip => GetCollectionTooltip(Coaches, nameof(Coaches), (x) => x.Name);
+
 
         [DependsOn(nameof(BeginTime))]
         public String BeginTimeFmtd => BeginTime.ToString("hh:mm tt");

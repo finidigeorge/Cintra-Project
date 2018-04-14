@@ -10,7 +10,7 @@
         
         mc:Ignorable="d"
         FontSize="14"
-        Title="Booking Edit Window" MinHeight="700" Width="720" 
+        Title="Booking Edit Window" MinHeight="700" Width="720" MaxHeight="875"
         SizeToContent="Height"
         WindowStartupLocation="CenterOwner"
     >
@@ -25,8 +25,8 @@
                     </Grid.RowDefinitions>
 
                     <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
-                              ItemsSource="{Binding ClientsModel.Items}"
-                              SelectedItem="{Binding ClientsModel.SelectedItem}"
+                              ItemsSource="{Binding Model.Items}"
+                              SelectedItem="{Binding Model.SelectedItem}"
                               >
                     </ComboBox>
                     <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
@@ -38,7 +38,7 @@
                     </Button>
                     <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="434,10,0,0"  
                             VerticalAlignment="Top" Width="24" Height="24"
-                            Command="{Binding AddClientCommand}" ToolTip="Add a client to booking">
+                            Command="{Binding AddClientCommand}" ToolTip="Add another client to booking">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/Images/plus.png" />
                         </StackPanel>
@@ -61,8 +61,8 @@
                     </Grid.RowDefinitions>
 
                     <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
-                              ItemsSource="{Binding HorsesModel.Items}"
-                              SelectedItem="{Binding HorsesModel.SelectedItem}"
+                              ItemsSource="{Binding Model.Items}"
+                              SelectedItem="{Binding Model.SelectedItem}"
                               >
                     </ComboBox>
                     <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
@@ -74,7 +74,7 @@
                     </Button>
                     <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="434,10,0,0"  
                             VerticalAlignment="Top" Width="24" Height="24"
-                            Command="{Binding AddHorseCommand}" ToolTip="Add a horse to booking">
+                            Command="{Binding AddHorseCommand}" ToolTip="Add another horse to booking">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/Resources/Images/plus.png" />
                         </StackPanel>
@@ -91,140 +91,143 @@
         </DataTemplate>
         <DataTemplate x:Key = "coachTemplate">
             <Border BorderThickness="1" BorderBrush="LightGray">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="24"/>
-                    <RowDefinition Height="Auto" MinHeight="24"/>
-                </Grid.RowDefinitions>                
-                
-                <CheckBox Grid.Row="0" HorizontalAlignment="Left" 
-                              IsChecked="{Binding DisplayOnlyAssignedCoaches, Mode=TwoWay}" Height="20" Width="418" Margin="10,10,0,0">
-                    <TextBlock Text="Display only assigned staff members" Margin="0,-4,0,0" FontSize="16" Width="396" Height="38" />
-                </CheckBox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" MinHeight="24"/>
+                        <RowDefinition Height="Auto" MinHeight="24"/>
+                    </Grid.RowDefinitions>
 
-                <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
-                              ItemsSource="{Binding CoachesModel.Items}"
-                              SelectedItem="{Binding CoachesModel.SelectedItem}"
+                    <CheckBox Grid.Row="0" HorizontalAlignment="Left" 
+                              IsChecked="{Binding DisplayOnlyAssignedCoaches, Mode=TwoWay}" Height="20" Width="418" Margin="10,10,0,0">
+                        <TextBlock Text="Display only assigned staff members" Margin="0,-4,0,0" FontSize="16" Width="396" Height="38" />
+                    </CheckBox>
+
+                    <ComboBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+                              ItemsSource="{Binding Model.Items}"
+                              SelectedItem="{Binding Model.SelectedItem}"
                               >
-                </ComboBox>
-                <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
+                    </ComboBox>
+                    <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"  
                             VerticalAlignment="Top" Width="24" Height="24"
                             Command="{Binding GetCoachesCommand}" ToolTip="Refresh data">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/Images/Refresh.ico" />
-                    </StackPanel>
-                </Button>
-                <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="434,10,0,0"  
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/Refresh.ico" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="434,10,0,0"  
                             VerticalAlignment="Top" Width="24" Height="24"
-                            Command="{Binding AddCoachCommand}" ToolTip="Add a Coach/Staff member to booking">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/Images/plus.png" />
-                    </StackPanel>
-                </Button>
-                <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="464,10,0,0"  
+                            Command="{Binding AddCoachCommand}" ToolTip="Add another Coach/Staff member to booking">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/plus.png" />
+                        </StackPanel>
+                    </Button>
+                    <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="464,10,0,0"  
                             VerticalAlignment="Top" Width="24" Height="24"
                             Command="{Binding DeleteCoachCommand}" ToolTip="Delete the Coach/Staff member from booking">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="/Resources/Images/Delete.ico" />
-                    </StackPanel>
-                </Button>
-            </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/Images/Delete.ico" />
+                        </StackPanel>
+                    </Button>
+                </Grid>
             </Border>
         </DataTemplate>
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True" Margin="0,0,0,-4">
         <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                  
-                    Grid.Row="0" 
-                    Grid.ColumnSpan="2"
-                    Grid.Column="0" SelectionChanged="TabControl_SelectionChanged"
+                    Grid.Row="0"
+                    Grid.Column="0" SelectionChanged="TabControl_SelectionChanged" Margin="0,0,0,74"
                     >
             <TabItem Header="Booking" Name="Booking" TabIndex="0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="160"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" MinHeight="12"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="1"/>
-                        <RowDefinition Height="Auto" MinHeight="48"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition Height="Auto" MinHeight="24"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                    <WrapPanel Orientation="Vertical">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="160"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" MinHeight="12"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="1"/>
+                                <RowDefinition Height="Auto" MinHeight="48"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition Height="Auto" MinHeight="24"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
 
-                    <TextBlock Name="datePickerLabel" Text="Date" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                            <TextBlock Name="datePickerLabel" Text="Date" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
                                />
 
-                    <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,0,10" SelectedDate="{Binding Path=BookingData.DateOn}" DisplayDateStart="{Binding Path=BookingData.DateOn}" HorizontalAlignment="Left" Width="259"
+                            <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,0,10" SelectedDate="{Binding Path=BookingData.DateOn}" DisplayDateStart="{Binding Path=BookingData.DateOn}" HorizontalAlignment="Left" Width="259"
                                 />
 
 
-                    <TextBlock Text="Start time" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <controls:TimePicker Grid.Row="2" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
+                            <TextBlock Text="Start time" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <controls:TimePicker Grid.Row="2" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
                                          x:Name="BeginTimePicker" HorizontalAlignment="Left" Width="114"/>
 
-                    <TextBlock Text="End time" Grid.Row="3" Grid.Column="0" TextAlignment="Right" Height="24" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10"/>
-                    <controls:TimePicker Grid.Row="3" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
+                            <TextBlock Text="End time" Grid.Row="3" Grid.Column="0" TextAlignment="Right" Height="24" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10"/>
+                            <controls:TimePicker Grid.Row="3" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
                                          x:Name="EndTimePicker" HorizontalAlignment="Left" Width="114"
                                           />
 
 
-                    <TextBlock Text="Service" Grid.Row="4" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ComboBox Name="servicePicker" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+                            <TextBlock Text="Service" Grid.Row="4" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <ComboBox Name="servicePicker" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
                               ItemsSource="{Binding ServicesModel.Items}"
                               SelectedItem="{Binding ServicesModel.SelectedItem}"
                               >
-                    </ComboBox>
-                    <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"
+                            </ComboBox>
+                            <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"
                             VerticalAlignment="Top" Width="24" Height="24"
                             Command="{Binding GetServicesCommand}" ToolTip="Refresh data">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/Images/Refresh.ico" />
-                        </StackPanel>
-                    </Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/Resources/Images/Refresh.ico" />
+                                </StackPanel>
+                            </Button>
 
 
-                    <TextBlock Text="Coaches / Staff members" Grid.Row="6" Grid.Column="0" TextAlignment="right" FontSize="16" Margin="10,10,10,10"/>
-                    <ItemsControl Grid.Row="6" Grid.Column="1" ItemsSource = "{Binding CoachesVms}" ItemTemplate = "{StaticResource coachTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
+                            <TextBlock Text="Coaches / Staff members" Grid.Row="6" Grid.Column="0" TextAlignment="right" FontSize="16" Margin="10,10,10,10"/>
+                            <ItemsControl Grid.Row="6" Grid.Column="1" ItemsSource = "{Binding CoachesVms}" ItemTemplate = "{StaticResource coachTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
-                    <TextBlock Text="Horses" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ItemsControl Grid.Row="7" Grid.Column="1" ItemsSource = "{Binding HorsesVms}" ItemTemplate = "{StaticResource horseTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
+                            <TextBlock Text="Horses" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <ItemsControl Grid.Row="7" Grid.Column="1" ItemsSource = "{Binding HorsesVms}" ItemTemplate = "{StaticResource horseTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
-                    <TextBlock Text="Clients" Grid.Row="8" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ItemsControl Grid.Row="8" Grid.Column="1" ItemsSource = "{Binding ClientsVms}" ItemTemplate = "{StaticResource clientTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
+                            <TextBlock Text="Clients" Grid.Row="8" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <ItemsControl Grid.Row="8" Grid.Column="1" ItemsSource = "{Binding ClientsVms}" ItemTemplate = "{StaticResource clientTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
 
-                    <CheckBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,10,10" Grid.Row="9"
+                            <CheckBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,10,10" Grid.Row="9"
                               IsChecked="{Binding Path=BookingData.BookingPayment.IsPaid, Mode=TwoWay}">
-                        <TextBlock Text="Is Paid" Margin="0,-3,0,0" FontSize="16"/>
-                    </CheckBox>
+                                <TextBlock Text="Is Paid" Margin="0,-3,0,0" FontSize="16"/>
+                            </CheckBox>
 
-                    <TextBlock Text="Payment Type" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <ComboBox Name="paymentTypes" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
+                            <TextBlock Text="Payment Type" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <ComboBox Name="paymentTypes" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
                               ItemsSource="{Binding PaymentTypesModel.Items}"
                               SelectedItem="{Binding PaymentTypesModel.SelectedItem}">
-                    </ComboBox>
+                            </ComboBox>
 
-                    <TextBlock Text="Notes" Grid.Row="11" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                    <TextBox Grid.Row="11" Grid.Column="1" Margin="10,10,10,6" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}"/>
+                            <TextBlock Text="Notes" Grid.Row="11" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <TextBox Grid.Row="11" Grid.Column="1" Margin="10,10,10,6" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}"/>
 
 
 
-                    <TextBox Text="{Binding Path=BookingData.Error, Mode=OneWay}" Grid.Row="12" FontSize="14" Margin="80,10,10,60" 
+                            <TextBox Text="{Binding Path=BookingData.Error, Mode=OneWay}" Grid.Row="12" FontSize="14" Margin="80,10,10,60" 
                      Foreground="Red" 
                      BorderThickness="0" 
                      Background="Transparent" 
                      TextWrapping="Wrap"
                      IsReadOnly="True" Grid.ColumnSpan="2" Grid.Column="0" />
-                </Grid>
+                        </Grid>
+                    </WrapPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Permanent bookings" TabIndex="1" IsEnabled="{Binding ShowRecurringTab}">
                 <Grid>

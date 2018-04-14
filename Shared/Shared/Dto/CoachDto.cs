@@ -12,7 +12,6 @@ namespace Shared.Dto
         [VmMeta(IsNullable = false)]
         public virtual string Name { get; set; }
         public virtual string Email { get; set; }
-        [VmMeta(IsNullable = false)]
         public virtual string Phone { get; set; }
 
         public virtual CoachRolesEnum? CoachRole { get; set; }

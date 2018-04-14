@@ -1,13 +1,17 @@
-﻿using System;
+﻿using Common;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using WPFCustomMessageBox;
 
 namespace Client.Commands
 {
-    class Command<T> : ICommand
+    public class Command<T> : ICommand
     {        
         private readonly Action _action;
         protected readonly Predicate<T> _canExecute;
@@ -35,7 +39,17 @@ namespace Client.Commands
 
         public void Execute(object parameter)
         {
-            _action();
+            try
+            {
+                _action(); 
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, $"Messsage: {e.Message} Source: {e.Source}, Trace: {e.StackTrace}");
+                CustomMessageBox.Show($"{Messages.COMMAND_ERROR_MSG} {e.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
         }
     }    
 }
