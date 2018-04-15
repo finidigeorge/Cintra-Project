@@ -64,7 +64,7 @@
                         <DataTemplate>
                             <Button Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
                                               Path=DataContext.DisplayEditServiceCommand}"
-                                    CommandParameter="{Binding SelectedItem}" ToolTip="Edit Horses and Coaches assignments to selected service">
+                                    ToolTip="Edit Horses and Coaches assignments to selected service">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="/Resources/Images/ReferenceEditItem.png" />
                                 </StackPanel>
@@ -73,10 +73,13 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name}"  Width="*" />
-                <DataGridTemplateColumn Header="No Horse Required" Width="110" >
-                    <DataGridTemplateColumn.CellTemplate >
+                <DataGridTemplateColumn Header="No Horse Required" Width="150" >
+
+                    <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Margin="-4,0,-4,0" HorizontalContentAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Path = NoHorseRequired}" IsEnabled="False"/>
+                            <CheckBox Margin="-4,0,-4,0" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                                      IsChecked="{Binding Path = NoHorseRequired}" IsEnabled="True"
+                                      />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
