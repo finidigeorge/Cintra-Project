@@ -6,12 +6,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using Client.Annotations;
 using Client.Commands;
+using Client.Security;
 using Client.ViewModels.Interfaces;
 using Common;
 using Common.DtoMapping;
@@ -59,6 +61,15 @@ namespace Client.ViewModels
             return await Client.GetAll();
         }
 
+        protected bool HasValidUser()
+        {
+            var principal = Thread.CurrentPrincipal as UserPrincipal;
+            if (principal != null && principal.Identity != null && principal.Identity.IsAuthenticated)
+                return true;
+
+            return false;
+        }
+
         protected BaseReferenceVm()
         {            
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
@@ -80,12 +91,12 @@ namespace Client.ViewModels
                     SelectedItem = Items.FirstOrDefault(i => i.Id == selectedItemId);
                 }
 
-            });
+            }, (x) => HasValidUser());
 
             RefreshDataCommand = new AsyncCommand<object>(async (x) =>
             {
                 await GetItemsCommand.ExecuteAsync(x);
-            });
+            }, (x) => HasValidUser());
 
             AddItemCommand = new AsyncCommand<T1>(async (param) =>
             {
@@ -98,18 +109,18 @@ namespace Client.ViewModels
                     Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;
                 else
                     Items.Add(item);
-            }, (x) => x != null);
+            }, (x) => x != null && HasValidUser());
 
             UpdateItemCommand = new AsyncCommand<T1>(async (param) =>
             {
                 BeforeEditItemHandler(param);
                 await Client.Create(ObjectMapper.Map<T>(param));                
-            }, (x) => x != null);
+            }, (x) => x != null && HasValidUser());
 
             DeleteItemCommand = new AsyncCommand<T1>(async (param) =>
             {
                 await Client.Delete(param.Id);                
-            }, (x) => x != null);
+            }, (x) => x != null && HasValidUser());
 
             UpdateSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
             {
@@ -214,9 +225,9 @@ namespace Client.ViewModels
 
         public bool IsEditModeEnabled { get; protected set; } = true;
 
-        public bool CanAddItem => IsEditModeEnabled;
-        public bool CanEditSelectedItem => IsEditModeEnabled && SelectedItem != null;
-        public bool CanDeleteSelectedItem => IsEditModeEnabled && SelectedItem != null;
+        public bool CanAddItem => IsEditModeEnabled && HasValidUser();
+        public bool CanEditSelectedItem => IsEditModeEnabled && SelectedItem != null && HasValidUser();
+        public bool CanDeleteSelectedItem => IsEditModeEnabled && SelectedItem != null && HasValidUser();
 
         //not implemented yet
         public IList<T1> SelectedItems { get; protected set; }

@@ -287,7 +287,7 @@ namespace Client.ViewModels
 
         public async Task RunHorseValidations()
         {            
-            if (!enableChecks || _bookingData.Service.NoHorseRequired)
+            if (!enableChecks || (_bookingData?.Service?.NoHorseRequired ?? false))
                 return;
 
             var dto = ObjectMapper.Map<BookingDto>(_bookingData);
