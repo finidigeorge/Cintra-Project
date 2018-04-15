@@ -16,7 +16,11 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return (await base.GetByParams(where, db)).OrderBy(x => x.Name);
+                return await Task.FromResult(db.GetTable<Client>()
+                    .Where(where)
+                    .Where((x) => x.IsDeleted == false)
+                    .OrderBy(x => x.Name)
+                    .ToList());
             }, dbContext);
         }
     }

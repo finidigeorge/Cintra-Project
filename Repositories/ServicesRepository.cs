@@ -51,7 +51,9 @@ namespace Repositories
                         .LoadWith(x => x.ServiceToCoachesLinks.First().Coach)
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .LoadWith(x => x.ServiceToHorsesLinks.First().Hor)
-                        .Where(where).Where(x => x.IsDeleted == false).ToList().OrderBy(x => x.Name)
+                        .Where(where).Where(x => x.IsDeleted == false)
+                        .OrderBy(x => x.Name)
+                        .ToList()
                 );
             }, dbContext);
         }

@@ -48,7 +48,9 @@ namespace Repositories
                     db.Horses                        
                         .LoadWith(x => x.HorsesScheduleData)
                         .LoadWith(x => x.ServiceToHorsesLinks)
-                        .Where(where).Where(x => x.IsDeleted == false).ToList().OrderBy(x => x.Nickname)
+                        .Where(where).Where(x => x.IsDeleted == false)
+                        .OrderBy(x => x.Nickname)
+                        .ToList()
                 );
             }, dbContext);
         }        
