@@ -36,7 +36,18 @@ namespace Repositories
                     var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId });
                     foreach (var c in serviceToCoachesLinks)
                         await db.InsertWithIdentityAsync(c);
-                }                               
+                }
+
+                //assign all coach services to the new staff member
+                if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.Coach)
+                {
+                    var ids = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => x.ServiceId).ToList();
+                    var hashSet = new HashSet<long>(ids);
+                    
+                    var links = db.Services.Where(x => !hashSet.Contains(x.Id)).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.Id });
+                    foreach (var c in links)
+                        await db.InsertWithIdentityAsync(c);
+                }
 
                 return coachId;
             },

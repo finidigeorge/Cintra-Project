@@ -172,25 +172,14 @@
 
                             <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,0,10" SelectedDate="{Binding Path=BookingData.DateOn}" DisplayDateStart="{Binding Path=BookingData.DateOn}" HorizontalAlignment="Left" Width="259"
                                 />
-
-
-                            <TextBlock Text="Start time" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <controls:TimePicker Grid.Row="2" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
-                                         x:Name="BeginTimePicker" HorizontalAlignment="Left" Width="114"/>
-
-                            <TextBlock Text="End time" Grid.Row="3" Grid.Column="0" TextAlignment="Right" Height="24" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10"/>
-                            <controls:TimePicker Grid.Row="3" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
-                                         x:Name="EndTimePicker" HorizontalAlignment="Left" Width="114"
-                                          />
-
-
-                            <TextBlock Text="Service" Grid.Row="4" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <ComboBox Name="servicePicker" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+                            
+                            <TextBlock Text="Service" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <ComboBox Name="servicePicker" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
                               ItemsSource="{Binding ServicesModel.Items}"
                               SelectedItem="{Binding ServicesModel.SelectedItem}"
                               >
                             </ComboBox>
-                            <Button Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"
+                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"
                             VerticalAlignment="Top" Width="24" Height="24"
                             Command="{Binding GetServicesCommand}" ToolTip="Refresh data">
                                 <StackPanel Orientation="Horizontal">
@@ -198,8 +187,16 @@
                                 </StackPanel>
                             </Button>
 
+                            <TextBlock Text="Start time" Grid.Row="3" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                            <controls:TimePicker Grid.Row="3" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
+                                        x:Name="BeginTimePicker" HorizontalAlignment="Left" Width="114"/>
 
-                            <TextBlock Text="Coaches / Staff members" Grid.Row="6" Grid.Column="0" TextAlignment="right" FontSize="16" Margin="10,10,10,10"/>
+                            <TextBlock Text="End time" Grid.Row="4" Grid.Column="0" TextAlignment="Right" Height="24" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10"/>
+                            <controls:TimePicker Grid.Row="4" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
+                                        x:Name="EndTimePicker" HorizontalAlignment="Left" Width="114"
+                                        />
+
+                                <TextBlock Text="Coaches / Staff members" Grid.Row="6" Grid.Column="0" TextAlignment="right" FontSize="16" Margin="10,10,10,10"/>
                             <ItemsControl Grid.Row="6" Grid.Column="1" ItemsSource = "{Binding CoachesVms}" ItemTemplate = "{StaticResource coachTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
                             <TextBlock Text="Horses" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>

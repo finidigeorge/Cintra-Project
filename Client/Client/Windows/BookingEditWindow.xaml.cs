@@ -71,7 +71,7 @@ namespace Client.Windows
 
             Model.AddWeeklyScheduledIntervalCommand = new Command<object>(() =>
             {
-                var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly);
+                var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly, Model.BookingData.BeginTime, Model.BookingData.EndTime);
                 if (editorResult.Item1)
                 {
                     var e = new Event() { Color = weeklyEventBrush };                                                            
@@ -96,10 +96,10 @@ namespace Client.Windows
             WeeklyScheduler.AddEvent(e);
         }
 
-        private (bool, ScheduleDataDtoUi) ShowScheduleEditor(ScheduleIntervalEnum mode)
+        private (bool, ScheduleDataDtoUi) ShowScheduleEditor(ScheduleIntervalEnum mode, DateTime begin, DateTime end)
         {
-            var beginTime = DateTime.Now.TruncateToCurrentHourStart();
-            var endTime = DateTime.Now.TruncateToCurrentHourEnd();
+            var beginTime = begin;
+            var endTime = end;
 
             var editor = new SchedulerIntervalEditWindow(beginTime, endTime, mode, false)
             {
@@ -144,12 +144,12 @@ namespace Client.Windows
             Close();
         }
 
-        private void CenterWindowOnScreen()
+        private void CenterWindowOnScreen(int hight)
         {
             double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
             double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             double windowWidth = this.Width;
-            double windowHeight = this.Height;
+            double windowHeight = hight;
             this.Left = (screenWidth / 2) - (windowWidth / 2);
             this.Top = (screenHeight / 2) - (windowHeight / 2);
         }
@@ -163,17 +163,17 @@ namespace Client.Windows
                 {                    
                     Width = 740;
                     MaxHeight = 875;
-                    CenterWindowOnScreen();
+                    CenterWindowOnScreen((int)MaxHeight);
                     return;
                 }
 
                 if (item.IsSelected &&  item.TabIndex == 1)
                 {
-                    Height = 900;
-                    MaxHeight = 900;
+                    Height = 1000;
+                    MaxHeight = 1000;
                     Width = 1280;
 
-                    CenterWindowOnScreen();
+                    CenterWindowOnScreen((int)MaxHeight);
                     return;
                 }                
             }
