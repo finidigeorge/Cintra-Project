@@ -82,7 +82,7 @@ namespace Common.DtoMapping
                 {
 
                     if (property.GetValue(_observableVm) == null || string.IsNullOrEmpty(property.GetValue(_observableVm).ToString()))
-                        return $"{propertyName} cannot be null or empty";
+                        return $"{propertyName} cannot be empty";
 
                     //if collection
                     if (typeof(IEnumerable).IsAssignableFrom(property.DeclaringType)) {
@@ -90,7 +90,7 @@ namespace Common.DtoMapping
 
                         if (!v.MoveNext())
                         {
-                            return $"{propertyName} cannot be null or empty";
+                            return $"{propertyName} cannot be empty";
                         }
                     }
                 }

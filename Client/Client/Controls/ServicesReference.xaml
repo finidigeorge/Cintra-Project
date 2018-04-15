@@ -73,6 +73,13 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name}"  Width="*" />
+                <DataGridTemplateColumn Header="No Horse Required" Width="110" >
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate>
+                            <CheckBox Margin="-4,0,-4,0" HorizontalContentAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Path = NoHorseRequired}" IsEnabled="False"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Lession length (min)" Binding="{Binding Path = LengthMinutes}"  Width="150" />
             </DataGrid.Columns>
         </DataGrid>

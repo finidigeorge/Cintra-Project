@@ -13,6 +13,7 @@ namespace Shared.Dto
         public virtual string Name { get; set; }
 
         public virtual long? LengthMinutes { get; set; }
+        public virtual bool NoHorseRequired { get; set; }
         public virtual DateTime? BeginTime { get; set; }
         public virtual DateTime? EndTime { get; set; }
 

@@ -131,6 +131,12 @@ namespace Common.DtoMapping
                 error.Append((error.Length != 0 ? ", " : "") + "Begin time and End time values are incorrect");
             }
 
+            if (!(Service != null && Service.NoHorseRequired))
+            {
+                if (Horses == null || !Horses.Any())
+                    error.Append((error.Length != 0 ? ", " : "") + $"Horses cannot be empty");
+            }
+
             if (ObjectLevelValidationCallback != null)
             {
                 error = ObjectLevelValidationCallback(error);

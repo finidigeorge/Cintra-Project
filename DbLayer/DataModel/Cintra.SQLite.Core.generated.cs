@@ -366,7 +366,7 @@ namespace DataModels
 		[Column("name"),            NotNull              ] public string Name           { get; set; } // varchar(50)
 		[Column("email"),              Nullable          ] public string Email          { get; set; } // varchar(50)
 		[Column("phone"),              Nullable          ] public string Phone          { get; set; } // varchar(50)
-		[Column("age"),             NotNull              ] public object Age            { get; set; } // number
+		[Column("age"),                Nullable          ] public object Age            { get; set; } // number
 		[Column("weight"),             Nullable          ] public string Weight         { get; set; } // varchar(10)
 		[Column("height"),             Nullable          ] public string Height         { get; set; } // varchar(10)
 		[Column("contact_details"),    Nullable          ] public string ContactDetails { get; set; } // varchar(200)
@@ -668,12 +668,13 @@ namespace DataModels
 	[Table("services")]
 	public partial class Service
 	{
-		[Column("id"),             PrimaryKey,  Identity] public long      Id            { get; set; } // integer
-		[Column("name"),           NotNull              ] public string    Name          { get; set; } // varchar(255)
-		[Column("is_deleted"),     NotNull              ] public bool      IsDeleted     { get; set; } // boolean
-		[Column("length_minutes"),    Nullable          ] public long?     LengthMinutes { get; set; } // integer
-		[Column("begin_time"),        Nullable          ] public DateTime? BeginTime     { get; set; } // date
-		[Column("end_time"),          Nullable          ] public DateTime? EndTime       { get; set; } // date
+		[Column("id"),                PrimaryKey,  Identity] public long      Id              { get; set; } // integer
+		[Column("name"),              NotNull              ] public string    Name            { get; set; } // varchar(255)
+		[Column("is_deleted"),        NotNull              ] public bool      IsDeleted       { get; set; } // boolean
+		[Column("length_minutes"),       Nullable          ] public long?     LengthMinutes   { get; set; } // integer
+		[Column("no_horse_required"), NotNull              ] public bool      NoHorseRequired { get; set; } // boolean
+		[Column("begin_time"),           Nullable          ] public DateTime? BeginTime       { get; set; } // date
+		[Column("end_time"),             Nullable          ] public DateTime? EndTime         { get; set; } // date
 
 		#region Associations
 

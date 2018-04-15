@@ -693,6 +693,8 @@ namespace Common.DtoMapping
 			public override String Name { get; set; }
 					
 			public override Int64? LengthMinutes { get; set; }
+				
+			public override Boolean NoHorseRequired { get; set; }
 					
 			public override DateTime? BeginTime { get; set; }
 					

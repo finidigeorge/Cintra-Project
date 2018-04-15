@@ -20,7 +20,6 @@ namespace Shared.Dto
         //only for transfer BookingDto -> BookingTemplate
         public virtual int DayOfWeek { get; set; }
         
-        [VmMeta(IsNullable = false)]
         public virtual List<HorseDto> Horses { get; set; }
         [VmMeta(IsNullable = false)]
         public virtual List<ClientDto> Clients { get; set; }
