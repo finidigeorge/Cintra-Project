@@ -145,83 +145,83 @@
                     </Grid.RowDefinitions>
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
                                   Grid.Row ="0">
-                    <WrapPanel Orientation="Vertical">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" MinWidth="160"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" MinHeight="12"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="1"/>
-                                <RowDefinition Height="Auto" MinHeight="48"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition Height="Auto" MinHeight="24"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                        <WrapPanel Orientation="Vertical">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" MinWidth="160"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" MinHeight="12"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="1"/>
+                                    <RowDefinition Height="Auto" MinHeight="48"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition Height="Auto" MinHeight="24"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Name="datePickerLabel" Text="Date" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
+                                <TextBlock Name="datePickerLabel" Text="Date" Grid.Row="1" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"
                                />
 
-                            <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,0,10" SelectedDate="{Binding Path=BookingData.DateOn}" DisplayDateStart="{Binding Path=BookingData.DateOn}" HorizontalAlignment="Left" Width="259"
+                                <DatePicker Name="datePicker" Grid.Row="1" Grid.Column="1" Margin="10,10,0,10" SelectedDate="{Binding Path=BookingData.DateOn}" DisplayDateStart="{Binding Path=BookingData.DateOn}" HorizontalAlignment="Left" Width="259"
                                 />
-                            
-                            <TextBlock Text="Service" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <ComboBox Name="servicePicker" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
+
+                                <TextBlock Text="Service" Grid.Row="2" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                                <ComboBox Name="servicePicker" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="389"
                               ItemsSource="{Binding ServicesModel.Items}"
                               SelectedItem="{Binding ServicesModel.SelectedItem}"
                               >
-                            </ComboBox>
-                            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"
+                                </ComboBox>
+                                <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="404,10,0,0"
                             VerticalAlignment="Top" Width="24" Height="24"
                             Command="{Binding GetServicesCommand}" ToolTip="Refresh data">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="/Resources/Images/Refresh.ico" />
-                                </StackPanel>
-                            </Button>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/Resources/Images/Refresh.ico" />
+                                    </StackPanel>
+                                </Button>
 
-                            <TextBlock Text="Start time" Grid.Row="3" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <controls:TimePicker Grid.Row="3" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
+                                <TextBlock Text="Start time" Grid.Row="3" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                                <controls:TimePicker Grid.Row="3" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
                                         x:Name="BeginTimePicker" HorizontalAlignment="Left" Width="114"/>
 
-                            <TextBlock Text="End time" Grid.Row="4" Grid.Column="0" TextAlignment="Right" Height="24" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10"/>
-                            <controls:TimePicker Grid.Row="4" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
+                                <TextBlock Text="End time" Grid.Row="4" Grid.Column="0" TextAlignment="Right" Height="24" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10"/>
+                                <controls:TimePicker Grid.Row="4" Grid.Column="1" Height="24" VerticalAlignment="Bottom" Margin="10,0,0,10"                             
                                         x:Name="EndTimePicker" HorizontalAlignment="Left" Width="114"
                                         />
 
                                 <TextBlock Text="Coaches / Staff members" Grid.Row="6" Grid.Column="0" TextAlignment="right" FontSize="16" Margin="10,10,10,10"/>
-                            <ItemsControl Grid.Row="6" Grid.Column="1" ItemsSource = "{Binding CoachesVms}" ItemTemplate = "{StaticResource coachTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
+                                <ItemsControl Grid.Row="6" Grid.Column="1" ItemsSource = "{Binding CoachesVms}" ItemTemplate = "{StaticResource coachTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
-                            <TextBlock Text="Horses" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <ItemsControl Grid.Row="7" Grid.Column="1" ItemsSource = "{Binding HorsesVms}" ItemTemplate = "{StaticResource horseTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
+                                <TextBlock Text="Horses" Grid.Row="7" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                                <ItemsControl Grid.Row="7" Grid.Column="1" ItemsSource = "{Binding HorsesVms}" ItemTemplate = "{StaticResource horseTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
-                            <TextBlock Text="Clients" Grid.Row="8" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <ItemsControl Grid.Row="8" Grid.Column="1" ItemsSource = "{Binding ClientsVms}" ItemTemplate = "{StaticResource clientTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
+                                <TextBlock Text="Clients" Grid.Row="8" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                                <ItemsControl Grid.Row="8" Grid.Column="1" ItemsSource = "{Binding ClientsVms}" ItemTemplate = "{StaticResource clientTemplate}" BorderBrush="LightGray" Margin="0,0,10,0"/>
 
 
-                            <CheckBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,10,10" Grid.Row="9"
+                                <CheckBox Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,10,10" Grid.Row="9"
                               IsChecked="{Binding Path=BookingData.BookingPayment.IsPaid, Mode=TwoWay}">
-                                <TextBlock Text="Is Paid" Margin="0,-3,0,0" FontSize="16"/>
-                            </CheckBox>
+                                    <TextBlock Text="Is Paid" Margin="0,-3,0,0" FontSize="16"/>
+                                </CheckBox>
 
-                            <TextBlock Text="Payment Type" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <ComboBox Name="paymentTypes" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
+                                <TextBlock Text="Payment Type" Grid.Row="10" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                                <ComboBox Name="paymentTypes" Grid.Row="10" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,10" Width="230"                  
                               ItemsSource="{Binding PaymentTypesModel.Items}"
                               SelectedItem="{Binding PaymentTypesModel.SelectedItem}">
-                            </ComboBox>
+                                </ComboBox>
 
-                            <TextBlock Text="Notes" Grid.Row="11" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
-                            <TextBox Grid.Row="11" Grid.Column="1" Margin="10,10,10,6" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}"/>
-                        </Grid>
-                    </WrapPanel>
-                </ScrollViewer>
+                                <TextBlock Text="Notes" Grid.Row="11" Grid.Column="0" TextAlignment="Right" FontSize="16" Margin="10,10,10,10"/>
+                                <TextBox Grid.Row="11" Grid.Column="1" Margin="10,10,10,6" Text="{Binding BookingData.BookingPayment.PaymentOptions, Mode=TwoWay}"/>
+                            </Grid>
+                        </WrapPanel>
+                    </ScrollViewer>
                     <TextBox Text="{Binding Path=BookingData.Error, Mode=OneWay}" FontSize="14" Margin="80,10,10,60" 
                                     Grid.Row ="1"
                                     Foreground="Red" 
@@ -278,10 +278,9 @@
             </TabItem>
 
         </TabControl>
-        <Button Content="OK"                
-            Grid.Column="1" Margin="0,0,10,19" Grid.Row="11" Width="120
+        <Button Content="OK" Margin="0,0,148,19" Width="120
             " IsDefault="True" HorizontalAlignment="Right" IsEnabled="{Binding Path=BookingData.IsValid}" Click="Button_Click" RenderTransformOrigin="0.506,1.385" Height="36" VerticalAlignment="Bottom"/>
-        <Button Content="Cancel" Grid.Column="1" Margin="0,0,141,19" Grid.Row="11" IsCancel="True" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"/>
+        <Button Content="Cancel" Margin="0,0,10,19" IsCancel="True" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

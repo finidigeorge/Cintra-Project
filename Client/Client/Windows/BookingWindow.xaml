@@ -81,9 +81,16 @@
                                         <ControlTemplate TargetType="GroupItem">
                                             <Expander IsExpanded="True">
                                                 <Expander.Header>
-                                                    <TextBlock TextWrapping="Wrap" Margin="0,5,0,5" >
-													    <Bold><TextBlock Text="{Binding Name}"/></Bold> (<TextBlock Text="{Binding ItemCount}"/> Lessions)
-												    </TextBlock>
+                                                    <Button Click="Button_Click" ToolTip="Click to add new booking at this time">
+                                                        <TextBlock TextWrapping="Wrap" Margin="0,5,0,5" >
+													        <Bold><TextBlock Text="{Binding Name}"/></Bold> (<TextBlock Text="{Binding ItemCount}"/> Lessions)
+												        </TextBlock>
+                                                        <Button.Template>
+                                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                                <ContentPresenter />
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
                                                 </Expander.Header>
                                                 <ItemsPresenter />
                                             </Expander>

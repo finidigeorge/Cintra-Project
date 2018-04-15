@@ -67,9 +67,9 @@
                  IsReadOnly="True" Grid.ColumnSpan="2" Grid.Column="0" />
 
         <Button Content="OK"                
-                Grid.Column="1" Margin="0,0,11,0" Grid.Row="6" Width="120
-                " Height="36" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="True" Click="Button_Click"/>
-        <Button Content="Cancel" Grid.Column="1" Margin="0,0,143,0" Grid.Row="6" Height="36" IsCancel="True" HorizontalAlignment="Right" Width="120" VerticalAlignment="Bottom"/>
+                Grid.Column="1" Margin="0,0,143,0" Grid.Row="6" Width="120
+                " Height="36" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="True" Click="Button_Click" RenderTransformOrigin="0.375,0.513"/>
+        <Button Content="Cancel" Margin="0,0,10,0" Grid.Row="6" Height="36" IsCancel="True" HorizontalAlignment="Right" Width="120" VerticalAlignment="Bottom" Grid.Column="1"/>
 
     </Grid>
 </Window>

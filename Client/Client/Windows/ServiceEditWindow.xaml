@@ -26,8 +26,8 @@
         <Label Content="Assigned Coaches" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>
         <Label Content="Assigned Horses" HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top"/>
         <ListBox ItemsSource="{Binding Horses, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" HorizontalAlignment="Left" Height="240" Margin="260,62,0,0" VerticalAlignment="Top" Width="211"/>
-        <Button Content="OK" HorizontalAlignment="Left" Margin="352,345,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsDefault="True" RenderTransformOrigin="0.456,1.77" Click="Button_Click"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Margin="227,345,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsCancel="True"/>
+        <Button Content="OK" HorizontalAlignment="Left" Margin="217,345,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsDefault="True" RenderTransformOrigin="0.456,1.77" Click="Button_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="350,345,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsCancel="True" RenderTransformOrigin="1.848,0.183"/>
         <Button Name="CoachesSelectAll" HorizontalAlignment="Left" Margin="167,38,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Select All"
                 Command="{Binding SelectAllCoachesCommand}">
             <Image Source="/Resources/Images/SelectAll.png" />

@@ -35,7 +35,7 @@ namespace Client.Windows
 
     public class Grouping
     {
-        public string Name { get; set; }
+        public string Name { get; set; }        
     }
 
     /// <summary>
@@ -196,10 +196,10 @@ namespace Client.Windows
         }
 
 
-        private BookingData ShowScheduleEditor(BookingDtoUi bookingData = null)
+        private BookingData ShowScheduleEditor(BookingDtoUi bookingData = null, DateTime? begin = null, DateTime? end = null)
         {
-            var beginTime = Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
-            var endTime = beginTime.AddHours(1);
+            var beginTime = begin.HasValue ? begin.Value : Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
+            var endTime = end.HasValue ? end.Value : beginTime.AddHours(1);
             var IsEditMode = true;
 
             BookingDtoUi _bookingData;
@@ -235,6 +235,21 @@ namespace Client.Windows
         private async void Window_LoadedAsync(object sender, RoutedEventArgs e)
         {
             await LoadSchedule();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var group = sender as Button;
+            if (group != null)
+            {
+                var dateOn = Model.CurrentDate.TruncateToDayStart();
+                var item = ((CollectionViewGroup)group.DataContext).Name.ToString();
+
+                var dateBegin = dateOn.Add(DateTime.ParseExact(item, "hh:mm tt", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay);
+                var dateEnd = dateBegin.AddHours(1);
+
+                ShowScheduleEditor(null, dateBegin, dateEnd);
+            }
         }
     }
 }

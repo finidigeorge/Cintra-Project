@@ -13,7 +13,7 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
-        <Grid Margin="0,0,0,12" FocusManager.FocusedElement="{Binding ElementName=dateFromPicker}">
+    <Grid Margin="0,0,0,12" FocusManager.FocusedElement="{Binding ElementName=dateFromPicker}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="162"/>
             <ColumnDefinition/>
@@ -80,11 +80,11 @@
                  IsReadOnly="True" Grid.ColumnSpan="2" Grid.Column="0" />
 
         <Button Content="OK"                
-                Grid.Column="1" Margin="0,0,11,0" Grid.Row="5" Width="120" 
+                Grid.Column="1" Margin="0,0,142,0" Grid.Row="5" Width="120" 
                 Height="36" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="Button_Click"
-                IsEnabled="{Binding IsValid}"
+                IsEnabled="{Binding IsValid}"                
                 />
-        <Button Content="Cancel" Margin="0,0,143,0" Grid.Row="5" Height="36" IsCancel="True" HorizontalAlignment="Right" 
+        <Button Content="Cancel" Margin="0,0,10,0" Grid.Row="5" Height="36" IsCancel="True" HorizontalAlignment="Right" 
                 Width="120" VerticalAlignment="Bottom" Grid.Column="1"                
                 />
 
