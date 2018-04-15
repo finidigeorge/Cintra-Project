@@ -64,8 +64,8 @@
                      IsReadOnly="True" Grid.Column="1" Height="36" VerticalAlignment="Top" HorizontalAlignment="Left" Width="415" Grid.RowSpan="2" />
 
 
-        <Button Content="Close" Grid.Column="1" Margin="0,0,141,13" Grid.Row="7" IsCancel="True" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"/>
-        <Button Content="Run Report" Grid.Column="1" IsEnabled="{Binding IsValid}" IsDefault="True" Margin="0,0,10,13" Grid.Row="7" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"
+        <Button Content="Close" Grid.Column="1" Margin="0,0,15,13" Grid.Row="7" IsCancel="True" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"/>
+        <Button Content="Run Report" Grid.Column="1" IsEnabled="{Binding IsValid}" IsDefault="True" Margin="0,0,158,13" Grid.Row="7" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"
                 Command="{Binding RunReportCommand}" Click="Button_Click"/>
 
     </Grid>

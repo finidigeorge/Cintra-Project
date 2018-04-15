@@ -71,25 +71,7 @@ namespace Client.Windows
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
                 var res = ShowScheduleEditor();
-                if (res.IsBooked)
-                {
-                    if (res.HasRecurrentBookings && res.IsPermanent && res.RecurrentBookings.Any())
-                    {
-                        res.Booking.BookingTemplateMetadata = new BookingTemplateMetadataDto()
-                        {
-                            StartDate = res.RecurentDateStart,
-                            BookingTemplates = MergePermanentEventData(res)
-                        };
-                    }
-
-                    await Model.AddItemCommand.ExecuteAsync(res.Booking);
-
-                    if (res.HasRecurrentBookings && !res.IsPermanent && res.RecurrentBookings.Any())
-                    {
-                        var items = MergeEventData(res);
-                        await Model.InsertAll(items);
-                    }                    
-                }
+                await CreateBooking(res);
 
             }, (x) => true);
 
@@ -136,6 +118,29 @@ namespace Client.Windows
             }, (x) => Model.SelectedItem != null);
 
             InitGroupings();
+        }
+
+        private async Task CreateBooking(BookingData res)
+        {
+            if (res.IsBooked)
+            {
+                if (res.HasRecurrentBookings && res.IsPermanent && res.RecurrentBookings.Any())
+                {
+                    res.Booking.BookingTemplateMetadata = new BookingTemplateMetadataDto()
+                    {
+                        StartDate = res.RecurentDateStart,
+                        BookingTemplates = MergePermanentEventData(res)
+                    };
+                }
+
+                await Model.AddItemCommand.ExecuteAsync(res.Booking);
+
+                if (res.HasRecurrentBookings && !res.IsPermanent && res.RecurrentBookings.Any())
+                {
+                    var items = MergeEventData(res);
+                    await Model.InsertAll(items);
+                }
+            }
         }
 
         private List<BookingDto> MergeEventData(BookingData data)
@@ -237,7 +242,7 @@ namespace Client.Windows
             await LoadSchedule();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var group = sender as Button;
             if (group != null)
@@ -248,7 +253,8 @@ namespace Client.Windows
                 var dateBegin = dateOn.Add(DateTime.ParseExact(item, "hh:mm tt", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay);
                 var dateEnd = dateBegin.AddHours(1);
 
-                ShowScheduleEditor(null, dateBegin, dateEnd);
+                var res = ShowScheduleEditor(null, dateBegin, dateEnd);
+                await CreateBooking(res);
             }
         }
     }
