@@ -119,6 +119,13 @@ namespace Client.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (!string.IsNullOrEmpty(Model.CoachValidationFitScheduleWarning))
+            {
+                MessageBoxResult result = CustomMessageBox.Show($"{Model.CoachValidationFitScheduleWarning}. Do you want to proceed ?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result != MessageBoxResult.Yes)
+                    return;
+            }
+
             if (!string.IsNullOrEmpty(Model.HorseValidationHoursPerDayWarning))
             {
                 MessageBoxResult result = CustomMessageBox.Show($"{Model.HorseValidationHoursPerDayWarning}. Do you want to proceed ?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);

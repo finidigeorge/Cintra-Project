@@ -12,6 +12,7 @@ namespace Shared.Interfaces
 
         Task<CheckResultDto> HasCoachesNotOverlappedBooking(BookingDto entity);
         Task<CheckResultDto> HasCoachesScheduleFitBooking(BookingDto entity);
+        Task<CheckResultDto> HasCoachScheduleFitBreaks(BookingDto entity);
 
         Task<CheckResultDto> HasHorsesNotOverlappedBooking(BookingDto entity);
 

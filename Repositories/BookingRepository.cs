@@ -113,10 +113,6 @@ namespace Repositories
                         activeSchedule.SchedulesData.Any(
                             x => x.IsDeleted == false &&
                             (bookingData.DateOn == x.DateOn && bookingData.BeginTime >= x.BeginTime && bookingData.EndTime <= x.EndTime) && x.IsAvialable
-                        ) &&
-                         !activeSchedule.SchedulesData.Any(
-                            x => x.IsDeleted == false &&
-                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) && !x.IsAvialable
                         );
 
                     //week schedule check
@@ -125,11 +121,6 @@ namespace Repositories
                             x => x.IsDeleted == false &&
                             (bookedDayOfWeek == x.DayNumber && bookingData.BeginTime >= DateTimeExtentions.SetTime(bookingData.BeginTime, x.BeginTime) &&
                                 bookingData.EndTime <= DateTimeExtentions.SetTime(bookingData.EndTime, x.EndTime)) && x.IsAvialable
-                        ) &&
-                         !activeSchedule.SchedulesData.Any(
-                            x => x.IsDeleted == false && bookedDayOfWeek == x.DayNumber &&
-                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, DateTimeExtentions.SetTime(bookingData.BeginTime, x.EndTime), DateTimeExtentions.SetTime(bookingData.EndTime, x.EndTime))
-                            && !x.IsAvialable
                         );
 
                     result.Result = weekScheduleChecks || dayScheduleChecks;
@@ -138,6 +129,47 @@ namespace Repositories
                 if (!result.Result)
                 {
                     result.ErrorMessage = "Coach is currently unavailable (check coach's schedule)";
+                }
+
+                return Task.FromResult<dynamic>(result);
+
+            }, dbContext);
+        }
+
+        public async Task<CheckResultDto> HasCoachScheduleFitBreaks(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction((db) =>
+            {
+                var result = new CheckResultDto();
+                var activeSchedule = coach.Schedules?.FirstOrDefault(x => x.IsDeleted == false && x.IsActive);
+                var bookedDayOfWeek = DateTimeExtentions.ToEuropeanDayNumber(bookingData.DateOn);
+
+                if (activeSchedule != null && activeSchedule.SchedulesData != null)
+                {
+                    //day schedule check
+                    var dayScheduleCheck =
+                         activeSchedule.SchedulesData.FirstOrDefault(
+                            x => x.IsDeleted == false &&
+                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, x.BeginTime, x.EndTime) && !x.IsAvialable
+                        );
+
+                    //week schedule check
+                    var weekScheduleCheck =
+                         activeSchedule.SchedulesData.FirstOrDefault(
+                            x => x.IsDeleted == false && bookedDayOfWeek == x.DayNumber &&
+                            DateTimeExtentions.IsOverlap(bookingData.BeginTime, bookingData.EndTime, DateTimeExtentions.SetTime(bookingData.BeginTime, x.EndTime), DateTimeExtentions.SetTime(bookingData.EndTime, x.EndTime))
+                            && !x.IsAvialable
+                        );
+
+                    result.Result = (dayScheduleCheck == null) && (weekScheduleCheck == null);
+
+
+                    if (!result.Result)
+                    {
+                        var breakType = string.Join(", ", dayScheduleCheck.AvailabilityDescription, weekScheduleCheck.AvailabilityDescription);
+                        result.ErrorMessage = $"Coach is currently might be unavailable (has scheduled {breakType})";
+                    }
+
                 }
 
                 return Task.FromResult<dynamic>(result);
@@ -391,7 +423,12 @@ namespace Repositories
                     foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor))
                     {
                         Append(error, (await HasHorseRequiredBreak(horse, booking, db)).ToString());
-                        Append(error, (await HasHorseWorkedLessThanAllowed(horse, booking, db)).ToString());
+                        Append(error, (await HasHorseWorkedLessThanAllowed(horse, booking, db)).ToString());                        
+                    }
+
+                    foreach (var coach in booking.BookingsToCoachesLinks.Select(x => x.Coach))
+                    {
+                        Append(error, (await HasCoachScheduleFitBreaks(coach, booking, db)).ToString());                        
                     }
                 }
 

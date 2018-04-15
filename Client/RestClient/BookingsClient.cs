@@ -35,6 +35,11 @@ namespace RestClient
             return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasCoachesScheduleFitBooking)}", RestSharp.Method.POST, entity);
         }
 
+        public async Task<CheckResultDto> HasCoachScheduleFitBreaks(BookingDto entity)
+        {
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasCoachScheduleFitBreaks)}", RestSharp.Method.POST, entity);
+        }
+
         public async Task<CheckResultDto> HasHorsesNotOverlappedBooking(BookingDto entity)
         {
             return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorsesNotOverlappedBooking)}", RestSharp.Method.POST, entity);

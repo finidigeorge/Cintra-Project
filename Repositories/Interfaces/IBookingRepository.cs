@@ -11,6 +11,7 @@ namespace Repositories.Interfaces
     {
         Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, CintraDB dbContext = null);
         Task<CheckResultDto> HasCoachScheduleFitBooking(Coach coach, Booking bookingData, CintraDB dbContext = null);
+        Task<CheckResultDto> HasCoachScheduleFitBreaks(Coach coach, Booking bookingData, CintraDB dbContext = null);
 
         Task<CheckResultDto> HasHorseNotOverlappedBooking(Hors horse, Booking bookingData, CintraDB dbContext = null);
         Task<CheckResultDto> HasHorseRequiredBreak(Hors horse, Booking bookingData, CintraDB dbContext = null);

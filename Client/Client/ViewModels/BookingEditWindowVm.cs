@@ -122,6 +122,8 @@ namespace Client.ViewModels
         private String coachValidationError;
         private String clientValidationError;
 
+
+        public String CoachValidationFitScheduleWarning { get; set; }
         public String HorseValidationHoursPerDayWarning { get; set; }
         public String HorseValidationHoursInRowWarning { get; set; }
 
@@ -258,6 +260,7 @@ namespace Client.ViewModels
 
             var dto = ObjectMapper.Map<BookingDto>(_bookingData);
             coachValidationError = null;
+            CoachValidationFitScheduleWarning = null;
 
             if (dto.Coaches.Any(x => x != null))
             {                
@@ -271,6 +274,10 @@ namespace Client.ViewModels
 
                 if (HasDuplicates(dto.Coaches))
                     coachValidationError = coachValidationError.Append("Booking has duplicate coaches");
+
+                res = await bookingsClient.HasCoachScheduleFitBreaks(dto);
+                if (!res.Result)
+                    CoachValidationFitScheduleWarning = res.ErrorMessage;
             }
 
             //to raise validation checks
