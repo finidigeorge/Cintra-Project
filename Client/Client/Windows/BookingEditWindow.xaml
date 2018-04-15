@@ -240,7 +240,6 @@
                         <RowDefinition Height="60"/>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="70"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <CheckBox Content="Enable recurring appoiments" IsChecked="{Binding EnableRecurringApointments}" HorizontalAlignment="Left" Width="706" Height="20" VerticalAlignment="Top"/>

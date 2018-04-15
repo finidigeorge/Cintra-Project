@@ -52,12 +52,31 @@ namespace Common.DtoMapping
         }
 
         private string GetCollectionStringRepresentation<T>(List<T> collection, Func<T, string> selectFunc)
-        where T: IUniqueDto
+        where T : IUniqueDto
         {
             if (!(collection?.Any() ?? false))
                 return null;
 
             return String.Join(", ", collection.Select(x => selectFunc(x)));
+        }
+
+        [DependsOn(nameof(BookingTemplateMetadata))]
+        public string PermanentStatusFmtd => BookingTemplateMetadata != null ? "P" : string.Empty;
+
+        [DependsOn(nameof(BookingTemplateMetadata))]
+        public string PermanentStatusFmtdToolTip
+        {
+            get
+            {
+                if (BookingTemplateMetadata == null)
+                    return string.Empty;
+
+                var datesInfo = $"Started: {BookingTemplateMetadata.StartDate.ToString("dd/MM/yyyy")}";
+                if (BookingTemplateMetadata.EndDate.HasValue)
+                    datesInfo = $"{datesInfo}, Finished: {BookingTemplateMetadata.EndDate.Value.ToString("dd/MM/yyyy")}";
+
+                return $"Permanent booking {datesInfo}";
+            }
         }
 
         [DependsOn(nameof(Clients))]

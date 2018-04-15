@@ -1,5 +1,7 @@
 ﻿using DataModels;
 using LinqToDB;
+using Repositories.Interfaces;
+using Shared.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +10,45 @@ using System.Threading.Tasks;
 
 namespace Repositories
 {
-    public class BookingTemplatesRepository: GenericPreservableRepository<BookingTemplates>    
+    [PerScope]
+    public class BookingTemplatesRepository: GenericPreservableRepository<BookingTemplates>, IBookingTemplateRepository
     {
+        public override async Task<long> Create(BookingTemplates entity, CintraDB dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                if (entity.Id == 0)
+                    entity.Id = (long)(await db.InsertWithIdentityAsync(entity));
+                else
+                {
+                    await db.BookingTemplatesToClientsLink.DeleteAsync(x => x.BookingTemplateId == entity.Id);
+                    await db.BookingTemplatesToCoachesLink.DeleteAsync(x => x.BookingTemplateId == entity.Id);
+                    await db.BookingTemplatesToHorsesLink.DeleteAsync(x => x.BookingTemplateId == entity.Id);
+                    await db.UpdateAsync(entity);
+                }
+
+                foreach (var c in entity.BookingTemplatesToClientsLinks)
+                {
+                    c.BookingTemplateId = entity.Id;
+                    await db.InsertWithIdentityAsync(c);
+                }
+
+                foreach (var c in entity.BookingTemplatesToCoachesLinks)
+                {
+                    c.BookingTemplateId = entity.Id;
+                    await db.InsertWithIdentityAsync(c);
+                }
+
+                foreach (var c in entity.BookingTemplatesToHorsesLinks)
+                {
+                    c.BookingTemplateId = entity.Id;
+                    await db.InsertWithIdentityAsync(c);
+                }
+
+                return entity.Id;
+            }, dbContext);
+        }
+
         public override async Task<List<BookingTemplates>> GetByParams(Func<BookingTemplates, bool> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>

@@ -22,18 +22,20 @@ namespace Controllers
     {
         private readonly IBookingPaymentsRepository _paymentsRepository;
         private readonly IBookingTemplatesMetadataRepository _bookingsMetadataRepository;
-        private readonly IGenericRepository<BookingTemplates> _templatesRepository = new GenericRepository<BookingTemplates>();
+        private readonly IBookingTemplateRepository _templatesRepository;
 
 
         private IBookingRepository repository { get => (IBookingRepository)_repository; }
 
         public BookingsController(IBookingRepository repository, 
                 IBookingPaymentsRepository paymentsRepository,
-                IBookingTemplatesMetadataRepository bookingsMetadataRepository,                
+                IBookingTemplatesMetadataRepository bookingsMetadataRepository,
+                IBookingTemplateRepository templatesRepository,
                 ILoggerFactory loggerFactory) : base(repository, loggerFactory)
         {
             _paymentsRepository = paymentsRepository;
-            _bookingsMetadataRepository = bookingsMetadataRepository;            
+            _bookingsMetadataRepository = bookingsMetadataRepository;
+            _templatesRepository = templatesRepository;
         }
 
         [HttpPost]

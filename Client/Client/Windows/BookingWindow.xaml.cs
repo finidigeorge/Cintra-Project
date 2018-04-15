@@ -151,9 +151,7 @@ namespace Client.Windows
                     item.EndTime = e.End.AddDays(7 * w);
 
                     item.DateOn = item.BeginTime.TruncateToDayStart();
-
-                    if (item.DateOn == DateTime.Now.TruncateToDayStart())
-                        result.Add(item);
+                    result.Add(item);
                 }
             }
             return result;

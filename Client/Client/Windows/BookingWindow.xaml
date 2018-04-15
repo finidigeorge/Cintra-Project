@@ -99,7 +99,19 @@
                         <GridViewColumn Header="Status" Width="50">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Width="16">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0"  Text="{Binding Path=PermanentStatusFmtd}" TextAlignment="Left" TextTrimming="CharacterEllipsis">
+                                            <TextBlock.ToolTip >
+                                                <ToolTip>
+                                                    <TextBlock Text="{Binding Path=PermanentStatusFmtdToolTip}"></TextBlock>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                        <Image Width="16" Grid.Column="1">
                                         <Image.Style>
                                             <Style TargetType="{x:Type Image}">
                                                 <Style.Triggers>
@@ -116,6 +128,7 @@
                                             </Style>
                                         </Image.Style>
                                     </Image>
+                                    </Grid>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

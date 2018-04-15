@@ -3,7 +3,7 @@ CREATE TABLE bookings_template_metadata (
 	id INTEGER PRIMARY KEY AUTOINCREMENT not null,
 	start_date date NOT NULL,
 	end_date date,
-	CHECK(end_date is null OR start_date < end_date)
+	CHECK(end_date is null OR start_date <= end_date)
 );
 
 drop table if exists booking_templates;
@@ -17,7 +17,7 @@ CREATE TABLE booking_templates (
 	begin_time time NOT NULL,
 	end_time time NOT NULL,	
 	template_metadata_id INTEGER not null,
-	CHECK(begin_time < end_time),
+	CHECK(begin_time <= end_time),
 	foreign key (service_id) REFERENCES services(id),
 	foreign key (template_metadata_id) REFERENCES bookings_template_metadata(id)
 );

@@ -105,6 +105,8 @@ namespace Client.Windows
             {
                 DataContext = new ScheduleDataDtoUi()
                 {
+                    BeginTime = beginTime,
+                    EndTime = endTime,
                     IsAvialable = true,
                     AvailabilityDescription = Model.BookingData.BookingPayment.PaymentOptions
                 },
