@@ -31,11 +31,11 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
                 <DataGridTextColumn Header="Client Name" Binding="{Binding Path = Name}"  Width="480" />
-                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="220" />
                 <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="120" />
                 <DataGridTextColumn Header="Age" Binding="{Binding Path = Age}"  Width="60" />
                 <DataGridTextColumn Header="Weight" Binding="{Binding Path = Weight}"  Width="60" />
                 <DataGridTextColumn Header="Height" Binding="{Binding Path = Height}"  Width="60" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="220" />
                 <DataGridTextColumn Header="Additional contact details" Binding="{Binding Path = ContactDetails}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>

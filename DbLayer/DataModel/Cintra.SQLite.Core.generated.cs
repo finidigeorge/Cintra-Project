@@ -366,7 +366,7 @@ namespace DataModels
 		[Column("name"),            NotNull              ] public string Name           { get; set; } // varchar(50)
 		[Column("email"),              Nullable          ] public string Email          { get; set; } // varchar(50)
 		[Column("phone"),              Nullable          ] public string Phone          { get; set; } // varchar(50)
-		[Column("age"),                Nullable          ] public object Age            { get; set; } // number
+		[Column("age"),                Nullable          ] public string Age            { get; set; } // varchar(50)
 		[Column("weight"),             Nullable          ] public string Weight         { get; set; } // varchar(10)
 		[Column("height"),             Nullable          ] public string Height         { get; set; } // varchar(10)
 		[Column("contact_details"),    Nullable          ] public string ContactDetails { get; set; } // varchar(200)
@@ -398,6 +398,7 @@ namespace DataModels
 		[Column("phone"),            Nullable          ] public string Phone       { get; set; } // varchar(50)
 		[Column("is_deleted"),    NotNull              ] public bool   IsDeleted   { get; set; } // boolean
 		[Column("coach_role_id"),    Nullable          ] public long?  CoachRoleId { get; set; } // integer
+		[Column("notes"),            Nullable          ] public string Notes       { get; set; } // varchar(255)
 
 		#region Associations
 

@@ -14,7 +14,7 @@ namespace Shared.Dto
         public virtual string Email { get; set; }
         [VmMeta(IsNullable = false)]
         public virtual string Phone { get; set; }
-        public virtual int Age { get; set; }
+        public virtual string Age { get; set; }
         public virtual string Weight { get; set; }
         public virtual string Height { get; set; }
         public virtual string ContactDetails { get; set; }

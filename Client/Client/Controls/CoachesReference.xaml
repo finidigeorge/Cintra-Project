@@ -63,8 +63,9 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding Path = Name}"  Width="*" />
                 <DataGridComboBoxColumn Width="120" Header="Staff Role" ItemsSource="{x:Static ext:EnumTools.GetCoachRolesEnumItems}" SelectedItemBinding="{Binding CoachRole}" />
-                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="*" />
-                <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="*" />
+                <DataGridTextColumn Header="Contact Phone" Binding="{Binding Path = Phone}"  Width="180" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Path = Email}"  Width="180" />
+                <DataGridTextColumn Header="Notes" Binding="{Binding Path = Notes}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -225,8 +225,10 @@ namespace Common.DtoMapping
 			public override String Email { get; set; }
 				
 			public override String Phone { get; set; }
-					
-			public override CoachRolesEnum? CoachRole { get; set; }
+
+            public override String Notes { get; set; }
+
+            public override CoachRolesEnum? CoachRole { get; set; }
 				
 			public override Boolean ShowOnlyAssignedCoaches { get; set; }
 			
@@ -320,7 +322,7 @@ namespace Common.DtoMapping
 				
 			public override String Phone { get; set; }
 				
-			public override Int32 Age { get; set; }
+			public override String Age { get; set; }
 				
 			public override String Weight { get; set; }
 				

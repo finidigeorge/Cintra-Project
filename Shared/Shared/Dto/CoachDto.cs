@@ -14,6 +14,8 @@ namespace Shared.Dto
         public virtual string Email { get; set; }
         public virtual string Phone { get; set; }
 
+        public virtual string Notes { get; set; }
+
         public virtual CoachRolesEnum? CoachRole { get; set; }
 
         public virtual List<ScheduleDto> Schedules { get; set; } = new List<ScheduleDto>();
