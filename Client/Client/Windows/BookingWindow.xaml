@@ -210,7 +210,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
