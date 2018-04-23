@@ -78,14 +78,8 @@ namespace Client.Windows
             Model.UpdateDailyScheduledIntervalCommand = new Command<object>(async () => 
             {
                 var res = ShowScheduleEditor(Model.SelectedItem);
-                if (res.IsBooked)
-                {
-                    await Model.UpdateItemCommand.ExecuteAsync(res.Booking);
-                }
-                else
-                {
-                    await LoadSchedule();
-                }
+                await Model.UpdateItemCommand.ExecuteAsync(res.Booking);
+                await LoadSchedule();                
             }, (x) => Model.SelectedItem != null);
 
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>

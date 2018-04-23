@@ -22,6 +22,7 @@ namespace Tests
         {
             var dto = new BookingDto()
             {
+                BookingTemplateMetadata = new BookingTemplateMetadataDto() { BookingTemplates = new List<BookingDto>() { new BookingDto() { } } },
                 BookingPayment = new BookingPaymentDto(),
                 Clients = new List<ClientDto>() { new ClientDto() },
                 Coaches = new List<CoachDto>() { new CoachDto() { Schedules = new List<ScheduleDto>() } },
@@ -30,8 +31,13 @@ namespace Tests
             };
 
             var result = ObjectMapper.Map<Booking>(dto);
+
+            Assert.IsNotNull(result.BookingPayments);
+
             result.BookingPayments = new List<BookingPayments>() { new BookingPayments() };
             dto = ObjectMapper.Map<BookingDto>(result);
+
+            Assert.IsNotNull(dto.BookingPayment);
         }
 
         [TestMethod]

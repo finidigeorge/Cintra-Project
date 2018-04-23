@@ -28,27 +28,27 @@ namespace Mapping
                     {
                         d.BookingsTemplateMetadata = s.BookingsTemplateMetadata;
                         d.Id = 0;
-                        d.BookingTemplatesToCoachesLinks = s.BookingsToCoachesLinks.Select(x => new BookingTemplatesToCoachesLink() { CoachId = x.CoachId, Coach = x.Coach }).ToList();
-                        d.BookingTemplatesToClientsLinks = s.BookingsToClientsLinks.Select(x => new BookingTemplatesToClientsLink() { ClientId = x.ClientId, Client = x.Client }).ToList();
-                        d.BookingTemplatesToHorsesLinks = s.BookingsToHorsesLinks.Select(x => new BookingTemplatesToHorsesLink() { HorseId = x.HorseId, Hor = x.Hor }).ToList();
+                        d.BookingTemplatesToCoachesLinks = s.BookingsToCoachesLinks?.Select(x => new BookingTemplatesToCoachesLink() { CoachId = x.CoachId, Coach = x.Coach }).ToList();
+                        d.BookingTemplatesToClientsLinks = s.BookingsToClientsLinks?.Select(x => new BookingTemplatesToClientsLink() { ClientId = x.ClientId, Client = x.Client }).ToList();
+                        d.BookingTemplatesToHorsesLinks = s.BookingsToHorsesLinks?.Select(x => new BookingTemplatesToHorsesLink() { HorseId = x.HorseId, Hor = x.Hor }).ToList();
                     });
 
                     conf.CreateMap<BookingTemplates, Booking>().AfterMap((s, d) =>
                     {                        
                         d.BookingsTemplateMetadata = s.BookingsTemplateMetadata;
                         d.Id = 0;
-                        d.BookingsToCoachesLinks = s.BookingTemplatesToCoachesLinks.Select(x => new BookingsToCoachesLink() { CoachId = x.CoachId, Coach = x.Coach }).ToList();
-                        d.BookingsToClientsLinks = s.BookingTemplatesToClientsLinks.Select(x => new BookingsToClientsLink() { ClientId = x.ClientId, Client = x.Client }).ToList();
-                        d.BookingsToHorsesLinks = s.BookingTemplatesToHorsesLinks.Select(x => new BookingsToHorsesLink() { HorseId = x.HorseId, Hor = x.Hor }).ToList();
+                        d.BookingsToCoachesLinks = s.BookingTemplatesToCoachesLinks?.Select(x => new BookingsToCoachesLink() { CoachId = x.CoachId, Coach = x.Coach }).ToList();
+                        d.BookingsToClientsLinks = s.BookingTemplatesToClientsLinks?.Select(x => new BookingsToClientsLink() { ClientId = x.ClientId, Client = x.Client }).ToList();
+                        d.BookingsToHorsesLinks = s.BookingTemplatesToHorsesLinks?.Select(x => new BookingsToHorsesLink() { HorseId = x.HorseId, Hor = x.Hor }).ToList();
                     });
-
-                    conf.CreateMap<BookingsTemplateMetadata, BookingTemplateMetadataDto>();
+                    
                     conf.CreateMap<BookingTemplateMetadataDto, BookingsTemplateMetadata>()
                         .AfterMap((vm, db) =>
                         {
-                            db.BookingTemplates = vm.BookingTemplates.Select(x => Map<BookingTemplates>(Map<Booking>(x)));
+                            var list1 = vm.BookingTemplates.Select(x => Map<Booking>(x)).ToList();
+                            var list2 = list1.Select(x => Map<BookingTemplates>(x)).ToList();
+                            db.BookingTemplates = list2;
                         });
-
                     conf.CreateMap<BookingsTemplateMetadata, BookingTemplateMetadataDto>()
                         .AfterMap((db, vm) =>
                         {
@@ -63,7 +63,7 @@ namespace Mapping
                         vm.Horses = db.BookingsToHorsesLinks.Select(x => _mapper.Map<HorseDto>(x.Hor)).ToList(); 
                         vm.Service = _mapper.Map<ServiceDto>(db.Service);
                         var payment = db.BookingPayments?.FirstOrDefault();
-                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(payment);  
+                        vm.BookingPayment = _mapper.Map<BookingPaymentDto>(payment) ?? new BookingPaymentDto();  
                         vm.BookingTemplateMetadata = _mapper.Map<BookingTemplateMetadataDto>(db.BookingsTemplateMetadata);
                     });
                     conf.CreateMap<BookingDto, Booking>()
@@ -72,6 +72,7 @@ namespace Mapping
                         {                            
                             db.ServiceId = vm.Service?.Id ?? 0;
                             db.Service = vm.Service != null ? _mapper.Map<Service>(vm.Service) : null;
+                            db.BookingPayments = vm.BookingPayment == null ? new List<BookingPayments>() : new List<BookingPayments>() { _mapper.Map<BookingPayments>(vm.BookingPayment) };
 
                             db.TemplateMetadataId = vm.BookingTemplateMetadata?.Id;
                             db.BookingsTemplateMetadata = vm.BookingTemplateMetadata != null ? _mapper.Map<BookingsTemplateMetadata>(vm.BookingTemplateMetadata) : null;

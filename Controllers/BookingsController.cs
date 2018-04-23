@@ -43,21 +43,27 @@ namespace Controllers
         {
             try
             {
-                var booking = ObjectMapper.Map<Booking>(entity);
-                if (booking.BookingsTemplateMetadata != null)
-                {
-                    var metadataId = await _bookingsMetadataRepository.Create(booking.BookingsTemplateMetadata);
-                    foreach (var p in booking.BookingsTemplateMetadata.BookingTemplates) {
-                        p.TemplateMetadataId = metadataId;
-                        await _templatesRepository.Create(p);
+                return await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
+                { 
+                    var booking = ObjectMapper.Map<Booking>(entity);
+
+                    //write booking template to database only if we create it
+                    //updates are not supported currently
+                    if (booking.BookingsTemplateMetadata != null && booking.BookingsTemplateMetadata.Id == 0)
+                    {
+                        var metadataId = await _bookingsMetadataRepository.Create(booking.BookingsTemplateMetadata, db);
+                        foreach (var p in booking.BookingsTemplateMetadata.BookingTemplates) {
+                            p.TemplateMetadataId = metadataId;
+                            await _templatesRepository.Create(p, db);
+                        }
+
+                        booking.TemplateMetadataId = metadataId;
                     }
 
-                    booking.TemplateMetadataId = metadataId;
-                }
-
-                var bookingId = await _repository.Create(booking);
-                await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(entity.BookingPayment));
-                return bookingId;
+                    var bookingId = await _repository.Create(booking);
+                    await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(entity.BookingPayment), db);
+                    return bookingId;                
+                });
             }
             catch (Exception e)
             {
