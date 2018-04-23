@@ -25,5 +25,7 @@ namespace Shared.Interfaces
         Task CancelAllBookings(long metadataId, long FromDate);
 
         Task InsertAll(List<BookingDto> entityList);
+
+        Task<long> Edit(BookingDto entity);
     }
 }

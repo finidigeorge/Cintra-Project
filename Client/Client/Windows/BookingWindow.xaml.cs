@@ -73,14 +73,14 @@ namespace Client.Windows
                 var res = ShowScheduleEditor();
                 await CreateBooking(res);
 
-            }, (x) => true);
+            }, (x) => Model.HasAdminRights());            
 
             Model.UpdateDailyScheduledIntervalCommand = new Command<object>(async () => 
             {
                 var res = ShowScheduleEditor(Model.SelectedItem);
                 await Model.UpdateItemCommand.ExecuteAsync(res.Booking);
                 await LoadSchedule();                
-            }, (x) => Model.SelectedItem != null);
+            }, (x) => Model.SelectedItem != null && Model.HasAdminRights());
 
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
             {                
@@ -109,7 +109,7 @@ namespace Client.Windows
                 Model.SelectedItem = null;
                 await LoadSchedule();
 
-            }, (x) => Model.SelectedItem != null);
+            }, (x) => Model.SelectedItem != null && Model.HasAdminRights());
 
             InitGroupings();
         }

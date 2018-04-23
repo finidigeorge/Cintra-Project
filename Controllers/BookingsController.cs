@@ -13,6 +13,7 @@ using Repositories;
 using System.Linq;
 using Shared.Interfaces;
 using Shared.Extentions;
+using Shared;
 
 namespace Controllers
 {
@@ -39,12 +40,28 @@ namespace Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         public override async Task<long> Create([FromBody] BookingDto entity)
+        {
+            if (entity.Id == 0)
+                return await CreateInternal(entity);
+            else
+                throw new Exception("Can't update an existing booking using Create call");
+        }
+
+        [HttpPatch]
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
+        public async Task<long> Edit([FromBody] BookingDto entity)
+        {
+            return await CreateInternal(entity);
+        }
+
+        private async Task<long> CreateInternal(BookingDto entity)
         {
             try
             {
                 return await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
-                { 
+                {
                     var booking = ObjectMapper.Map<Booking>(entity);
 
                     //write booking template to database only if we create it
@@ -52,7 +69,8 @@ namespace Controllers
                     if (booking.BookingsTemplateMetadata != null && booking.BookingsTemplateMetadata.Id == 0)
                     {
                         var metadataId = await _bookingsMetadataRepository.Create(booking.BookingsTemplateMetadata, db);
-                        foreach (var p in booking.BookingsTemplateMetadata.BookingTemplates) {
+                        foreach (var p in booking.BookingsTemplateMetadata.BookingTemplates)
+                        {
                             p.TemplateMetadataId = metadataId;
                             await _templatesRepository.Create(p, db);
                         }
@@ -62,7 +80,7 @@ namespace Controllers
 
                     var bookingId = await _repository.Create(booking);
                     await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(entity.BookingPayment), db);
-                    return bookingId;                
+                    return bookingId;
                 });
             }
             catch (Exception e)
@@ -92,6 +110,24 @@ namespace Controllers
             }
         }
 
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
+        [HttpDelete("{id}")]
+        public override async Task Delete(long id)
+        {
+            try
+            {
+                await base.Delete(id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(null, e, e.Message, id);
+                throw;
+            }
+        }
+
+
+
+        [Authorize(Roles = nameof(UserRolesEnum.Administrator))]
         [HttpPost("/api/[controller]/CancelAllBookings/{metadataId}/{FromDate}")]
         public async Task CancelAllBookings(long metadataId, long FromDate)
         {

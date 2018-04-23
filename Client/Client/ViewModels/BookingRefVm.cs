@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Client.Commands;
+using Mapping;
 
 namespace Client.ViewModels
 {
@@ -22,7 +24,13 @@ namespace Client.ViewModels
 
         public BookingRefVm()
         {
-            Client = new BookingsClient();            
+            Client = new BookingsClient();
+            UpdateItemCommand = new AsyncCommand<BookingDtoUi>(async (param) =>
+            {
+                BeforeEditItemHandler(param);
+                await _client.Edit(ObjectMapper.Map<BookingDto>(param));
+            }, (x) => x != null && HasValidUser() && HasAdminRights());
+
         }
 
         protected override async Task<IList<BookingDto>> GetAll()
@@ -39,7 +47,7 @@ namespace Client.ViewModels
         {
             await _client.CancelAllBookings(metadataId, fromDate.ToBinary());
         }
-
+        
         //UI Event wrappers commands
         public ICommand NextDayCommand { get; set; }
         public ICommand PrevDayCommand { get; set; }

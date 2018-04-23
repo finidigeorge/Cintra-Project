@@ -70,6 +70,15 @@ namespace Client.ViewModels
             return false;
         }
 
+        public bool HasAdminRights()
+        {
+            var principal = Thread.CurrentPrincipal as UserPrincipal;
+            if (HasValidUser() && principal.IsInRole(nameof(UserRolesEnum.Administrator)))
+                return true;
+
+            return false;
+        }
+
         protected BaseReferenceVm()
         {            
             GetItemsCommand = new AsyncCommand<object>(async (x) =>

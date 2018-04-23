@@ -64,5 +64,10 @@ namespace RestClient
         {
             await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.InsertAll)}", RestSharp.Method.POST, entityList);
         }
+
+        public async Task<long> Edit(BookingDto entity)
+        {
+            return await SendRequest<long>($"api/{ControllerName}/values", RestSharp.Method.PATCH, entity);            
+        }
     }
 }
