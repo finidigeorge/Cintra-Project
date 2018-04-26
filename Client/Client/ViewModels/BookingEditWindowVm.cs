@@ -64,7 +64,8 @@ namespace Client.ViewModels
                     {
                         _bookingData.ValidationErrors = "";
                         await RunHorseValidations();
-                        await RunCoachValidations();                        
+                        await RunCoachValidations();
+                        RunClientValidations();
                     }
                 };
 
@@ -251,7 +252,7 @@ namespace Client.ViewModels
 
                 await Task.FromResult(ClientsVms.Remove(c));
             }, (x) => CanDeleteClient);
-        }
+        }        
 
         public async Task RunCoachValidations()
         {
@@ -332,11 +333,11 @@ namespace Client.ViewModels
         {
             clientValidationError = null;
 
-            if (_bookingData?.Clients?.Any() ?? false) 
+            if (_bookingData?.Clients?.Any() ?? false)
             {
                 if (HasDuplicates(_bookingData.Clients))
                     clientValidationError = "Booking has duplicate clients";
-            }
+            }            
 
             //to raise validation checks
             _bookingData.OnPropertyChanged(nameof(_bookingData.Clients));

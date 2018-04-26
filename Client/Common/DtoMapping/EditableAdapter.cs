@@ -85,7 +85,7 @@ namespace Common.DtoMapping
                         return $"{propertyName} cannot be empty";
 
                     //if collection
-                    if (typeof(IEnumerable).IsAssignableFrom(property.DeclaringType)) {
+                    if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType)) {
                         var v = (property.GetValue(_observableVm) as IEnumerable).GetEnumerator();
 
                         if (!v.MoveNext())

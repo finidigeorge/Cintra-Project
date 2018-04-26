@@ -71,15 +71,18 @@ namespace Client.Windows
             Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
             {
                 var res = ShowScheduleEditor();
-                await CreateBooking(res);
+                await CreateNewBooking(res);
 
             }, (x) => Model.HasAdminRights());            
 
             Model.UpdateDailyScheduledIntervalCommand = new Command<object>(async () => 
             {
                 var res = ShowScheduleEditor(Model.SelectedItem);
-                await Model.UpdateItemCommand.ExecuteAsync(res.Booking);
-                await LoadSchedule();                
+                if (res.IsBooked)
+                {
+                    await Model.UpdateItemCommand.ExecuteAsync(res.Booking);
+                    await LoadSchedule();
+                }
             }, (x) => Model.SelectedItem != null && Model.HasAdminRights());
 
             Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
@@ -114,7 +117,7 @@ namespace Client.Windows
             InitGroupings();
         }
 
-        private async Task CreateBooking(BookingData res)
+        private async Task CreateNewBooking(BookingData res)
         {
             if (res.IsBooked)
             {
@@ -197,13 +200,14 @@ namespace Client.Windows
 
         private BookingData ShowScheduleEditor(BookingDtoUi bookingData = null, DateTime? begin = null, DateTime? end = null)
         {
-            var beginTime = begin.HasValue ? begin.Value : Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
-            var endTime = end.HasValue ? end.Value : beginTime.AddHours(1);
             var IsEditMode = true;
 
             BookingDtoUi _bookingData;
             if (bookingData == null)
             {
+                var beginTime = begin.HasValue ? begin.Value : Model.CurrentDate.TruncateToDayStart() + TimeSpan.FromHours(DateTime.Now.TruncateToCurrentHourStart().Hour);
+                var endTime = end.HasValue ? end.Value : beginTime.AddHours(1);
+
                 IsEditMode = false;
                 _bookingData = new BookingDtoUi()
                 {
@@ -216,7 +220,7 @@ namespace Client.Windows
             else
                 _bookingData = bookingData;
 
-            var editor = new BookingEditWindow(beginTime, endTime, _bookingData, IsEditMode) { Owner = this };            
+            var editor = new BookingEditWindow(_bookingData, IsEditMode) { Owner = this };            
                         
             var res = editor.ShowDialog() ?? false;            
             return new BookingData()
@@ -247,8 +251,8 @@ namespace Client.Windows
                 var dateBegin = dateOn.Add(DateTime.ParseExact(item, "hh:mm tt", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay);
                 var dateEnd = dateBegin.AddHours(1);
 
-                var res = ShowScheduleEditor(null, dateBegin, dateEnd);
-                await CreateBooking(res);
+                var res = ShowScheduleEditor(null, dateBegin, dateEnd);                
+                await CreateNewBooking(res);
             }
         }
     }

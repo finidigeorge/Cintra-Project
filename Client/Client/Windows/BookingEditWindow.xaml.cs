@@ -39,14 +39,14 @@ namespace Client.Windows
             InitializeComponent();            
         }       
 
-        public BookingEditWindow(DateTime beginTime, DateTime endTime, BookingDtoUi bookindData, bool isEditMode)
+        public BookingEditWindow(BookingDtoUi bookindData, bool isEditMode)
         {
             InitializeComponent();
             Model.IsEditMode = isEditMode;
             Model.BookingData = bookindData;            
             Model.RecurrentScheduler = WeeklyScheduler;
-            BeginTimePicker.Model.CurrentTime = beginTime;
-            EndTimePicker.Model.CurrentTime = endTime;
+            BeginTimePicker.Model.CurrentTime = bookindData.BeginTime;
+            EndTimePicker.Model.CurrentTime = bookindData.EndTime;
 
             Model.BookingData.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "EndTime")
