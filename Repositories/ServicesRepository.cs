@@ -7,6 +7,7 @@ using Shared.Attributes;
 using System.Threading.Tasks;
 using LinqToDB;
 using System.Linq;
+using DbLayer.Extentions;
 
 namespace Repositories
 {
@@ -17,25 +18,25 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                
                 var serviceId = await base.Create(entity, db);
 
                 await db.ServiceToCoachesLink
-                    .Where(x => x.ServiceId == entity.Id)
-                    .DeleteAsync();
+                        .Where(x => x.ServiceId == entity.Id)
+                        .DeleteAsyncWithLock();
 
                 foreach (var c in entity.ServiceToCoachesLinks)
-                    await db.InsertWithIdentityAsync(c);
+                    await db.InsertWithIdentityAsyncWithLock(c);
 
 
                 await db.ServiceToHorsesLink
                     .Where(x => x.ServiceId == entity.Id)
-                    .DeleteAsync();
+                    .DeleteAsyncWithLock();
 
                 foreach (var c in entity.ServiceToHorsesLinks)
-                    await db.InsertWithIdentityAsync(c);
+                    await db.InsertWithIdentityAsyncWithLock(c);
 
                 return serviceId;
+
             },
             dbContext
             );
@@ -46,7 +47,7 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.Services                        
+                    db.Services
                         .LoadWith(x => x.ServiceToCoachesLinks)
                         .LoadWith(x => x.ServiceToCoachesLinks.First().Coach)
                         .LoadWith(x => x.ServiceToHorsesLinks)

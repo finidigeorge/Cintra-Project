@@ -7,15 +7,16 @@ using LinqToDB;
 using Repositories.Interfaces;
 using Shared.Attributes;
 using System.Linq;
+using DbLayer.Extentions;
 
 namespace Repositories
 {
     [PerScope]
-    public class CoachesRepository: GenericPreservableRepository<Coach>
+    public class CoachesRepository : GenericPreservableRepository<Coach>
     {
         private IEnumerable<Schedule> LoadSchedules(long coachId, CintraDB db)
         {
-            return db.Schedules.LoadWith(x => x.SchedulesData).Where(x => x.CoachId == coachId && x.IsDeleted == false);            
+            return db.Schedules.LoadWith(x => x.SchedulesData).Where(x => x.CoachId == coachId && x.IsDeleted == false);
         }
 
         public override async Task<long> Create(Coach entity, CintraDB dbContext = null)
@@ -27,15 +28,14 @@ namespace Repositories
                 {
                     isNew = true;
                 }
-                
+
                 var coachId = await base.Create(entity, db);
 
-                //assign all staff services to the new staff member
                 if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
-                {                   
-                    var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId });
+                {
+                    var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId }).ToList();
                     foreach (var c in serviceToCoachesLinks)
-                        await db.InsertWithIdentityAsync(c);
+                        await db.InsertWithIdentityAsyncWithLock(c);
                 }
 
                 //assign all coach services to the new staff member
@@ -43,13 +43,14 @@ namespace Repositories
                 {
                     var ids = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => x.ServiceId).ToList();
                     var hashSet = new HashSet<long>(ids);
-                    
-                    var links = db.Services.Where(x => !hashSet.Contains(x.Id)).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.Id });
+
+                    var links = db.Services.Where(x => !hashSet.Contains(x.Id)).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.Id }).ToList();
                     foreach (var c in links)
-                        await db.InsertWithIdentityAsync(c);
+                        await db.InsertWithIdentityAsyncWithLock(c);
                 }
 
                 return coachId;
+
             },
             dbContext
             );
@@ -63,7 +64,7 @@ namespace Repositories
                 return await Task.FromResult(
                     db.Coaches
                     .LoadWith(x => x.ServiceToCoachesLinks)
-                    .Where(where)                    
+                    .Where(where)
                     .Where(x => x.IsDeleted == false).Select(x =>
                     {
                         var res = x;

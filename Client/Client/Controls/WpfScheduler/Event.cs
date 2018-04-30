@@ -1,5 +1,6 @@
 ﻿using Common.DtoMapping;
 using Shared.Dto;
+using Shared.Extentions;
 using System;
 using System.Linq;
 using System.Windows.Media;
@@ -16,6 +17,9 @@ namespace Client.Controls.WpfScheduler
         public bool AllDay { get; set; }
         public Brush Color { get; set; }
         public bool IsSelected { get; set; }
+
+        // for Forthight selection
+        public bool IsFirstWeek { get; set; }
 
         public Event()
         {
@@ -67,7 +71,16 @@ namespace Client.Controls.WpfScheduler
         public void MergeToScheduleDtoData(ref BookingDtoUi booking)
         {
             booking.EventGuid = Id;
+                        
+            booking.BeginTime = Start;
+            booking.EndTime = End;
+        }
 
+        public void MergeToScheduleDtoData(ref BookingDto booking)
+        {
+            booking.EventGuid = Id;
+            booking.DayOfWeek = Start.ToEuropeanDayNumber();
+            booking.IsFirstWeek = IsFirstWeek;
             booking.BeginTime = Start;
             booking.EndTime = End;
         }

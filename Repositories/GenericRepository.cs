@@ -11,12 +11,14 @@ using LinqToDB.Mapping;
 using Repositories.Interfaces;
 using Shared.Dto.Interfaces;
 using DbLayer.Interfaces;
+using System.Threading;
+using DbLayer.Extentions;
 
 namespace Repositories
 {
-    public class GenericRepository<T>: IGenericRepository<T> where T : class, IUniqueDto
+    public class GenericRepository<T> : IGenericRepository<T> where T : class, IUniqueDto
     {
-        public dynamic RunWithinTransaction(Func<CintraDB, Task<dynamic>> fetcher, CintraDB dbContext = null)
+        public async Task<dynamic> RunWithinTransaction(Func<CintraDB, Task<dynamic>> fetcher, CintraDB dbContext = null)
         {
             var isTransactional = dbContext == null;
             bool isSuccess = true;
@@ -27,14 +29,14 @@ namespace Repositories
                 if (isTransactional)
                     db.BeginTransaction();
 
-                return fetcher(db);
+                return await fetcher(db);
             }
             catch (Exception)
             {
+                isSuccess = false;
                 if (isTransactional)
                 {
                     db.RollbackTransaction();
-                    isSuccess = false;
                 }
                 throw;
             }
@@ -51,11 +53,14 @@ namespace Repositories
         public virtual async Task<long> Create(T entity, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
-            {               
+            {
                 if (entity.Id == 0)
-                    return await db.InsertWithIdentityAsync(entity);
+                {
+                    entity.Id = (long)await db.InsertWithIdentityAsyncWithLock(entity);
+                }
+                else
+                    await db.UpdateAsyncWithLock(entity);
 
-                await db.UpdateAsync(entity);
                 return entity.Id;
             }, dbContext);
         }
@@ -67,7 +72,7 @@ namespace Repositories
                 var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
                 var expression = SimpleComparison(pkName.Name, id);
 
-                await db.DeleteAsync(db.GetTable<T>().Where(expression).FirstOrDefault());                
+                await db.DeleteAsyncWithLock(db.GetTable<T>().Where(expression).FirstOrDefault());
 
                 return null;
             }, dbContext);
@@ -81,7 +86,7 @@ namespace Repositories
         public virtual async Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
-            {                
+            {
                 return await Task.FromResult(db.GetTable<T>().Where(where).ToList());
             }, dbContext);
         }
@@ -112,7 +117,7 @@ namespace Repositories
         /// <param name="valueToFilter">Value to filter query</param>
         /// <returns>List of T</returns>
         public virtual async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter)
-           
+
         {
             if (string.IsNullOrWhiteSpace(propertyName))
                 throw new Exception("Property name is empty");
@@ -121,11 +126,11 @@ namespace Repositories
 
             using (var db = new CintraDB())
             {
-                return await Task.FromResult(db.GetTable<T>().Where(expression).ToList());                
+                return await Task.FromResult(db.GetTable<T>().Where(expression).ToList());
             }
         }
 
-        public  Func<T, bool> SimpleComparison(string property, object value)
+        public Func<T, bool> SimpleComparison(string property, object value)
         {
             var type = typeof(T);
             var pe = Expression.Parameter(type, "p");
@@ -136,7 +141,7 @@ namespace Repositories
             (Expression.Equal(propertyReference, constantReference), pe).Compile();
         }
 
-        private  Func<T, bool> SimpleComparison<D>(string propertyName, D value)
+        private Func<T, bool> SimpleComparison<D>(string propertyName, D value)
         {
             var type = typeof(T);
             var pe = Expression.Parameter(type, "p");

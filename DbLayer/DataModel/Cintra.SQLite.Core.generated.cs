@@ -146,9 +146,10 @@ namespace DataModels
 	[Table("bookings_template_metadata")]
 	public partial class BookingsTemplateMetadata
 	{
-		[Column("id"),         PrimaryKey,  Identity] public long      Id        { get; set; } // integer
-		[Column("start_date"), NotNull              ] public DateTime  StartDate { get; set; } // date
-		[Column("end_date"),      Nullable          ] public DateTime? EndDate   { get; set; } // date
+		[Column("id"),             PrimaryKey,  Identity] public long      Id            { get; set; } // integer
+		[Column("start_date"),     NotNull              ] public DateTime  StartDate     { get; set; } // date
+		[Column("end_date"),          Nullable          ] public DateTime? EndDate       { get; set; } // date
+		[Column("is_fortnightly"), NotNull              ] public bool      IsFortnightly { get; set; } // boolean
 
 		#region Associations
 
@@ -251,6 +252,7 @@ namespace DataModels
 		[Column("begin_time"),           NotNull             ] public DateTime BeginTime          { get; set; } // time
 		[Column("end_time"),             NotNull             ] public DateTime EndTime            { get; set; } // time
 		[Column("template_metadata_id"), NotNull             ] public long     TemplateMetadataId { get; set; } // integer
+		[Column("is_first_week"),        NotNull             ] public bool     IsFirstWeek        { get; set; } // boolean
 
 		#region Associations
 

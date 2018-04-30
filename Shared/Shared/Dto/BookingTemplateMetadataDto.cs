@@ -10,6 +10,7 @@ namespace Shared.Dto
 
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public bool IsFortnightly { get; set; }        
         public List<BookingDto> BookingTemplates { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace Client.Windows
         public DateTime RecurentDateStart { get; set; }
         public int RecurrentWeekNumber { get; set; }
         public bool IsPermanent { get; set; }
+        public bool IsFortnightly { get; set; }        
     };
 
     public class Grouping
@@ -125,7 +126,8 @@ namespace Client.Windows
                 {
                     res.Booking.BookingTemplateMetadata = new BookingTemplateMetadataDto()
                     {
-                        StartDate = res.RecurentDateStart,
+                        StartDate = res.RecurentDateStart,                        
+                        IsFortnightly = res.IsFortnightly,                        
                         BookingTemplates = MergePermanentEventData(res)
                     };
                 }
@@ -134,24 +136,24 @@ namespace Client.Windows
 
                 if (res.HasRecurrentBookings && !res.IsPermanent && res.RecurrentBookings.Any())
                 {
-                    var items = MergeEventData(res);
+                    var items = GenerateBookingEventData(res);
                     await Model.InsertAll(items);
                 }
             }
         }
 
-        private List<BookingDto> MergeEventData(BookingData data)
+        private List<BookingDto> GenerateBookingEventData(BookingData data)
         {
             var result = new List<BookingDto>();
-
+            int fortNightCoeff = data.IsFortnightly ? 2 : 1;
             for (int w= 0; w < data.RecurrentWeekNumber; w++)
             {
                 foreach (var e in data.RecurrentBookings)
                 {
                     var item = ObjectMapper.Map<BookingDto>(data.Booking);
-                    item.BeginTime = e.Start.AddDays(7 * w);
-                    item.EndTime = e.End.AddDays(7 * w);
-
+                    item.BeginTime = e.Start.AddDays(7 * fortNightCoeff * w);
+                    item.EndTime = e.End.AddDays(7 * fortNightCoeff * w);
+                    
                     item.DateOn = item.BeginTime.TruncateToDayStart();
                     result.Add(item);
                 }
@@ -164,7 +166,8 @@ namespace Client.Windows
             var result = new List<BookingDto>();            
             foreach (var e in data.RecurrentBookings)
             {
-                var item = ObjectMapper.Map<BookingDto>(data.Booking);                
+                var item = ObjectMapper.Map<BookingDto>(data.Booking);
+                e.MergeToScheduleDtoData(ref item);
                 result.Add(item);
             }
             
@@ -222,10 +225,11 @@ namespace Client.Windows
 
             var editor = new BookingEditWindow(_bookingData, IsEditMode) { Owner = this };            
                         
-            var res = editor.ShowDialog() ?? false;            
+            var res = editor.ShowDialog() ?? false;
             return new BookingData()
             {
                 IsBooked = res,
+                IsFortnightly = editor.Model.IsFortnightly,                
                 Booking = editor.Model.BookingData,
                 HasRecurrentBookings = editor.Model.EnableRecurringApointments,
                 RecurrentBookings = editor.Model.RecurrentScheduler.Events.ToList(),

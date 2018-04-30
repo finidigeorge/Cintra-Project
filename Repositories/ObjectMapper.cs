@@ -177,8 +177,8 @@ namespace Mapping
 
                     conf.CreateMap<Service, ServiceDto>().AfterMap((db, vm) =>
                     {                       
-                        vm.Coaches = _mapper.Map<List<CoachDto>>(db.ServiceToCoachesLinks.Select(p => p.Coach));
-                        vm.Horses= _mapper.Map<List<HorseDto>>(db.ServiceToHorsesLinks.Select(p => p.Hor));
+                        vm.Coaches = _mapper.Map<List<CoachDto>>(db.ServiceToCoachesLinks.Select(p => p.Coach).ToList());
+                        vm.Horses= _mapper.Map<List<HorseDto>>(db.ServiceToHorsesLinks.Select(p => p.Hor).ToList());
                     });
                     conf.CreateMap<ServiceDto, Service>()
                         .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())

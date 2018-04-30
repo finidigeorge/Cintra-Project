@@ -82,6 +82,13 @@ namespace Shared.Extentions
             return dt.AddDays(daysToAdd).TruncateToDayStart();
         }
 
+        public static DateTime TruncateToWeekStart(this DateTime dt)
+        {
+            // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
+            int daysToAdd = (((int)DayOfWeek.Monday - (int)dt.DayOfWeek + 7) % 7) - 7;
+            return dt.AddDays(daysToAdd).TruncateToDayStart();
+        }
+
         public static DateTime SetTime(this DateTime dt, DateTime time)
         {
             // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]

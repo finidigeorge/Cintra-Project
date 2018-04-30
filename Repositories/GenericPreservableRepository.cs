@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using DbLayer.Extentions;
 using DbLayer.Interfaces;
 using LinqToDB;
 using LinqToDB.Mapping;
@@ -22,7 +23,7 @@ namespace Repositories
 
                 var entity = db.GetTable<T>().Where(expression).FirstOrDefault();
                 entity.IsDeleted = true;
-                await db.UpdateAsync(entity);
+                await db.UpdateAsyncWithLock(entity);
                 
                 return null;
             }, dbContext);

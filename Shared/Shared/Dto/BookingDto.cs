@@ -16,10 +16,8 @@ namespace Shared.Dto
         public virtual DateTime BeginTime { get; set; }
         [VmMeta(IsNullable = false)]
         public virtual DateTime EndTime { get; set; }
+       
 
-        //only for transfer BookingDto -> BookingTemplate
-        public virtual int DayOfWeek { get; set; }
-        
         public virtual List<HorseDto> Horses { get; set; }
         [VmMeta(IsNullable = false)]
         public virtual List<ClientDto> Clients { get; set; }
@@ -33,6 +31,10 @@ namespace Shared.Dto
 
         public virtual string ValidationErrors { get; set; }
         public virtual string ValidationWarnings { get; set; }
+
+        //only for mapping BookingDto <-> BookingTemplate
+        public virtual int DayOfWeek { get; set; }
+        public virtual bool IsFirstWeek { get; set; }
 
     }
 }

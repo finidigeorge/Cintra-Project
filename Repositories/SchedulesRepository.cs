@@ -11,7 +11,7 @@ using Shared.Dto.Interfaces;
 namespace Repositories
 {
     [PerScope]
-    public class SchedulesRepository: GenericPreservableRepository<Schedule>
+    public class SchedulesRepository : GenericPreservableRepository<Schedule>
     {
         private readonly SchedulesDataRepository _dataRepository = new SchedulesDataRepository();
 
@@ -21,14 +21,15 @@ namespace Repositories
             {
                 return await Task.FromResult(db.GetTable<Schedule>().LoadWith(x => x.SchedulesData).Where(where).Where(x => x.IsDeleted == false).ToList());
             }, dbContext);
-        }        
+        }
 
         public override async Task Delete(long id, CintraDB dbContext = null)
-        {            
+        {
             await RunWithinTransaction(async (db) =>
             {
-                var schedulesData = await  _dataRepository.GetByParams(x => x.ScheduleId == id);
-                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id));                
+                var schedulesData = await _dataRepository.GetByParams(x => x.ScheduleId == id);
+                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id));
+
 
                 await base.Delete(id, db);
 

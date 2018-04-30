@@ -74,7 +74,7 @@ namespace Client.Windows
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly, Model.BookingData.BeginTime, Model.BookingData.EndTime);
                 if (editorResult.Item1)
                 {
-                    var e = new Event() { Color = weeklyEventBrush };                                                            
+                    var e = new Event() { Color = weeklyEventBrush, IsFirstWeek = (Model.WeekNumber == 0) };                                                            
                     AddWeeklyEvent(editorResult.Item2, e);
                 }
 
@@ -86,6 +86,19 @@ namespace Client.Windows
             {                        
                 WeeklyScheduler.DeleteEvent(SelectedEvent.Id);                
             }, (x) => SelectedEvent != null);
+
+            Model.NextWeekCommand = new Command<object>(() =>
+            {
+                WeeklyScheduler.NextPage();
+                Model.WeekNumber++;
+
+            }, (x) => Model.WeekNumber == 0);
+
+            Model.PrevWeekCommand = new Command<object>(() =>
+            {
+                WeeklyScheduler.PrevPage();
+                Model.WeekNumber--;
+            }, (x) => Model.WeekNumber == 1);
         }
 
         private void AddWeeklyEvent(ScheduleDataDtoUi item, Event e)

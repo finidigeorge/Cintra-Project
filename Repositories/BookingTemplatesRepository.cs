@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using DbLayer.Extentions;
 using LinqToDB;
 using Repositories.Interfaces;
 using Shared.Attributes;
@@ -11,39 +12,44 @@ using System.Threading.Tasks;
 namespace Repositories
 {
     [PerScope]
-    public class BookingTemplatesRepository: GenericPreservableRepository<BookingTemplates>, IBookingTemplateRepository
+    public class BookingTemplatesRepository : GenericPreservableRepository<BookingTemplates>, IBookingTemplateRepository
     {
         public override async Task<long> Create(BookingTemplates entity, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 if (entity.Id == 0)
-                    entity.Id = (long)(await db.InsertWithIdentityAsync(entity));
+                    entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
+
                 else
                 {
-                    await db.BookingTemplatesToClientsLink.DeleteAsync(x => x.BookingTemplateId == entity.Id);
-                    await db.BookingTemplatesToCoachesLink.DeleteAsync(x => x.BookingTemplateId == entity.Id);
-                    await db.BookingTemplatesToHorsesLink.DeleteAsync(x => x.BookingTemplateId == entity.Id);
-                    await db.UpdateAsync(entity);
+                    await db.BookingTemplatesToClientsLink.DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+                    await db.BookingTemplatesToCoachesLink.DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+                    await db.BookingTemplatesToHorsesLink.DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+
+                    await db.UpdateAsyncWithLock(entity);
                 }
+
 
                 foreach (var c in entity.BookingTemplatesToClientsLinks)
                 {
                     c.BookingTemplateId = entity.Id;
-                    await db.InsertWithIdentityAsync(c);
+                    await db.InsertWithIdentityAsyncWithLock(c);
                 }
 
                 foreach (var c in entity.BookingTemplatesToCoachesLinks)
                 {
                     c.BookingTemplateId = entity.Id;
-                    await db.InsertWithIdentityAsync(c);
+                    await db.InsertWithIdentityAsyncWithLock(c);
                 }
 
                 foreach (var c in entity.BookingTemplatesToHorsesLinks)
                 {
                     c.BookingTemplateId = entity.Id;
-                    await db.InsertWithIdentityAsync(c);
+                    await db.InsertWithIdentityAsyncWithLock(c);
                 }
+
+
 
                 return entity.Id;
             }, dbContext);
@@ -68,7 +74,7 @@ namespace Repositories
                         .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor)
                         .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor.HorsesScheduleData)
                         .Where(where).Where(x => x.IsDeleted == false).ToList()
-                );                
+                );
 
             }, dbContext);
         }

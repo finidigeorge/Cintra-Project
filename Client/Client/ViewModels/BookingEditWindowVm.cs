@@ -80,23 +80,8 @@ namespace Client.ViewModels
         public bool DisplayOnlyAssignedCoaches { get; set; }
 
         public bool IsEditMode { get; set; }
-
-        public bool ShowRecurringTab { get => !IsEditMode && (BookingData?.IsValid ?? false); }
-        public bool ShowCancelRecurringTab { get => IsEditMode && BookingData?.BookingTemplateMetadata != null; }
-
-        public bool EnableRecurringApointments { get; set; }
-        public bool IsPermanent { get; set; }
-        public bool EnableNonPermanentRecurringApointments { get => EnableRecurringApointments && !IsPermanent; }
-
-        public int RecurringWeeksNumber { get; set; } = 10;
-        public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToNextWeekday(DayOfWeek.Monday);
-
-        public ICommand AddWeeklyScheduledIntervalCommand { get; set; }
-        public ICommand UpdateWeeklyScheduledIntervalCommand { get; set; }
-        public ICommand DeleteWeeklyScheduledIntervalCommand { get; set; }
-
+        
         public ICommand GetServicesCommand { get => ServicesModel.RefreshDataCommand; }
-
 
         public IAsyncCommand AddCoachCommand { get; set; }
         public ICommand SyncCoachesCommand { get; set; }
@@ -111,10 +96,7 @@ namespace Client.ViewModels
         public IAsyncCommand AddClientCommand { get; set; }
         public ICommand SyncClientsCommand { get; set; }
         public IAsyncCommand DeleteClientCommand { get; set; }
-        public bool CanDeleteClient { get => ClientsVms.Count > 1; }
-
-
-        public Scheduler RecurrentScheduler { get; set; }
+        public bool CanDeleteClient { get => ClientsVms.Count > 1; }        
 
         public ServicesRefVm ServicesModel { get; set; } = new ServicesRefVm();        
         public PaymentTypesRefVm PaymentTypesModel { get; set; } = new PaymentTypesRefVm();
@@ -145,6 +127,34 @@ namespace Client.ViewModels
         public ObservableCollection<BookingEditCoachVm> CoachesVms { get; set; } = new ObservableCollection<BookingEditCoachVm>();
         public ObservableCollection<BookingEditHorseVm> HorsesVms { get; set; } = new ObservableCollection<BookingEditHorseVm>();
         public ObservableCollection<BookingEditClientVm> ClientsVms { get; set; } = new ObservableCollection<BookingEditClientVm>();
+
+        #region Permanent Booking
+        public Scheduler RecurrentScheduler { get; set; }
+
+        public int WeekNumber { get; set; }
+
+        public bool ShowRecurringTab { get => !IsEditMode && (BookingData?.IsValid ?? false); }
+        public bool ShowCancelRecurringTab { get => IsEditMode && BookingData?.BookingTemplateMetadata != null; }
+
+        public bool EnableRecurringApointments { get; set; }
+        public bool IsPermanent { get; set; }        
+        public bool EnableNonPermanentRecurringApointments { get => EnableRecurringApointments && !IsPermanent; }
+
+        public bool IsFortnightly { get; set; }
+        public bool SchedulerPrevNextWeekButtonsVisible { get => EnableRecurringApointments && IsFortnightly; }
+
+        public int RecurringWeeksNumber { get; set; } = 10;
+        public DateTime RecurringStartDate { get; set; } = DateTime.Now.TruncateToNextWeekday(DayOfWeek.Monday);
+
+        public ICommand AddWeeklyScheduledIntervalCommand { get; set; }
+        public ICommand UpdateWeeklyScheduledIntervalCommand { get; set; }
+        public ICommand DeleteWeeklyScheduledIntervalCommand { get; set; }
+
+
+        public ICommand NextWeekCommand { get; set; }
+        public ICommand PrevWeekCommand { get; set; }
+
+        #endregion
 
         public BookingEditWindowVm()
         {

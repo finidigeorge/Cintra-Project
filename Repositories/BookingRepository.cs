@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DbLayer.Extentions;
 
 namespace Repositories
 {
@@ -20,33 +21,42 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                if (entity.Id == 0)
-                    entity.Id = (long)(await db.InsertWithIdentityAsync(entity));
-                else
-                {
-                    await db.BookingsToHorsesLink.DeleteAsync(x => x.BookingId == entity.Id);
-                    await db.BookingsToClientsLink.DeleteAsync(x => x.BookingId == entity.Id);
-                    await db.BookingsToCoachesLink.DeleteAsync(x => x.BookingId == entity.Id);
-                    await db.UpdateAsync(entity);
-                }
+                
+                    if (entity.Id == 0)
+                    {
+                        entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
+                        
+                    }
+                    else
+                    {
+                        
+                        await db.BookingsToHorsesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                        await db.BookingsToClientsLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                        await db.BookingsToCoachesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                        
+                        await db.UpdateAsyncWithLock(entity);
+                    }
 
-                foreach (var c in entity.BookingsToClientsLinks)
-                {
-                    c.BookingId = entity.Id;
-                    await db.InsertWithIdentityAsync(c);
-                }
 
-                foreach (var c in entity.BookingsToCoachesLinks)
-                {
-                    c.BookingId = entity.Id;
-                    await db.InsertWithIdentityAsync(c);
-                }
+                        foreach (var c in entity.BookingsToClientsLinks)
+                        {
+                            c.BookingId = entity.Id;
+                            await db.InsertWithIdentityAsyncWithLock(c);
+                        }
 
-                foreach (var c in entity.BookingsToHorsesLinks)
-                {
-                    c.BookingId = entity.Id;
-                    await db.InsertWithIdentityAsync(c);
-                }
+                        foreach (var c in entity.BookingsToCoachesLinks)
+                        {
+                            c.BookingId = entity.Id;
+                            await db.InsertWithIdentityAsyncWithLock(c);
+                        }
+
+                        foreach (var c in entity.BookingsToHorsesLinks)
+                        {
+                            c.BookingId = entity.Id;
+                            await db.InsertWithIdentityAsyncWithLock(c);
+                        }
+                    
+                
 
                 return entity.Id;
             }, dbContext);
@@ -228,7 +238,7 @@ namespace Repositories
                 if (overlappedBooking != null)
                 {
                     result.Result = false;
-                    result.ErrorMessage = $"Horse has another booking during the selected time interval: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")}, Service: {overlappedBooking.Service.Name}";
+                    result.ErrorMessage = $"Horse has another booking during the selected time interval: {overlappedBooking.BeginTime.ToString("hh:mm tt")} - {overlappedBooking.EndTime.ToString("hh:mm tt")}";
                 }
 
                 return result;
@@ -381,7 +391,8 @@ namespace Repositories
         {
             await RunWithinTransaction(async (db) =>
             {
-                await db.BookingPayments.Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsync();
+                await db.BookingPayments.Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsyncWithLock();                                    
+
                 await base.Delete(id, db);
 
                 return null;
@@ -405,13 +416,13 @@ namespace Repositories
 
                 if (ErrorsValidation)
                 {
-                    foreach (var coach in booking.BookingsToCoachesLinks.Select(x => x.Coach))
+                    foreach (var coach in booking.BookingsToCoachesLinks.Select(x => x.Coach).ToList())
                     {
                         Append(error, (await HasCoachNotOverlappedBooking(coach, booking, db)).ToString());
                         Append(error, (await HasCoachScheduleFitBooking(coach, booking, db)).ToString());
                     }
 
-                    foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor))
+                    foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor).ToList())
                     {
                         Append(error, (await HasHorseNotOverlappedBooking(horse, booking, db)).ToString());
                         Append(error, (await HasHorseScheduleFitBooking(horse, booking, db)).ToString());
@@ -420,13 +431,13 @@ namespace Repositories
                 //just Warnings
                 else
                 {
-                    foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor))
+                    foreach (var horse in booking.BookingsToHorsesLinks.Select(x => x.Hor).ToList())
                     {
                         Append(error, (await HasHorseRequiredBreak(horse, booking, db)).ToString());
                         Append(error, (await HasHorseWorkedLessThanAllowed(horse, booking, db)).ToString());                        
                     }
 
-                    foreach (var coach in booking.BookingsToCoachesLinks.Select(x => x.Coach))
+                    foreach (var coach in booking.BookingsToCoachesLinks.Select(x => x.Coach).ToList())
                     {
                         Append(error, (await HasCoachScheduleFitBreaks(coach, booking, db)).ToString());                        
                     }

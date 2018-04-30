@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using DbLayer.Extentions;
 using LinqToDB;
 using Mapping;
 using Repositories.Interfaces;
@@ -13,8 +14,8 @@ using System.Threading.Tasks;
 namespace Repositories
 {
     [PerScope]
-    public class BookingTemplatesMetadataRepository: GenericRepository<BookingsTemplateMetadata>, IBookingTemplatesMetadataRepository
-    {        
+    public class BookingTemplatesMetadataRepository : GenericRepository<BookingsTemplateMetadata>, IBookingTemplatesMetadataRepository
+    {
         private readonly IBookingRepository _bookingRepository = new BookingRepository();
         private readonly BookingTemplatesRepository _bookingTemplatesRepository = new BookingTemplatesRepository();
 
@@ -27,26 +28,66 @@ namespace Repositories
                 foreach (var m in metadataList)
                 {
                     var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == m.Id, db);
-                    var hasBooking = templates.Any(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber());
+                    var hasBooking = false;
 
-                    if (hasBooking) {
+                    if (m.IsFortnightly)
+                    {
+                        var daysDiff = (onDate.TruncateToWeekStart() - m.StartDate.TruncateToWeekStart()).Days;
+                        hasBooking = templates.Any(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber());
 
-                        var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
-
-                        if (!alreadyGenerated)
+                        if (hasBooking)
                         {
-                            foreach (var t in templates.Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber())
-                                .Select(x => ObjectMapper.Map<Booking>(x)))
-                            {
-                                t.DateOn = onDate;
-                                t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
-                                t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
-                                await _bookingRepository.Create(t, db);
-                            }
-                        }
+                            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
 
+                            if (!alreadyGenerated)
+                            {
+                                foreach (var t in
+                                    //first week events
+                                    templates
+                                        .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && x.IsFirstWeek)
+                                        .ToList()
+                                        .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
+                                        .Union
+                                        (
+                                        //second week events
+                                        templates
+                                            .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && !x.IsFirstWeek).ToList()
+                                            .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
+                                        )
+                                        .Select(x => ObjectMapper.Map<Booking>(x)))
+                                {
+                                    t.DateOn = onDate;
+                                    t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
+                                    t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
+                                    await _bookingRepository.Create(t, db);
+                                }
+                            }
+
+                        }
                     }
-                    
+                    else
+                    {
+                        hasBooking = templates.Any(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber());
+
+                        if (hasBooking)
+                        {
+                            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
+
+                            if (!alreadyGenerated)
+                            {
+                                foreach (var t in templates.Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber()).ToList()
+                                    .Select(x => ObjectMapper.Map<Booking>(x)))
+                                {
+                                    t.DateOn = onDate;
+                                    t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
+                                    t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
+                                    await _bookingRepository.Create(t, db);
+                                }
+                            }
+
+                        }
+                    }
+
                 }
 
                 return null;
@@ -57,16 +98,16 @@ namespace Repositories
         public async Task CancelAllBookings(long metadataId, DateTime onDate, CintraDB dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
-            {                 
-                await db.BookingsTemplateMetadata    
+            {
+                await db.BookingsTemplateMetadata
                     .Where(x => x.Id == metadataId)
                     .Set(x => x.EndDate, onDate)
-                    .UpdateAsync();
+                    .UpdateAsyncWithLock();
 
                 await db.Bookings
                     .Where(x => x.TemplateMetadataId == metadataId && x.DateOn >= onDate)
                     .Set(x => x.IsDeleted, true)
-                    .UpdateAsync();
+                    .UpdateAsyncWithLock();
 
                 return null;
 

@@ -10,6 +10,17 @@ namespace Tests
     public class DateTimeExtentionTest
     {
         [TestMethod]
+        public void TruncateToWeekStartTest()
+        {
+            var date = new DateTime(2018, 4, 26, 12, 0, 0);
+            var weekStart = date.TruncateToWeekStart();
+            Assert.IsTrue(weekStart.DayOfWeek == DayOfWeek.Monday);
+            Assert.IsTrue(weekStart.Day == 23);
+            Assert.IsTrue(weekStart.Month == 4);
+            Assert.IsTrue(weekStart.Year == 2018);
+        }
+
+        [TestMethod]
         public void IsOverlapTest()
         {
             // ----

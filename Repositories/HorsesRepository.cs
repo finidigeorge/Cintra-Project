@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataModels;
+using DbLayer.Extentions;
 using LinqToDB;
 using Repositories.Interfaces;
 using Shared.Attributes;
@@ -12,7 +13,7 @@ using Shared.Extentions;
 namespace Repositories
 {
     [PerScope]
-    public class HorsesRepository: GenericPreservableRepository<Hors>
+    public class HorsesRepository : GenericPreservableRepository<Hors>
     {
         public override async Task<long> Create(Hors entity, CintraDB dbContext = null)
         {
@@ -20,18 +21,15 @@ namespace Repositories
             {
                 bool isNew = false;
                 if (entity.Id == 0)
-                {
                     isNew = true;
-                }
 
                 var id = await base.Create(entity, db);
 
-                //assign all services to the new horse
                 if (isNew)
                 {
-                    var serviceToHorsesLinks = db.ServiceToHorsesLink.Where(x => x.HorseId == entity.Id).Select(x => new ServiceToHorsesLink() { HorseId = id, ServiceId = x.ServiceId });
+                    var serviceToHorsesLinks = db.ServiceToHorsesLink.Where(x => x.HorseId == entity.Id).Select(x => new ServiceToHorsesLink() { HorseId = id, ServiceId = x.ServiceId }).ToList();
                     foreach (var c in serviceToHorsesLinks)
-                        await db.InsertWithIdentityAsync(c);
+                        await db.InsertWithIdentityAsyncWithLock(c);
                 }
 
                 return id;
@@ -45,7 +43,7 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.Horses                        
+                    db.Horses
                         .LoadWith(x => x.HorsesScheduleData)
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .Where(where).Where(x => x.IsDeleted == false)
@@ -53,6 +51,6 @@ namespace Repositories
                         .ToList()
                 );
             }, dbContext);
-        }        
+        }
     }
 }

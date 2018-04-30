@@ -92,6 +92,7 @@ namespace Mapping
                     conf.CreateMap<UserDtoUi, UserDto>();
                     conf.CreateMap<UserRoleDtoUi, UserRoleDto>();
                     conf.CreateMap<PaymentTypeDtoUi, PaymentTypeDto>();
+                    
                     conf.IgnoreUnmapped();
                 }
             );            
