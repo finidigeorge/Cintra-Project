@@ -125,6 +125,7 @@
     <Compile Include="Controls\TimePicker.xaml.cs">
       <DependentUpon>TimePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TypeAheadComboBox.cs" />
     <Compile Include="Controls\WpfScheduler\DayScheduler.xaml.cs">
       <DependentUpon>DayScheduler.xaml</DependentUpon>
     </Compile>
