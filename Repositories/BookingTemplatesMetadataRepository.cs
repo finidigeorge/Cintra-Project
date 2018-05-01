@@ -37,32 +37,7 @@ namespace Repositories
 
                         if (hasBooking)
                         {
-                            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
-
-                            if (!alreadyGenerated)
-                            {
-                                foreach (var t in
-                                    //first week events
-                                    templates
-                                        .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && x.IsFirstWeek)
-                                        .ToList()
-                                        .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
-                                        .Union
-                                        (
-                                        //second week events
-                                        templates
-                                            .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && !x.IsFirstWeek).ToList()
-                                            .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
-                                        )
-                                        .Select(x => ObjectMapper.Map<Booking>(x)))
-                                {
-                                    t.DateOn = onDate;
-                                    t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
-                                    t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
-                                    await _bookingRepository.Create(t, db);
-                                }
-                            }
-
+                            await GenerateFortnightEvents(onDate, db, m, templates);
                         }
                     }
                     else
@@ -71,28 +46,60 @@ namespace Repositories
 
                         if (hasBooking)
                         {
-                            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
-
-                            if (!alreadyGenerated)
-                            {
-                                foreach (var t in templates.Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber()).ToList()
-                                    .Select(x => ObjectMapper.Map<Booking>(x)))
-                                {
-                                    t.DateOn = onDate;
-                                    t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
-                                    t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
-                                    await _bookingRepository.Create(t, db);
-                                }
-                            }
-
+                            await GenerateWeekEvents(onDate, db, m, templates);
                         }
                     }
-
                 }
 
                 return null;
 
             }, dbContext);
+        }
+
+        private async Task GenerateWeekEvents(DateTime onDate, CintraDB db, BookingsTemplateMetadata m, List<BookingTemplates> templates)
+        {
+            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
+
+            if (!alreadyGenerated)
+            {
+                foreach (var t in templates.Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber()).ToList()
+                    .Select(x => ObjectMapper.Map<Booking>(x)))
+                {
+                    t.DateOn = onDate;
+                    t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
+                    t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
+                    await _bookingRepository.Create(t, db);
+                }
+            }
+        }
+
+        private async Task GenerateFortnightEvents(DateTime onDate, CintraDB db, BookingsTemplateMetadata m, List<BookingTemplates> templates)
+        {
+            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == m.Id);
+
+            if (!alreadyGenerated)
+            {
+                foreach (var t in
+                    //first week events
+                    templates
+                        .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && x.IsFirstWeek)
+                        .ToList()
+                        .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
+                        .Union
+                        (
+                        //second week events
+                        templates
+                            .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && !x.IsFirstWeek).ToList()
+                            .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
+                        )
+                        .Select(x => ObjectMapper.Map<Booking>(x)))
+                {
+                    t.DateOn = onDate;
+                    t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
+                    t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
+                    await _bookingRepository.Create(t, db);
+                }
+            }
         }
 
         public async Task CancelAllBookings(long metadataId, DateTime onDate, CintraDB dbContext = null)

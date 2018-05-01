@@ -29,7 +29,7 @@ namespace Repositories
                 if (isTransactional)
                     db.BeginTransaction();
 
-                return await fetcher(db);
+                return await Linq2dbSqliteExtentions.ApplyReadLock(async () => await fetcher(db));
             }
             catch (Exception)
             {
@@ -92,7 +92,7 @@ namespace Repositories
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T">linqToDb Table mapped</typeparam>
         /// <param name="id"> Have to be of the same type of primary key atribute of T table mapped</param>

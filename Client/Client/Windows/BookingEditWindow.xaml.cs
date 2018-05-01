@@ -36,14 +36,14 @@ namespace Client.Windows
 
         public BookingEditWindow()
         {
-            InitializeComponent();            
-        }       
+            InitializeComponent();
+        }
 
         public BookingEditWindow(BookingDtoUi bookindData, bool isEditMode)
         {
             InitializeComponent();
             Model.IsEditMode = isEditMode;
-            Model.BookingData = bookindData;            
+            Model.BookingData = bookindData;
             Model.RecurrentScheduler = WeeklyScheduler;
             BeginTimePicker.Model.CurrentTime = bookindData.BeginTime;
             EndTimePicker.Model.CurrentTime = bookindData.EndTime;
@@ -58,7 +58,7 @@ namespace Client.Windows
             BeginTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")
                 {
-                    Model.BookingData.BeginTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart()); 
+                    Model.BookingData.BeginTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart());
                 }
             };
 
@@ -74,7 +74,7 @@ namespace Client.Windows
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly, Model.BookingData.BeginTime, Model.BookingData.EndTime);
                 if (editorResult.Item1)
                 {
-                    var e = new Event() { Color = weeklyEventBrush, IsFirstWeek = (Model.WeekNumber == 0) };                                                            
+                    var e = new Event() { Color = weeklyEventBrush, IsFirstWeek = (Model.WeekNumber == 0) };
                     AddWeeklyEvent(editorResult.Item2, e);
                 }
 
@@ -83,8 +83,8 @@ namespace Client.Windows
             Model.UpdateWeeklyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
 
             Model.DeleteWeeklyScheduledIntervalCommand = new Command<object>(() =>
-            {                        
-                WeeklyScheduler.DeleteEvent(SelectedEvent.Id);                
+            {
+                WeeklyScheduler.DeleteEvent(SelectedEvent.Id);
             }, (x) => SelectedEvent != null);
 
             Model.NextWeekCommand = new Command<object>(() =>
@@ -126,7 +126,7 @@ namespace Client.Windows
                 Owner = this
             };
 
-            var res = editor.ShowDialog() ?? false;            
+            var res = editor.ShowDialog() ?? false;
             return (res, editor.Model);
         }
 
@@ -173,7 +173,7 @@ namespace Client.Windows
             {
                 var item = (TabItem)tc.SelectedItem;
                 if (item == null || (item.IsSelected && item.TabIndex != 1))
-                {                    
+                {
                     Width = 740;
                     MaxHeight = 875;
                     CenterWindowOnScreen((int)MaxHeight);
@@ -188,7 +188,7 @@ namespace Client.Windows
 
                     CenterWindowOnScreen((int)MaxHeight);
                     return;
-                }                
+                }
             }
         }
 
