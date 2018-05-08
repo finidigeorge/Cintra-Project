@@ -7,6 +7,7 @@
         xmlns:viewModels="clr-namespace:Client.ViewModels"
         xmlns:controls="clr-namespace:Client.Controls"
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
+        xmlns:tk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Bookings" Height="900" Width="1600" WindowStartupLocation="CenterScreen"
         FontSize="14"
@@ -16,7 +17,8 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
-        <Grid Background="#FFE5E5E5">
+        <tk:BusyIndicator IsBusy="{Binding IsLoading}" BusyContent="Loading, please wait..." DisplayAfter="0">
+            <Grid Background="#FFE5E5E5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition Height="*"/>
@@ -242,5 +244,6 @@
                 <Label Content="{Binding SelectedItem.ValidationWarnings}" Grid.Column="1"/>
             </Grid>
         </Grid>
+        </tk:BusyIndicator>
     </Grid>
 </Window>

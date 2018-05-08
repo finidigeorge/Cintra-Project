@@ -378,7 +378,7 @@ namespace Repositories
                         .LoadWith(x => x.BookingsToHorsesLinks)
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor)
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor.HorsesScheduleData)
-                        .Where(where).Where(x => x.IsDeleted == false).ToList()
+                        .Where(where).Where(x => x.IsDeleted == false).OrderBy(x => x.BeginTime).ToList()
                 );
 
                 return await AccessFilter(result, db);

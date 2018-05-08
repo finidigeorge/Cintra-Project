@@ -59,6 +59,20 @@ namespace Client.Windows
 
             Model.CurrentDate = DateTime.Now.TruncateToDayStart();
 
+            var refreshCommand = Model.RefreshDataCommand;
+            Model.RefreshDataCommand = new AsyncCommand<object>(async (obj) =>
+            {
+                try
+                {
+                    Model.IsLoading = true;
+                    await refreshCommand.ExecuteAsync(null);
+                }
+                finally
+                {
+                    Model.IsLoading = false;
+                }
+            }, (x) => true);
+
             Model.NextDayCommand = new Command<object>(() =>
             {
                 Model.CurrentDate = Model.CurrentDate.AddDays(1);                
@@ -196,8 +210,8 @@ namespace Client.Windows
         }
 
         private async Task LoadSchedule()
-        {            
-            await Model.RefreshDataCommand.ExecuteAsync(null);
+        {
+            await Model.RefreshDataCommand.ExecuteAsync(null);            
         }
 
 

@@ -32,6 +32,8 @@ namespace Client.ViewModels
         where T: IUniqueDto, new()
         
     {
+        private static SemaphoreSlim _lockObject = new SemaphoreSlim(1, 1);
+
         private ICollectionView _itemsCollectionView;
         public ICollectionView ItemsCollectionView { get { return _itemsCollectionView; } }
 
@@ -83,21 +85,29 @@ namespace Client.ViewModels
         {            
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
             {
-                long selectedItemId = 0;
-                if (SelectedItem != null)
-                    selectedItemId = SelectedItem.Id;
-
-                if (Items == null)
-                    Items = new ObservableCollection<T1>();
-                else
-                    Items.Clear();
-
-                foreach (var item in (await GetAll()).ToList<T, T1>())                
-                    Items.Add(item);
-
-                if (selectedItemId != 0)
+                try
                 {
-                    SelectedItem = Items.FirstOrDefault(i => i.Id == selectedItemId);
+                    await _lockObject.WaitAsync();
+
+                    long selectedItemId = 0;
+                    if (SelectedItem != null)
+                        selectedItemId = SelectedItem.Id;
+
+                    if (Items == null)
+                        Items = new ObservableCollection<T1>();
+                    else
+                        Items.Clear();
+
+                    foreach (var item in (await GetAll()).ToList<T, T1>())
+                        Items.Add(item);
+
+                    if (selectedItemId != 0)
+                    {
+                        SelectedItem = Items.FirstOrDefault(i => i.Id == selectedItemId);
+                    }
+                }
+                finally {
+                    _lockObject.Release();
                 }
 
             }, (x) => HasValidUser());
@@ -110,19 +120,31 @@ namespace Client.ViewModels
             AddItemCommand = new AsyncCommand<T1>(async (param) =>
             {
                 BeforeAddItemHandler(param);
-                var id = await Client.Create(ObjectMapper.Map<T>(param));
-                var item = ObjectMapper.Map<T1>(await Client.GetById(id));
 
-                //two cases for scheduler and table models
-                if (Items.Any(v => v.Id == 0))
-                    Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;
-                else
-                    Items.Add(item);
+                try
+                {
+                    await _lockObject.WaitAsync();
+
+                    var id = await Client.Create(ObjectMapper.Map<T>(param));
+                    var item = ObjectMapper.Map<T1>(await Client.GetById(id));
+
+                    //two cases for scheduler and table models
+                    if (Items.Any(v => v.Id == 0))
+                        Items[Items.IndexOf(Items.First(v => v.Id == 0))] = item;
+                    else
+                        Items.Add(item);
+                }
+                finally
+                {
+                    _lockObject.Release();
+                }
+
             }, (x) => x != null && HasValidUser());
 
             UpdateItemCommand = new AsyncCommand<T1>(async (param) =>
             {
                 BeforeEditItemHandler(param);
+
                 await Client.Create(ObjectMapper.Map<T>(param));                
             }, (x) => x != null && HasValidUser());
 
@@ -140,9 +162,18 @@ namespace Client.ViewModels
 
             DeleteSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
             {
-                await DeleteItemCommand.ExecuteAsync(SelectedItem);
-                if (SelectedItem != null)
-                    Items.Remove(Items.First(i => i.Id == SelectedItem.Id));                
+                try
+                {
+                    await _lockObject.WaitAsync();
+                    await DeleteItemCommand.ExecuteAsync(SelectedItem);
+                    if (SelectedItem != null)
+                        Items.Remove(Items.First(i => i.Id == SelectedItem.Id));
+                }
+                finally
+                {
+                    _lockObject.Release();
+                }
+
             }, (x) => CanDeleteSelectedItem);
 
 
