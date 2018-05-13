@@ -156,6 +156,7 @@ namespace Client.Controls.WpfScheduler
         }
         #endregion
 
+        public bool EnableEventsIntersection { get; set; } = false;
 
         public Scheduler()
         {
@@ -191,7 +192,11 @@ namespace Client.Controls.WpfScheduler
 
         public void AddEvent(Event e)
         {
-            if (e.Start > e.End) throw new ArgumentException("End date is before Start date");
+            if (e.Start > e.End)
+                throw new ArgumentException("End date is before Start date");
+
+            if (!EnableEventsIntersection && Events.Any(x => x.Start < e.End && x.End > e.Start))
+                throw new ArgumentException("Can't add new scheduled event because it intersects another one added before");
 
             Events.Add(e);
 

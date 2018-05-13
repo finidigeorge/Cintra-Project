@@ -14,7 +14,7 @@ namespace Client.Controls
 
         public CoachesReference()
         {
-            InitializeComponent();
+            InitializeComponent();            
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);
             Model.DisplayEditItemScheduleCommand = new Command<object>(ShowScheduleEditor, (x) => Model.CanEditSelectedItem);
         }

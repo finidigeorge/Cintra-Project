@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
             <controls:ReferencesToolbar 
-                DeleteCommand="{Binding Path=DeleteSelectedItemCommand}"
+                DeleteCommand="{Binding Path=BeginDeleteItemCommand}"
                 EditCommand="{Binding Path=BeginEditItemCommand}"
                 NewCommand="{Binding Path=BeginAddItemCommand}"
                 RefreshCommand="{Binding Path=RefreshDataCommand}"

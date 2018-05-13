@@ -21,42 +21,40 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                
-                    if (entity.Id == 0)
-                    {
-                        entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
+                                
+                if (entity.Id == 0)
+                {
+                    entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
                         
-                    }
-                    else
-                    {
+                }
+                else
+                {
                         
-                        await db.BookingsToHorsesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                        await db.BookingsToClientsLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                        await db.BookingsToCoachesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.BookingsToHorsesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.BookingsToClientsLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.BookingsToCoachesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
                         
-                        await db.UpdateAsyncWithLock(entity);
-                    }
+                    await db.UpdateAsyncWithLock(entity);
+                }
 
 
-                        foreach (var c in entity.BookingsToClientsLinks)
-                        {
-                            c.BookingId = entity.Id;
-                            await db.InsertWithIdentityAsyncWithLock(c);
-                        }
+                foreach (var c in entity.BookingsToClientsLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsyncWithLock(c);
+                }
 
-                        foreach (var c in entity.BookingsToCoachesLinks)
-                        {
-                            c.BookingId = entity.Id;
-                            await db.InsertWithIdentityAsyncWithLock(c);
-                        }
+                foreach (var c in entity.BookingsToCoachesLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsyncWithLock(c);
+                }
 
-                        foreach (var c in entity.BookingsToHorsesLinks)
-                        {
-                            c.BookingId = entity.Id;
-                            await db.InsertWithIdentityAsyncWithLock(c);
-                        }
-                    
-                
+                foreach (var c in entity.BookingsToHorsesLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsyncWithLock(c);
+                }                                    
 
                 return entity.Id;
             }, dbContext);
