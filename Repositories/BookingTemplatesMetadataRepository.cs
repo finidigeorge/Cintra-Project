@@ -59,7 +59,7 @@ namespace Repositories
 
         private async Task GenerateWeekEvents(DateTime onDate, CintraDB db, long metadataId)
         {
-            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == metadataId);
+            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadataId);
 
             if (!alreadyGenerated)
             {
@@ -78,7 +78,7 @@ namespace Repositories
 
         private async Task GenerateFortnightEvents(DateTime onDate, CintraDB db, long metadataId)
         {
-            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && !x.IsDeleted && x.TemplateMetadataId == metadataId);
+            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadataId);
 
             if (!alreadyGenerated)
             {
