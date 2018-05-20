@@ -83,7 +83,7 @@ namespace Repositories
             return (await GetByParams((x) => true)).ToList();
         }
 
-        public virtual async Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null)
+        public virtual async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -130,7 +130,7 @@ namespace Repositories
             }
         }
 
-        public Func<T, bool> SimpleComparison(string property, object value)
+        public Expression<Func<T, bool>> SimpleComparison(string property, object value)
         {
             var type = typeof(T);
             var pe = Expression.Parameter(type, "p");
@@ -138,10 +138,10 @@ namespace Repositories
             var constantReference = Expression.Constant(value);
 
             return Expression.Lambda<Func<T, bool>>
-            (Expression.Equal(propertyReference, constantReference), pe).Compile();
+            (Expression.Equal(propertyReference, constantReference), pe);
         }
 
-        private Func<T, bool> SimpleComparison<D>(string propertyName, D value)
+        private Expression<Func<T, bool>> SimpleComparison<D>(string propertyName, D value)
         {
             var type = typeof(T);
             var pe = Expression.Parameter(type, "p");
@@ -149,7 +149,7 @@ namespace Repositories
             var propertyReference = Expression.Property(pe, propertyName);
 
             return Expression.Lambda<Func<T, bool>>(
-                Expression.Equal(propertyReference, constantReference), pe).Compile();
+                Expression.Equal(propertyReference, constantReference), pe);
         }
     }
 }

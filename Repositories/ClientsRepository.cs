@@ -4,6 +4,7 @@ using Shared.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace Repositories
     [PerScope]
     public class ClientsRepository: GenericPreservableRepository<Client>
     {
-        public override async Task<List<Client>> GetByParams(Func<Client, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Client>> GetByParams(Expression<Func<Client, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {

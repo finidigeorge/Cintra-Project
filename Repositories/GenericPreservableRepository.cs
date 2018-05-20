@@ -6,6 +6,7 @@ using LinqToDB.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Repositories
             return (await GetByParams((x) => x.IsDeleted == false)).ToList();
         }
 
-        public override async Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null)
+        public override async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {

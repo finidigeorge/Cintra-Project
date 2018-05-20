@@ -173,7 +173,9 @@ namespace Controllers
                               
                 var res = new List<BookingDto>();
 
-                foreach (var b in (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate)))) {
+                var _bd = _beginDate.TruncateToDayStart();
+                var _ed = _endDate.TruncateToDayStart();
+                foreach (var b in (await ((BookingRepository)_repository).GetByParams(x => x.DateOn >= _bd && x.DateOn < _ed))) {
                     var item = ObjectMapper.Map<BookingDto>(b);
                     item.ValidationErrors = await repository.RunValidations(b, true);
                     item.ValidationWarnings = await repository.RunValidations(b, false);

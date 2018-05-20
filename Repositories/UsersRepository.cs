@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataModels;
 using LinqToDB;
@@ -14,7 +15,7 @@ namespace Repositories
     [PerScope]
     public class UserRepository : GenericPreservableRepository<User>, IUsersRepository
     {
-        public override async Task<List<User>> GetByParams(Func<User, bool> where, CintraDB dbContext = null)
+        public override async Task<List<User>> GetByParams(Expression<Func<User, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {                

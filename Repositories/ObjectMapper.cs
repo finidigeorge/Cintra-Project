@@ -34,7 +34,9 @@ namespace Mapping
                     });
 
                     conf.CreateMap<BookingTemplates, Booking>().AfterMap((s, d) =>
-                    {                        
+                    {
+                        if (s.PaymentTypeId != null)
+                            d.BookingPayments = new List<BookingPayments>() { new BookingPayments() { PaymentTypeId = s.PaymentTypeId.Value, PaymentOptions = s.PaymentOptions} };
                         d.BookingsTemplateMetadata = s.BookingsTemplateMetadata;
                         d.Id = 0;
                         d.BookingsToCoachesLinks = s.BookingTemplatesToCoachesLinks?.Select(x => new BookingsToCoachesLink() { CoachId = x.CoachId, Coach = x.Coach }).ToList();
@@ -51,7 +53,7 @@ namespace Mapping
                         });
                     conf.CreateMap<BookingsTemplateMetadata, BookingTemplateMetadataDto>()
                         .AfterMap((db, vm) =>
-                        {
+                        {                                                        
                             vm.BookingTemplates = db.BookingTemplates.Select(x => Map<BookingDto>(Map<BookingTemplates>(x))).ToList();
                         });
 

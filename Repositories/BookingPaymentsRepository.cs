@@ -5,6 +5,7 @@ using Shared.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Repositories
     [PerScope]
     public class BookingPaymentsRepository: GenericPreservableRepository<BookingPayments>, IBookingPaymentsRepository
     {
-        public override async Task<List<BookingPayments>> GetByParams(Func<BookingPayments, bool> where, CintraDB dbContext = null)
+        public override async Task<List<BookingPayments>> GetByParams(Expression<Func<BookingPayments, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {

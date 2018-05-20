@@ -18,7 +18,9 @@ namespace Repositories
     public class BookingTemplatesMetadataRepository : GenericRepository<BookingsTemplateMetadata>, IBookingTemplatesMetadataRepository
     {
         private readonly IBookingRepository _bookingRepository = new BookingRepository();
-        private readonly BookingTemplatesRepository _bookingTemplatesRepository = new BookingTemplatesRepository();
+        private readonly IBookingPaymentsRepository _paymentsRepository = new BookingPaymentsRepository();
+        private readonly IBookingTemplateRepository _bookingTemplatesRepository = new BookingTemplatesRepository();
+
         private static readonly SemaphoreSlim _lockObject = new SemaphoreSlim(1, 1);
 
         public async Task GenerateAllPermanentBookings(DateTime onDate, CintraDB dbContext = null)
@@ -63,15 +65,16 @@ namespace Repositories
 
             if (!alreadyGenerated)
             {
-                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadataId, db);
+                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadataId &&
+                    !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber(), db);
 
-                foreach (var t in templates.Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber()).ToList()
-                    .Select(x => ObjectMapper.Map<Booking>(x)))
+                foreach (var t in templates.Select(x => ObjectMapper.Map<Booking>(x)))
                 {
                     t.DateOn = onDate;
                     t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
                     t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
-                    await _bookingRepository.Create(t, db);
+                    var bookingId = await _bookingRepository.Create(t, db);
+                    await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(t.BookingPayments?.FirstOrDefault()), db);
                 }
             }
         }
@@ -82,19 +85,20 @@ namespace Repositories
 
             if (!alreadyGenerated)
             {
-                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadataId, db);
+                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadataId && 
+                    !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber(), db);
 
                 foreach (var t in
                     //first week events
                     templates
-                        .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && x.IsFirstWeek)
+                        .Where(x => x.IsFirstWeek)
                         .ToList()
                         .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
                         .Union
                         (
                         //second week events
                         templates
-                            .Where(x => !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber() && !x.IsFirstWeek).ToList()
+                            .Where(x => !x.IsFirstWeek).ToList()
                             .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
                         )
                         .Select(x => ObjectMapper.Map<Booking>(x)))
@@ -102,7 +106,8 @@ namespace Repositories
                     t.DateOn = onDate;
                     t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
                     t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
-                    await _bookingRepository.Create(t, db);
+                    var bookingId = await _bookingRepository.Create(t, db);
+                    await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(t.BookingPayments?.FirstOrDefault()), db);
                 }
             }
         }

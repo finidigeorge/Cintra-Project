@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DbLayer.Extentions;
+using System.Linq.Expressions;
 
 namespace Repositories
 {
@@ -352,13 +353,13 @@ namespace Repositories
 
                 return !hasOverlappedBookings && eligibleForService && passedScheduleCheck;
             }, dbContext);
-        }        
+        }                
 
-        public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Booking>> GetByParams(Expression<Func<Booking, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
-                var result =  await Task.FromResult(
+                var result = await Task.FromResult(
                     db.Bookings
                         .LoadWith(x => x.BookingsTemplateMetadata)
                         .LoadWith(x => x.BookingsTemplateMetadata.BookingTemplates)
@@ -370,13 +371,15 @@ namespace Repositories
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules)
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules.First().SchedulesData)
-                        .LoadWith(x => x.Service)                        
+                        .LoadWith(x => x.Service)
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)
                         .LoadWith(x => x.BookingsToHorsesLinks)
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor)
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor.HorsesScheduleData)
-                        .Where(where).Where(x => x.IsDeleted == false).OrderBy(x => x.BeginTime).ToList()
+                        .Where(x => x.IsDeleted == false)
+                        .Where(where)
+                        .OrderBy(x => x.BeginTime).ToList()
                 );
 
                 return await AccessFilter(result, db);
@@ -384,7 +387,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        
+
         public override async Task Delete(long id, CintraDB dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
