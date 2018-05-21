@@ -28,8 +28,8 @@ namespace Repositories
         {
             await RunWithinTransaction(async (db) =>
             {
-                var schedulesData = await _dataRepository.GetByParams(x => x.ScheduleId == id);
-                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id));
+                var schedulesData = await _dataRepository.GetByParams(x => x.ScheduleId == id, db);
+                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id, db));
 
                 await base.Delete(id, db);
 

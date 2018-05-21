@@ -75,6 +75,7 @@ namespace Repositories
                         res.Schedules = LoadSchedules(x.Id, db).ToList();
                         return res;
                     })
+                    .ToList()
                 );
             }, dbContext);
         }

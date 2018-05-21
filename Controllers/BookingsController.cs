@@ -56,7 +56,7 @@ namespace Controllers
             return await CreateInternal(entity);
         }
 
-        private async Task<long> CreateInternal(BookingDto entity)
+        private async Task<long> CreateInternal(BookingDto entity, CintraDB dbContext = null)
         {
             try
             {
@@ -81,14 +81,16 @@ namespace Controllers
                     }
 
                     return null;
-                });
+                },
+                dbContext);
 
                 return await ((BookingRepository)_repository).RunWithinTransaction(async (db) => 
                 { 
-                    var bookingId = await _repository.Create(booking);
+                    var bookingId = await _repository.Create(booking, db);
                     await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(entity.BookingPayment), db);
                     return bookingId;
-                });
+                },
+                dbContext);
             }
             catch (Exception e)
             {
@@ -105,7 +107,7 @@ namespace Controllers
                 await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
                 {
                     foreach (var e in entityList)
-                        await Create(e);
+                        await CreateInternal(e, db);
 
                     return null;
                 });
