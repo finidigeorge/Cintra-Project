@@ -32,6 +32,14 @@ namespace Repositories
 
                 var coachId = await base.Create(entity, db);
 
+                //create default schedule
+                if (isNew) {
+                    var scheduleRepository = new SchedulesRepository();
+                    await scheduleRepository.Create(
+                        new Schedule() { CoachId = coachId, Name = "Default Schedule", IsActive = true},
+                        db);
+                }
+
                 if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
                 {
                     var serviceToCoachesLinks = db.CoachRolesToServicesLink.Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId }).ToList();
@@ -66,7 +74,7 @@ namespace Repositories
                     db.Coaches
                     .LoadWith(x => x.ServiceToCoachesLinks)
                     .Where(where)
-                    .Where(x => x.IsDeleted == false)                    
+                    .Where(x => x.IsDeleted == false)
                     .OrderBy(x => x.Name)
                     .ToList()
                     .Select(x =>

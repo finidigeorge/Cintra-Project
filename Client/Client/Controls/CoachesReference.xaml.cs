@@ -14,7 +14,7 @@ namespace Client.Controls
 
         public CoachesReference()
         {
-            InitializeComponent();            
+            InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);
             Model.DisplayEditItemScheduleCommand = new Command<object>(ShowScheduleEditor, (x) => Model.CanEditSelectedItem);
         }
@@ -31,6 +31,7 @@ namespace Client.Controls
             editor.Model.RefreshDataCommand.ExecuteAsync(null);
 
             editor.ShowDialog();
+            Model.RefreshDataCommand.ExecuteAsync(null);
         }
     }
 }
