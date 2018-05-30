@@ -41,11 +41,11 @@ namespace Repositories
                     {                        
                         if (m.IsFortnightly)
                         {
-                            await GenerateFortnightEvents(onDate, db, m.Id);                            
+                            await GenerateFortnightEvents(onDate, db, m);                            
                         }
                         else
                         {
-                            await GenerateWeekEvents(onDate, db, m.Id);                            
+                            await GenerateWeekEvents(onDate, db, m);                            
                         }
                     }
                 }
@@ -59,36 +59,73 @@ namespace Repositories
             }, dbContext);
         }
 
-        private async Task GenerateWeekEvents(DateTime onDate, CintraDB db, long metadataId)
+        private async Task<Booking> UpdateFromPrevBooking(BookingsTemplateMetadata metadata, DateTime onDate, CintraDB db, Booking booking)
         {
-            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadataId);
+            var daysToSubtract = -7;
+
+            if (metadata.IsFortnightly)
+                daysToSubtract = -14;
+
+            var prevWeekDate = onDate.AddDays(daysToSubtract);
+            var prevBooking = await db.Bookings                
+                .FirstOrDefaultAsync(x => x.DateOn == prevWeekDate && x.TemplateMetadataId == metadata.Id && !x.IsDeleted);
+
+            if (prevBooking != null)
+            {
+                prevBooking = await _bookingRepository.GetById(prevBooking.Id, db);
+
+                booking.ServiceId = prevBooking.ServiceId;                
+                booking.BookingsToHorsesLinks = prevBooking.BookingsToHorsesLinks.Select(x => new BookingsToHorsesLink() { Booking = booking, Hor = x.Hor, HorseId = x.HorseId }).ToList();
+                var payment = booking.BookingPayments?.FirstOrDefault();
+                if (payment != null)
+                {
+                    var prevPayment = prevBooking.BookingPayments?.FirstOrDefault();
+                    if (prevPayment != null)
+                    {
+                        payment.PaymentTypeId = prevPayment.PaymentTypeId;
+                        payment.PaymentType = prevPayment.PaymentType;                        
+                    }
+                }
+                
+            }
+
+            return booking;
+        }
+
+        private async Task GenerateWeekEvents(DateTime onDate, CintraDB db, BookingsTemplateMetadata metadata)
+        {
+            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadata.Id);
 
             if (!alreadyGenerated)
             {
-                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadataId &&
+                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadata.Id &&
                     !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber(), db);
 
-                foreach (var t in templates.Select(x => ObjectMapper.Map<Booking>(x)))
+                foreach (var template in templates)
                 {
+                    var t = ObjectMapper.Map<Booking>(template);
                     t.DateOn = onDate;
                     t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
                     t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
+
+                    t = await UpdateFromPrevBooking(metadata, onDate, db, t);
+
                     var bookingId = await _bookingRepository.Create(t, db);
                     await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(t.BookingPayments?.FirstOrDefault()), db);
                 }
             }
         }
 
-        private async Task GenerateFortnightEvents(DateTime onDate, CintraDB db, long metadataId)
+        private async Task GenerateFortnightEvents(DateTime onDate, CintraDB db, BookingsTemplateMetadata metadata)
         {
-            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadataId);
+            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadata.Id);
 
             if (!alreadyGenerated)
             {
-                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadataId && 
+                var templates = await _bookingTemplatesRepository.GetByParams(x => x.TemplateMetadataId == metadata.Id && 
                     !x.IsDeleted && x.DayOfWeek == onDate.ToEuropeanDayNumber(), db);
 
-                foreach (var t in
+                foreach (var template in
                     //first week events
                     templates
                         .Where(x => x.IsFirstWeek)
@@ -100,12 +137,14 @@ namespace Repositories
                         templates
                             .Where(x => !x.IsFirstWeek).ToList()
                             .Where(x => ((onDate.TruncateToWeekStart() - x.BeginTime.TruncateToWeekStart()).Days % 14) == 0)
-                        )
-                        .Select(x => ObjectMapper.Map<Booking>(x)))
+                        ))                        
                 {
+                    var t = ObjectMapper.Map<Booking>(template);
                     t.DateOn = onDate;
                     t.BeginTime = onDate.Add(new TimeSpan(t.BeginTime.Hour, t.BeginTime.Minute, 0));
                     t.EndTime = onDate.Add(new TimeSpan(t.EndTime.Hour, t.EndTime.Minute, 0));
+                    t = await UpdateFromPrevBooking(metadata, onDate, db, t);
+
                     var bookingId = await _bookingRepository.Create(t, db);
                     await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(t.BookingPayments?.FirstOrDefault()), db);
                 }

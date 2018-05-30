@@ -78,9 +78,9 @@ namespace Repositories
             }, dbContext);
         }
 
-        public virtual async Task<List<T>> GetAll()
+        public virtual async Task<List<T>> GetAll(CintraDB dbContext = null)
         {
-            return (await GetByParams((x) => true)).ToList();
+            return (await GetByParams((x) => true, dbContext)).ToList();
         }
 
         public virtual async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null)
@@ -97,15 +97,15 @@ namespace Repositories
         /// <typeparam name="T">linqToDb Table mapped</typeparam>
         /// <param name="id"> Have to be of the same type of primary key atribute of T table mapped</param>
         /// <returns>T linqToDb mapped class</returns>
-        public virtual async Task<T> GetById(long id)
+        public virtual async Task<T> GetById(long id, CintraDB dbContext = null)
         {
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
                 var expression = SimpleComparison(pkName.Name, id);
 
-                return (await GetByParams(expression)).FirstOrDefault();
-            }
+                return (await GetByParams(expression, db)).FirstOrDefault();
+            }, dbContext);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Repositories
         /// <param name="propertyName">Name of property</param>
         /// <param name="valueToFilter">Value to filter query</param>
         /// <returns>List of T</returns>
-        public virtual async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter)
+        public virtual async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, CintraDB dbContext = null)
 
         {
             if (string.IsNullOrWhiteSpace(propertyName))
@@ -124,10 +124,10 @@ namespace Repositories
 
             var expression = SimpleComparison(propertyName, valueToFilter);
 
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(db.GetTable<T>().Where(expression).ToList());
-            }
+            }, dbContext);
         }
 
         public Expression<Func<T, bool>> SimpleComparison(string property, object value)

@@ -13,13 +13,13 @@ namespace Repositories.Interfaces
 
          Task Delete(long id, CintraDB dbContext = null);
 
-         Task<List<T>> GetAll();
+         Task<List<T>> GetAll(CintraDB dbContext = null);
 
          Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null);
 
-         Task<T> GetById(long id);
+         Task<T> GetById(long id, CintraDB dbContext = null);
 
-         Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter);
+         Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, CintraDB dbContext = null);
 
         Expression<Func<T, bool>> SimpleComparison(string property, object value);
      }
