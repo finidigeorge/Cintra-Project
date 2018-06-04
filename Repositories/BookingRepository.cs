@@ -175,8 +175,7 @@ namespace Repositories
 
                     if (!result.Result)
                     {
-                        var breakType = string.Join(", ", dayScheduleCheck.AvailabilityDescription, weekScheduleCheck.AvailabilityDescription);
-                        result.ErrorMessage = $"Coach is currently might be unavailable (has scheduled {breakType})";
+                        result.ErrorMessage = $"Coach is currently might be unavailable (has scheduled a break)";
                     }
 
                 }
