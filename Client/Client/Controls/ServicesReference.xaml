@@ -84,6 +84,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Lession length (min)" Binding="{Binding Path = LengthMinutes}"  Width="150" />
+                <DataGridTextColumn Header="Maximum clients" Binding="{Binding Path = MaxClients}"  Width="150" />
+                <DataGridTextColumn Header="Maximum horses" Binding="{Binding Path = MaxHorses}"  Width="150" />
+                <DataGridTextColumn Header="Maximum coaches" Binding="{Binding Path = MaxCoaches}"  Width="150" />
             </DataGrid.Columns>
         </DataGrid>
         <Grid HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top">

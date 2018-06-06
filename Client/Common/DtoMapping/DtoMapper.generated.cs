@@ -697,8 +697,12 @@ namespace Common.DtoMapping
 			public override Int64? LengthMinutes { get; set; }
 				
 			public override Boolean NoHorseRequired { get; set; }
-					
-			public override DateTime? BeginTime { get; set; }
+
+            public override int MaxClients { get; set; }
+            public override int MaxHorses { get; set; }
+            public override int MaxCoaches { get; set; }
+
+            public override DateTime? BeginTime { get; set; }
 					
 			public override DateTime? EndTime { get; set; }
 			

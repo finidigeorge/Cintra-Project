@@ -692,6 +692,9 @@ namespace DataModels
 		[Column("no_horse_required"), NotNull              ] public bool      NoHorseRequired { get; set; } // boolean
 		[Column("begin_time"),           Nullable          ] public DateTime? BeginTime       { get; set; } // date
 		[Column("end_time"),             Nullable          ] public DateTime? EndTime         { get; set; } // date
+		[Column("max_clients"),       NotNull              ] public long      MaxClients      { get; set; } // integer
+		[Column("max_coaches"),       NotNull              ] public long      MaxCoaches      { get; set; } // integer
+		[Column("max_horses"),        NotNull              ] public long      MaxHorses       { get; set; } // integer
 
 		#region Associations
 
