@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +11,12 @@ namespace Client.Commands
 {
     public class AsyncCommand<T> : IAsyncCommand
     {
+        private static readonly TaskFactory _myTaskFactory = new
+          TaskFactory(CancellationToken.None,
+                      TaskCreationOptions.None,
+                      TaskContinuationOptions.None,
+                      TaskScheduler.Default);
+
         protected readonly Predicate<T> _canExecute;
         protected Func<T, Task> _asyncExecute;
 
@@ -35,9 +42,9 @@ namespace Client.Commands
             return _canExecute((T)parameter);
         }
 
-        public async void Execute(object parameter)
+        public void Execute(object parameter)
         {
-            await AsyncRunner(parameter);
+            AsyncRunner(parameter);            
         }
 
         public async Task ExecuteAsync(object parameter)
@@ -49,7 +56,7 @@ namespace Client.Commands
         {
             try
             {
-                await _asyncExecute((T) parameter);
+                await _asyncExecute((T) parameter).ConfigureAwait(false);
             } catch(Exception e)            
             {
                 Log.Error(e, $"Messsage: {e.Message} Source: {e.Source}, Trace: {e.StackTrace}");

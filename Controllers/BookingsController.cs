@@ -94,7 +94,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -114,7 +114,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entityList);
+                _logger.LogError(e, e.Message, entityList);
                 throw;
             }
         }
@@ -129,7 +129,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, id);
+                _logger.LogError(e, e.Message, id);
                 throw;
             }
         }
@@ -147,7 +147,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message);
+                _logger.LogError(e, e.Message);
                 throw;
             }
         }        
@@ -189,7 +189,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, null);
+                _logger.LogError(e, e.Message, null);
                 throw;
             }
 
@@ -216,7 +216,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -242,7 +242,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -268,7 +268,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -294,7 +294,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -320,7 +320,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -347,7 +347,7 @@ namespace Controllers
 
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -374,7 +374,7 @@ namespace Controllers
 
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }

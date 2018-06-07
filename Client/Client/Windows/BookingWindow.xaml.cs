@@ -105,6 +105,8 @@ namespace Client.Windows
                 if (Model.SelectedItem.BookingTemplateMetadata != null)
                 { 
                     var dlg = new BookingDeleteWindow() { Owner = this };
+                    dlg.Model.RecurringStartDate = Model.CurrentDate.AddDays(1);
+
                     var res = dlg.ShowDialog() ?? false;
                     if (res)
                     {
