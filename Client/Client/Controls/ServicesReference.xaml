@@ -8,11 +8,11 @@
              xmlns:extentions="clr-namespace:Client.Extentions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="320"
-             FocusManager.IsFocusScope="True">
+             >
     <UserControl.Resources>
         <viewModels:ServicesRefVm x:Key="ViewModel" />
     </UserControl.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
@@ -29,7 +29,7 @@
         </ToolBarPanel>
         <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"                   
                   Grid.Row="1" AutoGenerateColumns="False" 
-                  SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" 
+                  SelectionMode="Single" MinRowHeight="16"  
                   CanUserAddRows="False" CanUserDeleteRows="true">
 
             <DataGrid.RowValidationRules>
@@ -51,7 +51,7 @@
                             <Setter Property="ToolTip"
 
                                     Value="{Binding RelativeSource={RelativeSource Self},
-                         Path=(Validation.Errors)[0].ErrorContent}"/>
+                         Path=(Validation.Errors).CurrentItem.ErrorContent}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -72,21 +72,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name}"  Width="*" />
-                <DataGridTemplateColumn Header="No Horse Required" Width="150" >
-
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox Margin="-4,0,-4,0" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                                      IsChecked="{Binding Path = NoHorseRequired}" IsEnabled="True"
-                                      />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Lession length (min)" Binding="{Binding Path = LengthMinutes}"  Width="150" />
-                <DataGridTextColumn Header="Maximum clients" Binding="{Binding Path = MaxClients}"  Width="150" />
-                <DataGridTextColumn Header="Maximum horses" Binding="{Binding Path = MaxHorses}"  Width="150" />
-                <DataGridTextColumn Header="Maximum coaches" Binding="{Binding Path = MaxCoaches}"  Width="150" />
+                <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name, UpdateSourceTrigger = PropertyChanged}"  Width="*" />
+                <DataGridCheckBoxColumn Header="No Horse Required" Width="150" Binding="{Binding Path = NoHorseRequired, UpdateSourceTrigger = PropertyChanged}" >
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="Lession length (min)" Binding="{Binding Path = LengthMinutes, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
+                <DataGridTextColumn Header="Maximum clients" Binding="{Binding Path = MaxClients, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
+                <DataGridTextColumn Header="Maximum horses" Binding="{Binding Path = MaxHorses, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
+                <DataGridTextColumn Header="Maximum coaches" Binding="{Binding Path = MaxCoaches, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
             </DataGrid.Columns>
         </DataGrid>
         <Grid HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top">

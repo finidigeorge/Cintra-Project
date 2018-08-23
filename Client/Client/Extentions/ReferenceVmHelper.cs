@@ -30,8 +30,13 @@ namespace Client.Extentions
 
             vm.BeginEditItemCommand = new Command<object>(() =>
             {
-                dataGrid.IsReadOnly = false;
-                dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
+                dataGrid.Dispatcher.BeginInvoke(new DispatcherOperationCallback((param) =>
+                {
+                    dataGrid.IsReadOnly = false;
+                    dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
+                    return null;
+                }), DispatcherPriority.Background, new object[] { null });
+                
             }, (x) => vm.CanEditSelectedItem);
 
             vm.BeginAddItemCommand = new Command<object>(() =>
@@ -40,17 +45,25 @@ namespace Client.Extentions
                 dataGrid.SelectedItem = vm.AddEmptyItem();
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
 
-                dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
+                dataGrid.Dispatcher.BeginInvoke(new DispatcherOperationCallback((param) =>
+                {                                        
+                    dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
+                    return null;
+                }), DispatcherPriority.Background, new object[] { null });
+                
             }, (x) => vm.CanAddItem);            
         }
 
         private static void DataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {            
-            (sender as DataGrid).Dispatcher.BeginInvoke(new DispatcherOperationCallback((param) =>
+        {
+            if ((e.Row?.Item as IDataErrorInfo) != null && string.IsNullOrEmpty((e.Row?.Item as IDataErrorInfo).Error))
             {
-                (sender as DataGrid).IsReadOnly = true;
-                return null;
-            }), DispatcherPriority.Background, new object[] { null });
+                (sender as DataGrid).Dispatcher.BeginInvoke(new DispatcherOperationCallback((param) =>
+                {
+                    (sender as DataGrid).IsReadOnly = true;
+                    return null;
+                }), DispatcherPriority.Background, new object[] { null });
+            }
         }
     }
 }
