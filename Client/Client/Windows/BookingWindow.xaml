@@ -16,7 +16,7 @@
         <viewModels:BookingRefVm x:Key="ViewModel" />
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
         <tk:BusyIndicator IsBusy="{Binding IsLoading}" BusyContent="Loading, please wait..." DisplayAfter="0">
             <Grid Background="#FFE5E5E5">
             <Grid.RowDefinitions>

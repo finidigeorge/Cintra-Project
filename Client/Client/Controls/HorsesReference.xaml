@@ -8,11 +8,11 @@
              xmlns:extentions="clr-namespace:Client.Extentions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="320"
-             FocusManager.IsFocusScope="True">
+             >
     <UserControl.Resources>
         <viewModels:HorsesRefVm x:Key="ViewModel" />
     </UserControl.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
@@ -28,7 +28,7 @@
         <DataGrid Name="ItemsDataGrid" 
                   ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
                   Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" 
-                  FocusManager.IsFocusScope="True" 
+                   
                   CanUserAddRows="False" CanUserDeleteRows="True"                
                   >
             <DataGrid.RowValidationRules>

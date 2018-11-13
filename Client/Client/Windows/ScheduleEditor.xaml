@@ -33,9 +33,8 @@
         </ToolBarPanel>
 
         <DataGrid Name="ItemsDataGrid" 
-                  ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" 
-                  FocusManager.IsFocusScope="True"
+                  ItemsSource="{Binding Path=Items}"
+                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16"                   
                   CanUserAddRows="False" CanUserDeleteRows="True" 
                   >
             <DataGrid.Resources>
