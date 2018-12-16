@@ -264,7 +264,7 @@ namespace Repositories
                     var workedTimeStr = $"{workedMinutes / 60} h {workedMinutes % 60} min";
 
                     result.Result = false;
-                    result.ErrorMessage = $"Horse already has booked lessions (total time is {workedTimeStr}) which is more than maximum allowed time ({horse.MaxWorkingHours} h)";
+                    result.ErrorMessage = $"Horse already has booked lessons (total time is {workedTimeStr}) which is more than maximum allowed time ({horse.MaxWorkingHours} h)";
                 }
 
                 return result;

@@ -34,7 +34,7 @@
                 <MenuItem Header="Open Booking Window" Command="{Binding ShowBookingWindowCommand, UpdateSourceTrigger=PropertyChanged}"/>
             </MenuItem>
             <MenuItem Header="Reports">
-                <MenuItem Header="Client Lessions" Command="{Binding RunClientHistoryReportCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Header="Client Lessons" Command="{Binding RunClientHistoryReportCommand, UpdateSourceTrigger=PropertyChanged}"/>
                 <MenuItem Header="Horses Workload" Command="{Binding RunHorsesWorkloadReportCommand, UpdateSourceTrigger=PropertyChanged}"/>
             </MenuItem>
             <MenuItem Header="Help">

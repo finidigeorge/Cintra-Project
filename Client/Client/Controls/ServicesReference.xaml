@@ -75,7 +75,7 @@
                 <DataGridTextColumn Header="Service Name" Binding="{Binding Path = Name, UpdateSourceTrigger = PropertyChanged}"  Width="*" />
                 <DataGridCheckBoxColumn Header="No Horse Required" Width="150" Binding="{Binding Path = NoHorseRequired, UpdateSourceTrigger = PropertyChanged}" >
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Lession length (min)" Binding="{Binding Path = LengthMinutes, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
+                <DataGridTextColumn Header="Lesson length (min)" Binding="{Binding Path = LengthMinutes, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
                 <DataGridTextColumn Header="Maximum clients" Binding="{Binding Path = MaxClients, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
                 <DataGridTextColumn Header="Maximum horses" Binding="{Binding Path = MaxHorses, UpdateSourceTrigger = PropertyChanged}"  Width="150" />
                 <DataGridTextColumn Header="Maximum coaches" Binding="{Binding Path = MaxCoaches, UpdateSourceTrigger = PropertyChanged}"  Width="150" />

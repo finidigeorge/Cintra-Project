@@ -7,7 +7,7 @@
         xmlns:viewModels="clr-namespace:Client.ViewModels.Reports"
         xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
-        Title="Client Lessions Report" MinHeight="300" Height="300" Width="610" WindowStartupLocation="CenterOwner"
+        Title="Client Lessons Report" MinHeight="300" Height="300" Width="610" WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         FontSize="14"
     >
