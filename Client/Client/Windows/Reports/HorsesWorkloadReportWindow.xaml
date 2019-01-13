@@ -13,7 +13,7 @@
     <Window.Resources>
         <viewModels:HorsesWorkloadReportVm x:Key="ViewModel" />
     </Window.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True" HorizontalAlignment="Left" >
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" HorizontalAlignment="Left" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" MinWidth="160"/>
             <ColumnDefinition/>

@@ -244,15 +244,17 @@ namespace DataModels
 	[Table("booking_templates")]
 	public partial class BookingTemplates
 	{
-		[Column("id"),                   PrimaryKey, Identity] public long     Id                 { get; set; } // integer
-		[Column("event_guid"),           NotNull             ] public Guid     EventGuid          { get; set; } // guid
-		[Column("service_id"),           NotNull             ] public long     ServiceId          { get; set; } // integer
-		[Column("is_deleted"),           NotNull             ] public bool     IsDeleted          { get; set; } // boolean
-		[Column("day_of_week"),          NotNull             ] public long     DayOfWeek          { get; set; } // integer
-		[Column("begin_time"),           NotNull             ] public DateTime BeginTime          { get; set; } // time
-		[Column("end_time"),             NotNull             ] public DateTime EndTime            { get; set; } // time
-		[Column("template_metadata_id"), NotNull             ] public long     TemplateMetadataId { get; set; } // integer
-		[Column("is_first_week"),        NotNull             ] public bool     IsFirstWeek        { get; set; } // boolean
+		[Column("id"),                   PrimaryKey,  Identity] public long     Id                 { get; set; } // integer
+		[Column("event_guid"),           NotNull              ] public Guid     EventGuid          { get; set; } // guid
+		[Column("service_id"),           NotNull              ] public long     ServiceId          { get; set; } // integer
+		[Column("is_deleted"),           NotNull              ] public bool     IsDeleted          { get; set; } // boolean
+		[Column("day_of_week"),          NotNull              ] public long     DayOfWeek          { get; set; } // integer
+		[Column("begin_time"),           NotNull              ] public DateTime BeginTime          { get; set; } // time
+		[Column("end_time"),             NotNull              ] public DateTime EndTime            { get; set; } // time
+		[Column("template_metadata_id"), NotNull              ] public long     TemplateMetadataId { get; set; } // integer
+		[Column("is_first_week"),        NotNull              ] public bool     IsFirstWeek        { get; set; } // boolean
+		[Column("payment_type_id"),         Nullable          ] public long?    PaymentTypeId      { get; set; } // integer
+		[Column("payment_options"),         Nullable          ] public string   PaymentOptions     { get; set; } // varchar(200)
 
 		#region Associations
 
@@ -279,6 +281,12 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="BookingTemplateId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<BookingTemplatesToHorsesLink> BookingTemplatesToHorsesLinks { get; set; }
+
+		/// <summary>
+		/// FK_booking_templates_2_0
+		/// </summary>
+		[Association(ThisKey="PaymentTypeId", OtherKey="Id", CanBeNull=true, Relationship=Relationship.ManyToOne, KeyName="FK_booking_templates_2_0", BackReferenceName="BookingTemplates")]
+		public PaymentTypes PaymentType { get; set; }
 
 		/// <summary>
 		/// FK_booking_templates_1_0
@@ -590,6 +598,12 @@ namespace DataModels
 		[Association(ThisKey="Id", OtherKey="PaymentTypeId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<BookingPayments> BookingPayments { get; set; }
 
+		/// <summary>
+		/// FK_booking_templates_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="PaymentTypeId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<BookingTemplates> BookingTemplates { get; set; }
+
 		#endregion
 	}
 
@@ -678,6 +692,9 @@ namespace DataModels
 		[Column("no_horse_required"), NotNull              ] public bool      NoHorseRequired { get; set; } // boolean
 		[Column("begin_time"),           Nullable          ] public DateTime? BeginTime       { get; set; } // date
 		[Column("end_time"),             Nullable          ] public DateTime? EndTime         { get; set; } // date
+		[Column("max_clients"),       NotNull              ] public long      MaxClients      { get; set; } // integer
+		[Column("max_coaches"),       NotNull              ] public long      MaxCoaches      { get; set; } // integer
+		[Column("max_horses"),        NotNull              ] public long      MaxHorses       { get; set; } // integer
 
 		#region Associations
 

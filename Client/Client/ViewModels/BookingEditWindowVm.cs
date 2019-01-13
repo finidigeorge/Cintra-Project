@@ -23,7 +23,10 @@ namespace Client.ViewModels
 
     public class BookingEditWindowVm : BaseVm
     {
-        const int MAX_CLIENTS = 6;
+        private int MaxClients { get => _bookingData?.Service == null ? 6 : (int)_bookingData?.Service.MaxClients; }
+        private int MaxHorses { get => _bookingData?.Service == null ? 6 : (int)_bookingData?.Service.MaxHorses; }
+        private int MaxCoaches { get => _bookingData?.Service == null ? 6 : (int)_bookingData?.Service.MaxCoaches; }
+
         BookingsClient bookingsClient = new BookingsClient();
 
         private BookingDtoUi _bookingData;
@@ -188,7 +191,7 @@ namespace Client.ViewModels
                 var coachDto = ObjectMapper.Map<CoachDtoUi>(param);
                 var c = new BookingEditCoachVm(this, coachDto);
                 CoachesVms.Add(c);                
-            }, (x) => CoachesVms.Count < MAX_CLIENTS);
+            }, (x) => CoachesVms.Count < MaxCoaches);
             SyncCoachesCommand = new Command<object>(() =>
             {
                 if (_bookingData.Coaches == null)
@@ -215,7 +218,7 @@ namespace Client.ViewModels
                 var horseDto = ObjectMapper.Map<HorseDtoUi>(param);
                 var h = new BookingEditHorseVm(this, horseDto);
                 HorsesVms.Add(h);                
-            }, (x) => HorsesVms.Count < MAX_CLIENTS);
+            }, (x) => HorsesVms.Count < MaxHorses && (!_bookingData?.Service?.NoHorseRequired ?? false));
             SyncHorsesCommand = new Command<object>(() =>
             {
                 if (_bookingData.Horses == null)
@@ -242,7 +245,7 @@ namespace Client.ViewModels
                 var c = new BookingEditClientVm(this, clientDto);                
                 ClientsVms.Add(c);
 
-            }, (x) => ClientsVms.Count < MAX_CLIENTS);
+            }, (x) => ClientsVms.Count < MaxClients);
             SyncClientsCommand = new Command<object>(() =>
             {
                 if (_bookingData.Clients == null)

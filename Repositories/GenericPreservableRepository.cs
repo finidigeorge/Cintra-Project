@@ -6,6 +6,7 @@ using LinqToDB.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,12 +30,12 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task<List<T>> GetAll()
+        public override async Task<List<T>> GetAll(CintraDB dbContext = null)
         {
-            return (await GetByParams((x) => x.IsDeleted == false)).ToList();
+            return (await GetByParams((x) => x.IsDeleted == false, dbContext)).ToList();
         }
 
-        public override async Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null)
+        public override async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -42,7 +43,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter)
+        public override async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, CintraDB dbContext = null)
 
         {
             if (string.IsNullOrWhiteSpace(propertyName))
@@ -50,10 +51,10 @@ namespace Repositories
 
             var expression = SimpleComparison(propertyName, valueToFilter);
 
-            using (var db = new CintraDB())
+            return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(db.GetTable<T>().Where(expression).Where((x) => x.IsDeleted == false).ToList());
-            }
+            }, dbContext);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace DbLayer.Extentions
 
         public static async Task<int> DeleteAsyncWithLock<T>(this IDataContext dataContext, T obj, CancellationToken token = default(CancellationToken))
         {
-            return await ApplyWriteLock(async () => await dataContext.DeleteAsync(obj, token));
+            return await ApplyWriteLock(async () => await dataContext.DeleteAsync(obj, token:token));
         }
 
         public static async Task<int> DeleteAsyncWithLock<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate, CancellationToken token = default(CancellationToken))
@@ -58,7 +58,7 @@ namespace DbLayer.Extentions
 
         public static async Task<object> InsertWithIdentityAsyncWithLock<T>(this IDataContext dataContext, T obj, CancellationToken token = default(CancellationToken))
         {
-            return await ApplyWriteLock(async () => await dataContext.InsertWithIdentityAsync(obj, token));
+            return await ApplyWriteLock(async () => await dataContext.InsertWithIdentityAsync(obj, token: token));
         }
 
         public static async Task<int> UpdateAsyncWithLock<T>(this IUpdatable<T> source, CancellationToken token = default(CancellationToken))
@@ -68,7 +68,7 @@ namespace DbLayer.Extentions
 
         public static async Task<int> UpdateAsyncWithLock<T>(this IDataContext dataContext, T obj, CancellationToken token = default(CancellationToken))
         {
-            return await ApplyWriteLock(async () => await dataContext.UpdateAsync(obj, token));
+            return await ApplyWriteLock(async () => await dataContext.UpdateAsync(obj, token: token));
         }
     }
 }

@@ -18,6 +18,7 @@ using RestApi;
 using RestClient;
 using System.ComponentModel;
 using Shared;
+using Shared.Extentions;
 
 namespace Client
 {
@@ -29,6 +30,8 @@ namespace Client
         public ScheduleDataDtoUi Model => (ScheduleDataDtoUi)DataContext;
 
         private ScheduleIntervalEnum mode = ScheduleIntervalEnum.Weekly;
+
+        private DateTime schedulerDate;
 
         public bool IsDatePickerVisible => mode == ScheduleIntervalEnum.Daily;
         public bool IsWeekDropdownVisible => mode == ScheduleIntervalEnum.Weekly;
@@ -43,20 +46,23 @@ namespace Client
         public SchedulerIntervalEditWindow(DateTime beginTime, DateTime endTime, ScheduleIntervalEnum mode, bool showWorkHoursCheckbox = true)
         {
             InitializeComponent();
+
+            schedulerDate = beginTime.TruncateToDayStart();
+
             BeginTimePicker.Model.CurrentTime = beginTime;
             EndTimePicker.Model.CurrentTime = endTime;
 
             BeginTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")
                 {
-                    Model.BeginTime = ((TimePickerVm)sender).CurrentTime;
+                    Model.BeginTime = schedulerDate.SetTime(((TimePickerVm)sender).CurrentTime);
                 }
             };
 
             EndTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")
                 {
-                    Model.EndTime = ((TimePickerVm)sender).CurrentTime;
+                    Model.EndTime = schedulerDate.SetTime(((TimePickerVm)sender).CurrentTime);
                 }
             };
 

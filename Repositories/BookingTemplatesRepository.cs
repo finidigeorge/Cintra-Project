@@ -6,6 +6,7 @@ using Shared.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,7 +56,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task<List<BookingTemplates>> GetByParams(Func<BookingTemplates, bool> where, CintraDB dbContext = null)
+        public override async Task<List<BookingTemplates>> GetByParams(Expression<Func<BookingTemplates, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -73,7 +74,9 @@ namespace Repositories
                         .LoadWith(x => x.BookingTemplatesToHorsesLinks)
                         .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor)
                         .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor.HorsesScheduleData)
-                        .Where(where).Where(x => x.IsDeleted == false).ToList()
+                        .Where(where)
+                        .Where(x => x.IsDeleted == false)
+                        .ToList()
                 );
 
             }, dbContext);

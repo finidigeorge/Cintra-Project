@@ -142,7 +142,7 @@ WHERE  b.is_deleted = 0 and
                 <TableCell>
                   <ReportItems>
                     <Textbox Name="Textbox2">
-                      <Value>Lession Date</Value>
+                      <Value>Lesson Date</Value>
                       <Style>
                         <TextAlign>Center</TextAlign>
                         <BorderStyle>

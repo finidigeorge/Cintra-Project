@@ -69,7 +69,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, userDto);
+                _logger.LogError(e, e.Message, userDto);
                 throw;
             }
 
@@ -117,7 +117,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, applicationUser);
+                _logger.LogError(e, e.Message, applicationUser);
                 throw;
             }            
         }

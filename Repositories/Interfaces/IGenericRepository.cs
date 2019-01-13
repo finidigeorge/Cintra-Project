@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DataModels;
@@ -12,14 +13,14 @@ namespace Repositories.Interfaces
 
          Task Delete(long id, CintraDB dbContext = null);
 
-         Task<List<T>> GetAll();
+         Task<List<T>> GetAll(CintraDB dbContext = null);
 
-         Task<List<T>> GetByParams(Func<T, bool> where, CintraDB dbContext = null);
+         Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null);
 
-         Task<T> GetById(long id);
+         Task<T> GetById(long id, CintraDB dbContext = null);
 
-         Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter);
+         Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, CintraDB dbContext = null);
 
-         Func<T, bool> SimpleComparison(string property, object value);
+        Expression<Func<T, bool>> SimpleComparison(string property, object value);
      }
 }

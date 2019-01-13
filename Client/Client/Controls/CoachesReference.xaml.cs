@@ -31,6 +31,7 @@ namespace Client.Controls
             editor.Model.RefreshDataCommand.ExecuteAsync(null);
 
             editor.ShowDialog();
+            Model.RefreshDataCommand.ExecuteAsync(null);
         }
     }
 }

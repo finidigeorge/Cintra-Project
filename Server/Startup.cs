@@ -192,7 +192,13 @@ namespace Cintra
                 options.Audience = jwtAppSettingOptions[nameof(JwtTokenOptions.Audience)];                                
                 options.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtTokenOptions.Issuer)];
                 options.TokenValidationParameters = GetJwtTokenValidationParameters();
-            });            
+            });
+
+            /*
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });*/
         }
 
         private TokenValidationParameters GetJwtTokenValidationParameters()

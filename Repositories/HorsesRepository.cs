@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DataModels;
@@ -38,7 +39,7 @@ namespace Repositories
             );
         }
 
-        public override async Task<List<Hors>> GetByParams(Func<Hors, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Hors>> GetByParams(Expression<Func<Hors, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {

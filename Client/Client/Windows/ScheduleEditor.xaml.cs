@@ -123,7 +123,7 @@ namespace Client.Windows
 
             Model.OnSelectedItemChanged += OnSelectedScheduleChanged;
             
-            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);                                  
+            ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2, readOnlyMode: false);                                  
         }
 
         private async void OnSelectedScheduleChanged(object sender, ScheduleDtoUi s)
@@ -173,6 +173,8 @@ namespace Client.Windows
             {
                 DataContext = new ScheduleDataDtoUi()
                 {
+                    BeginTime = beginTime,
+                    EndTime = endTime,
                     DateOn = DailyScheduler.SelectedDate.TruncateToDayStart(),                    
                     IsAvialable = true,
                     AvailabilityDescription = "Coaching"

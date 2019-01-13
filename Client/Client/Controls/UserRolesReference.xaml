@@ -6,11 +6,11 @@
              xmlns:viewModels="clr-namespace:Client.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="320"
-             FocusManager.IsFocusScope="True">
+             >
     <UserControl.Resources>
         <viewModels:UserRolesRefVm x:Key="ViewModel" />
     </UserControl.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
@@ -18,7 +18,7 @@
         <ToolBarTray DockPanel.Dock="Top" Grid.Row="0">
             <ToolBar Height="32"/>
         </ToolBarTray>
-        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" FocusManager.IsFocusScope="True" CanUserAddRows="False" CanUserDeleteRows="False">
+        <DataGrid Name="ItemsDataGrid" ItemsSource="{Binding Path=Items}" Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16"  CanUserAddRows="False" CanUserDeleteRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Role Name" Binding="{Binding Path = Name}"  Width="*" />
             </DataGrid.Columns>

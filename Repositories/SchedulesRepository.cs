@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using DataModels;
@@ -15,7 +16,7 @@ namespace Repositories
     {
         private readonly SchedulesDataRepository _dataRepository = new SchedulesDataRepository();
 
-        public override async Task<List<Schedule>> GetByParams(Func<Schedule, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Schedule>> GetByParams(Expression<Func<Schedule, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -27,9 +28,8 @@ namespace Repositories
         {
             await RunWithinTransaction(async (db) =>
             {
-                var schedulesData = await _dataRepository.GetByParams(x => x.ScheduleId == id);
-                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id));
-
+                var schedulesData = await _dataRepository.GetByParams(x => x.ScheduleId == id, db);
+                schedulesData.ForEach(async x => await _dataRepository.Delete(x.Id, db));
 
                 await base.Delete(id, db);
 

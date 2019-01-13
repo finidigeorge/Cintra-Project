@@ -16,6 +16,8 @@ namespace Client.ViewModels
 {
     public class BookingRefVm : BaseReferenceVm<BookingDto, BookingDtoUi>
     {
+        public bool IsLoading { get; set; }
+
         public int NumDaysToLoad { get; set; } = 1;
 
         public DateTime CurrentDate { get; set; } = DateTime.Now.TruncateToDayStart();

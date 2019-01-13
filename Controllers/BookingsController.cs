@@ -56,7 +56,7 @@ namespace Controllers
             return await CreateInternal(entity);
         }
 
-        private async Task<long> CreateInternal(BookingDto entity)
+        private async Task<long> CreateInternal(BookingDto entity, CintraDB dbContext = null)
         {
             try
             {
@@ -81,18 +81,20 @@ namespace Controllers
                     }
 
                     return null;
-                });
+                },
+                dbContext);
 
                 return await ((BookingRepository)_repository).RunWithinTransaction(async (db) => 
                 { 
-                    var bookingId = await _repository.Create(booking);
+                    var bookingId = await _repository.Create(booking, db);
                     await _paymentsRepository.SynchronizeWithBooking(bookingId, ObjectMapper.Map<BookingPayments>(entity.BookingPayment), db);
                     return bookingId;
-                });
+                },
+                dbContext);
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -105,14 +107,14 @@ namespace Controllers
                 await ((BookingRepository)_repository).RunWithinTransaction(async (db) =>
                 {
                     foreach (var e in entityList)
-                        await Create(e);
+                        await CreateInternal(e, db);
 
                     return null;
                 });
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entityList);
+                _logger.LogError(e, e.Message, entityList);
                 throw;
             }
         }
@@ -127,7 +129,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, id);
+                _logger.LogError(e, e.Message, id);
                 throw;
             }
         }
@@ -145,7 +147,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message);
+                _logger.LogError(e, e.Message);
                 throw;
             }
         }        
@@ -173,7 +175,9 @@ namespace Controllers
                               
                 var res = new List<BookingDto>();
 
-                foreach (var b in (await _repository.GetByParams(x => !(x.BeginTime > _endDate || x.EndTime < _beginDate)))) {
+                var _bd = _beginDate.TruncateToDayStart();
+                var _ed = _endDate.TruncateToDayStart();
+                foreach (var b in (await ((BookingRepository)_repository).GetByParams(x => x.DateOn >= _bd && x.DateOn < _ed))) {
                     var item = ObjectMapper.Map<BookingDto>(b);
                     item.ValidationErrors = await repository.RunValidations(b, true);
                     item.ValidationWarnings = await repository.RunValidations(b, false);
@@ -185,7 +189,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, null);
+                _logger.LogError(e, e.Message, null);
                 throw;
             }
 
@@ -212,7 +216,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -238,7 +242,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -264,7 +268,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -290,7 +294,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -316,7 +320,7 @@ namespace Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -343,7 +347,7 @@ namespace Controllers
 
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }
@@ -370,7 +374,7 @@ namespace Controllers
 
             catch (Exception e)
             {
-                _logger.LogError(null, e, e.Message, entity);
+                _logger.LogError(e, e.Message, entity);
                 throw;
             }
         }

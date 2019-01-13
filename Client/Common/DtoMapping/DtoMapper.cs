@@ -61,7 +61,13 @@ namespace Common.DtoMapping
         }
 
         [DependsOn(nameof(BookingTemplateMetadata))]
-        public string PermanentStatusFmtd => BookingTemplateMetadata != null ? "P" : string.Empty;
+        public string PermanentStatusFmtd {
+            get
+            {
+                var bookingStatus = (BookingTemplateMetadata?.IsFortnightly ?? false) ? "2W" : "1W";
+                return BookingTemplateMetadata != null ? $"P {bookingStatus}" : string.Empty;
+            }
+        }
 
         [DependsOn(nameof(BookingTemplateMetadata))]
         public string PermanentStatusFmtdToolTip
@@ -115,6 +121,9 @@ namespace Common.DtoMapping
                 return (EndTime - BeginTime).ToString("h'h 'm'm '");
             }
         }
+
+        [DependsOn(nameof(BeginTime))]
+        public bool IsEvenHour => BeginTime.Hour % 2 == 0;
 
         public string ApplyObjectLevelValidations()
         {

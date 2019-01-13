@@ -58,14 +58,14 @@ namespace Client.Windows
             BeginTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")
                 {
-                    Model.BookingData.BeginTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart());
+                    Model.BookingData.BeginTime = Model.BookingData.DateOn.SetTime(((TimePickerVm)sender).CurrentTime);
                 }
             };
 
             EndTimePicker.Model.PropertyChanged += (sender, args) => {
                 if (args.PropertyName == "CurrentTime")
                 {
-                    Model.BookingData.EndTime = Model.BookingData.DateOn + (((TimePickerVm)sender).CurrentTime - ((TimePickerVm)sender).CurrentTime.TruncateToDayStart());
+                    Model.BookingData.EndTime = Model.BookingData.DateOn.SetTime(((TimePickerVm)sender).CurrentTime);
                 }
             };
 

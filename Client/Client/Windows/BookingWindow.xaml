@@ -7,6 +7,7 @@
         xmlns:viewModels="clr-namespace:Client.ViewModels"
         xmlns:controls="clr-namespace:Client.Controls"
         xmlns:wpfScheduler="clr-namespace:Client.Controls.WpfScheduler"
+        xmlns:tk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Bookings" Height="900" Width="1600" WindowStartupLocation="CenterScreen"
         FontSize="14"
@@ -15,8 +16,9 @@
         <viewModels:BookingRefVm x:Key="ViewModel" />
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True">
-        <Grid Background="#FFE5E5E5">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
+        <tk:BusyIndicator IsBusy="{Binding IsLoading}" BusyContent="Loading, please wait..." DisplayAfter="0">
+            <Grid Background="#FFE5E5E5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition Height="*"/>
@@ -83,7 +85,7 @@
                                                 <Expander.Header>
                                                     <Button Click="Button_Click" ToolTip="Click to add new booking at this time">
                                                         <TextBlock TextWrapping="Wrap" Margin="0,5,0,5" >
-													        <Bold><TextBlock Text="{Binding Name}"/></Bold> (<TextBlock Text="{Binding ItemCount}"/> Lessions)
+													        <Bold><TextBlock Text="{Binding Name}"/></Bold> (<TextBlock Text="{Binding ItemCount}"/> Lessons)
 												        </TextBlock>
                                                         <Button.Template>
                                                             <ControlTemplate TargetType="{x:Type Button}">
@@ -103,7 +105,7 @@
                 </ListView.GroupStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Status" Width="50">
+                        <GridViewColumn Header="Status" Width="80">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <Grid>
@@ -242,5 +244,6 @@
                 <Label Content="{Binding SelectedItem.ValidationWarnings}" Grid.Column="1"/>
             </Grid>
         </Grid>
+        </tk:BusyIndicator>
     </Grid>
 </Window>

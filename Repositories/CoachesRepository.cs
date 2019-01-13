@@ -8,6 +8,7 @@ using Repositories.Interfaces;
 using Shared.Attributes;
 using System.Linq;
 using DbLayer.Extentions;
+using System.Linq.Expressions;
 
 namespace Repositories
 {
@@ -30,6 +31,14 @@ namespace Repositories
                 }
 
                 var coachId = await base.Create(entity, db);
+
+                //create default schedule
+                if (isNew) {
+                    var scheduleRepository = new SchedulesRepository();
+                    await scheduleRepository.Create(
+                        new Schedule() { CoachId = coachId, Name = "Default Schedule", IsActive = true},
+                        db);
+                }
 
                 if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
                 {
@@ -57,7 +66,7 @@ namespace Repositories
         }
 
 
-        public override async Task<List<Coach>> GetByParams(Func<Coach, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Coach>> GetByParams(Expression<Func<Coach, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -65,13 +74,15 @@ namespace Repositories
                     db.Coaches
                     .LoadWith(x => x.ServiceToCoachesLinks)
                     .Where(where)
-                    .Where(x => x.IsDeleted == false).Select(x =>
+                    .Where(x => x.IsDeleted == false)
+                    .OrderBy(x => x.Name)
+                    .ToList()
+                    .Select(x =>
                     {
                         var res = x;
                         res.Schedules = LoadSchedules(x.Id, db).ToList();
                         return res;
                     })
-                    .OrderBy(x => x.Name)
                     .ToList()
                 );
             }, dbContext);

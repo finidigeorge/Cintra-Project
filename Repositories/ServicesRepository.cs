@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LinqToDB;
 using System.Linq;
 using DbLayer.Extentions;
+using System.Linq.Expressions;
 
 namespace Repositories
 {
@@ -42,7 +43,7 @@ namespace Repositories
             );
         }
 
-        public override async Task<List<Service>> GetByParams(Func<Service, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Service>> GetByParams(Expression<Func<Service, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -52,7 +53,8 @@ namespace Repositories
                         .LoadWith(x => x.ServiceToCoachesLinks.First().Coach)
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .LoadWith(x => x.ServiceToHorsesLinks.First().Hor)
-                        .Where(where).Where(x => x.IsDeleted == false)
+                        .Where(where)
+                        .Where(x => x.IsDeleted == false)
                         .OrderBy(x => x.Name)
                         .ToList()
                 );

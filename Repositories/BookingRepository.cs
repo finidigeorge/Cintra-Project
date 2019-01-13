@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DbLayer.Extentions;
+using System.Linq.Expressions;
 
 namespace Repositories
 {
@@ -21,42 +22,40 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                
-                    if (entity.Id == 0)
-                    {
-                        entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
+                                
+                if (entity.Id == 0)
+                {
+                    entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
                         
-                    }
-                    else
-                    {
+                }
+                else
+                {
                         
-                        await db.BookingsToHorsesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                        await db.BookingsToClientsLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                        await db.BookingsToCoachesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.BookingsToHorsesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.BookingsToClientsLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.BookingsToCoachesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
                         
-                        await db.UpdateAsyncWithLock(entity);
-                    }
+                    await db.UpdateAsyncWithLock(entity);
+                }
 
 
-                        foreach (var c in entity.BookingsToClientsLinks)
-                        {
-                            c.BookingId = entity.Id;
-                            await db.InsertWithIdentityAsyncWithLock(c);
-                        }
+                foreach (var c in entity.BookingsToClientsLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsyncWithLock(c);
+                }
 
-                        foreach (var c in entity.BookingsToCoachesLinks)
-                        {
-                            c.BookingId = entity.Id;
-                            await db.InsertWithIdentityAsyncWithLock(c);
-                        }
+                foreach (var c in entity.BookingsToCoachesLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsyncWithLock(c);
+                }
 
-                        foreach (var c in entity.BookingsToHorsesLinks)
-                        {
-                            c.BookingId = entity.Id;
-                            await db.InsertWithIdentityAsyncWithLock(c);
-                        }
-                    
-                
+                foreach (var c in entity.BookingsToHorsesLinks)
+                {
+                    c.BookingId = entity.Id;
+                    await db.InsertWithIdentityAsyncWithLock(c);
+                }                                    
 
                 return entity.Id;
             }, dbContext);
@@ -176,8 +175,7 @@ namespace Repositories
 
                     if (!result.Result)
                     {
-                        var breakType = string.Join(", ", dayScheduleCheck.AvailabilityDescription, weekScheduleCheck.AvailabilityDescription);
-                        result.ErrorMessage = $"Coach is currently might be unavailable (has scheduled {breakType})";
+                        result.ErrorMessage = $"Coach is currently might be unavailable (has scheduled a break)";
                     }
 
                 }
@@ -266,7 +264,7 @@ namespace Repositories
                     var workedTimeStr = $"{workedMinutes / 60} h {workedMinutes % 60} min";
 
                     result.Result = false;
-                    result.ErrorMessage = $"Horse already has booked lessions (total time is {workedTimeStr}) which is more than maximum allowed time ({horse.MaxWorkingHours} h)";
+                    result.ErrorMessage = $"Horse already has booked lessons (total time is {workedTimeStr}) which is more than maximum allowed time ({horse.MaxWorkingHours} h)";
                 }
 
                 return result;
@@ -354,13 +352,13 @@ namespace Repositories
 
                 return !hasOverlappedBookings && eligibleForService && passedScheduleCheck;
             }, dbContext);
-        }        
+        }                
 
-        public override async Task<List<Booking>> GetByParams(Func<Booking, bool> where, CintraDB dbContext = null)
+        public override async Task<List<Booking>> GetByParams(Expression<Func<Booking, bool>> where, CintraDB dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
-                var result =  await Task.FromResult(
+                var result = await Task.FromResult(
                     db.Bookings
                         .LoadWith(x => x.BookingsTemplateMetadata)
                         .LoadWith(x => x.BookingsTemplateMetadata.BookingTemplates)
@@ -372,13 +370,15 @@ namespace Repositories
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach)
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules)
                         .LoadWith(x => x.BookingsToCoachesLinks.First().Coach.Schedules.First().SchedulesData)
-                        .LoadWith(x => x.Service)                        
+                        .LoadWith(x => x.Service)
                         .LoadWith(x => x.Service.ServiceToCoachesLinks)
                         .LoadWith(x => x.Service.ServiceToHorsesLinks)
                         .LoadWith(x => x.BookingsToHorsesLinks)
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor)
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor.HorsesScheduleData)
-                        .Where(where).Where(x => x.IsDeleted == false).ToList()
+                        .Where(x => x.IsDeleted == false)
+                        .Where(where)
+                        .OrderBy(x => x.BeginTime).ToList()
                 );
 
                 return await AccessFilter(result, db);
@@ -386,7 +386,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        
+
         public override async Task Delete(long id, CintraDB dbContext = null)
         {
             await RunWithinTransaction(async (db) =>

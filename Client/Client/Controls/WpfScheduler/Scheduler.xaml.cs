@@ -154,8 +154,7 @@ namespace Client.Controls.WpfScheduler
                     break;
             }
         }
-        #endregion
-
+        #endregion        
 
         public Scheduler()
         {
@@ -191,7 +190,8 @@ namespace Client.Controls.WpfScheduler
 
         public void AddEvent(Event e)
         {
-            if (e.Start > e.End) throw new ArgumentException("End date is before Start date");
+            if (e.Start > e.End)
+                throw new ArgumentException("End date is before Start date");            
 
             Events.Add(e);
 

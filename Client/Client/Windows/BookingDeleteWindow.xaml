@@ -27,7 +27,7 @@
             <CheckBox Content="Delete selected booking" IsChecked="{Binding DeleteSelectedBooking}" HorizontalAlignment="Left" Width="706" Height="20" VerticalAlignment="Top" Margin="13,21,-317,0"/>
 
             <CheckBox Content="Delete recurring bookings from" IsChecked="{Binding DeleteRecurringBookings}" HorizontalAlignment="Left" Width="706" Height="20" VerticalAlignment="Top" Margin="13,52,-317,-12"/>
-            <DatePicker Name="datePickerCancelRecurring" SelectedDate="{Binding Path=RecurringStartDate}" 
+            <DatePicker Name="datePickerCancelRecurring" SelectedDate="{Binding Path=RecurringStartDate}" DisplayDateStart="{Binding Path=RecurringStartDate}"
                                     HorizontalAlignment="Left" Width="169"
                                     IsEnabled="{Binding DeleteRecurringBookings}" Margin="223,46,0,-16" Height="30" VerticalAlignment="Top"
                                     />

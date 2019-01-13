@@ -19,7 +19,7 @@
             </WrapPanel>
         </DataTemplate>
     </Window.Resources>
-    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" FocusManager.IsFocusScope="True" Margin="0,0,0,-2">
+    <Grid DataContext="{Binding Source={StaticResource ViewModel}}" Margin="0,0,0,-2">
         <Label Content="Selected service:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label Content="{Binding ServiceData.Name}" HorizontalAlignment="Left" Margin="112,10,0,0" VerticalAlignment="Top"/>
         <ListBox ItemsSource="{Binding Coaches, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" HorizontalAlignment="Left" Height="240" Margin="10,62,0,0" VerticalAlignment="Top" Width="210"/>
