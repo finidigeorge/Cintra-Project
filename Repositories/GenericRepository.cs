@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
-using DataModels;
-using LinqToDB;
+﻿using LinqToDB;
+using LinqToDB.Data;
 using LinqToDB.Mapping;
 using Repositories.Interfaces;
 using Shared.Dto.Interfaces;
-using DbLayer.Interfaces;
-using System.Threading;
-using DbLayer.Extentions;
-using LinqToDB.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repositories
 {
@@ -30,7 +24,7 @@ namespace Repositories
                 if (isTransactional)
                     db.BeginTransaction();
 
-                return await Linq2dbSqliteExtentions.ApplyReadLock(async () => await fetcher(db));
+                return await fetcher(db);
             }
             catch (Exception)
             {
@@ -57,10 +51,10 @@ namespace Repositories
             {
                 if (entity.Id == 0)
                 {
-                    entity.Id = (long)await db.InsertWithIdentityAsyncWithLock(entity);
+                    entity.Id = (long)await db.InsertWithIdentityAsync(entity);
                 }
                 else
-                    await db.UpdateAsyncWithLock(entity);
+                    await db.UpdateAsync(entity);
 
                 return entity.Id;
             }, dbContext);
@@ -73,7 +67,7 @@ namespace Repositories
                 var pkName = typeof(T).GetProperties().First(prop => prop.GetCustomAttributes(typeof(PrimaryKeyAttribute), false).Any());
                 var expression = SimpleComparison(pkName.Name, id);
 
-                await db.DeleteAsyncWithLock(db.GetTable<T>().Where(expression).FirstOrDefault());
+                await db.DeleteAsync(db.GetTable<T>().Where(expression).FirstOrDefault());
 
                 return null;
             }, dbContext);
@@ -88,7 +82,7 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(db.GetTable<T>().Where(where).ToList());
+                return await db.GetTable<T>().Where(where).ToListAsync();
             }, dbContext);
         }
 
@@ -127,7 +121,7 @@ namespace Repositories
 
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(db.GetTable<T>().Where(expression).ToList());
+                return await db.GetTable<T>().Where(expression).ToListAsync();
             }, dbContext);
         }
 

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DataModels;
-using Repositories.Interfaces;
-using Shared.Attributes;
-using System.Threading.Tasks;
+﻿using DataModels;
 using LinqToDB;
-using System.Linq;
-using DbLayer.Extentions;
-using System.Linq.Expressions;
 using LinqToDB.Data;
+using Shared.Attributes;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Repositories
 {
@@ -24,18 +21,18 @@ namespace Repositories
 
                 await db.GetTable<ServiceToCoachesLink>()
                         .Where(x => x.ServiceId == entity.Id)
-                        .DeleteAsyncWithLock();
+                        .DeleteAsync();
 
                 foreach (var c in entity.ServiceToCoachesLinks)
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
 
 
                 await db.GetTable<ServiceToCoachesLink>()
                     .Where(x => x.ServiceId == entity.Id)
-                    .DeleteAsyncWithLock();
+                    .DeleteAsync();
 
                 foreach (var c in entity.ServiceToHorsesLinks)
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
 
                 return serviceId;
 
@@ -48,7 +45,7 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(
+                return await
                     db.GetTable<Service>()
                         .LoadWith(x => x.ServiceToCoachesLinks)
                         .LoadWith(x => x.ServiceToCoachesLinks.First().Coach)
@@ -57,8 +54,8 @@ namespace Repositories
                         .Where(where)
                         .Where(x => x.IsDeleted == false)
                         .OrderBy(x => x.Name)
-                        .ToList()
-                );
+                        .ToListAsync();
+               
             }, dbContext);
         }
     }

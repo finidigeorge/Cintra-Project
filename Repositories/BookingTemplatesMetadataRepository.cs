@@ -1,5 +1,4 @@
 ﻿using DataModels;
-using DbLayer.Extentions;
 using LinqToDB;
 using LinqToDB.Data;
 using Mapping;
@@ -159,12 +158,12 @@ namespace Repositories
                 await db.GetTable<BookingsTemplateMetadata>()
                     .Where(x => x.Id == metadataId)
                     .Set(x => x.EndDate, onDate)
-                    .UpdateAsyncWithLock();
+                    .UpdateAsync();
 
                 await db.GetTable<Booking>()
                     .Where(x => x.TemplateMetadataId == metadataId && x.DateOn >= onDate)
                     .Set(x => x.IsDeleted, true)
-                    .UpdateAsyncWithLock();
+                    .UpdateAsync();
 
                 return null;
 

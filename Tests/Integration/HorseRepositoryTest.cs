@@ -38,7 +38,8 @@ namespace Tests.Integration
             var tasks = Enumerable.Range(0, 1000).Select(async x =>
             {
                 var horse = new Hors() { Nickname = $"TestHorse{x}", MaxWorkingHours = 4 };
-                var id = await _respository.Create(horse);
+                var respository = ServiceProvider.GetService<IGenericRepository<Hors>>() as HorsesRepository;
+                var id = await respository.Create(horse);
                 Assert.AreNotEqual(0, id);
             });
 

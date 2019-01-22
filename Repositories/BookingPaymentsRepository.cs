@@ -19,11 +19,11 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(
+                return await
                     db.GetTable<BookingPayments>()
-                        .LoadWith(x => x.PaymentOptions)                        
-                        .Where(where).Where(x => x.IsDeleted == false).ToList()
-                );
+                        .LoadWith(x => x.PaymentOptions)
+                        .Where(where).Where(x => x.IsDeleted == false)
+                        .ToListAsync();                
             }, dbContext);
         }
 

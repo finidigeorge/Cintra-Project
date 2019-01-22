@@ -1,5 +1,4 @@
 ﻿using DataModels;
-using DbLayer.Extentions;
 using DbLayer.Interfaces;
 using LinqToDB;
 using LinqToDB.Data;
@@ -25,7 +24,7 @@ namespace Repositories
 
                 var entity = db.GetTable<T>().Where(expression).FirstOrDefault();
                 entity.IsDeleted = true;
-                await db.UpdateAsyncWithLock(entity);
+                await db.UpdateAsync(entity);
                 
                 return null;
             }, dbContext);
@@ -40,7 +39,7 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(db.GetTable<T>().Where(where).Where((x) => x.IsDeleted == false).ToList());
+                return await db.GetTable<T>().Where(where).Where((x) => x.IsDeleted == false).ToListAsync();
             }, dbContext);
         }
 
@@ -54,7 +53,7 @@ namespace Repositories
 
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(db.GetTable<T>().Where(expression).Where((x) => x.IsDeleted == false).ToList());
+                return await db.GetTable<T>().Where(expression).Where((x) => x.IsDeleted == false).ToListAsync();
             }, dbContext);
         }
     }

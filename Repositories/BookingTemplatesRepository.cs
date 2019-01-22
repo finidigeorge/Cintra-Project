@@ -1,5 +1,4 @@
 ﻿using DataModels;
-using DbLayer.Extentions;
 using LinqToDB;
 using LinqToDB.Data;
 using Repositories.Interfaces;
@@ -21,37 +20,34 @@ namespace Repositories
             return await RunWithinTransaction(async (db) =>
             {
                 if (entity.Id == 0)
-                    entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
+                    entity.Id = (long)(await db.InsertWithIdentityAsync(entity));
 
                 else
                 {
-                    await db.GetTable<BookingTemplatesToClientsLink>().DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
-                    await db.GetTable<BookingTemplatesToCoachesLink>().DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
-                    await db.GetTable<BookingTemplatesToHorsesLink>().DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+                    await db.GetTable<BookingTemplatesToClientsLink>().DeleteAsync(x => x.BookingTemplateId == entity.Id);
+                    await db.GetTable<BookingTemplatesToCoachesLink>().DeleteAsync(x => x.BookingTemplateId == entity.Id);
+                    await db.GetTable<BookingTemplatesToHorsesLink>().DeleteAsync(x => x.BookingTemplateId == entity.Id);
 
-                    await db.UpdateAsyncWithLock(entity);
+                    await db.UpdateAsync(entity);
                 }
-
 
                 foreach (var c in entity.BookingTemplatesToClientsLinks)
                 {
                     c.BookingTemplateId = entity.Id;
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
                 }
 
                 foreach (var c in entity.BookingTemplatesToCoachesLinks)
                 {
                     c.BookingTemplateId = entity.Id;
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
                 }
 
                 foreach (var c in entity.BookingTemplatesToHorsesLinks)
                 {
                     c.BookingTemplateId = entity.Id;
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
                 }
-
-
 
                 return entity.Id;
             }, dbContext);

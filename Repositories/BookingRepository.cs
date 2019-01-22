@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DbLayer.Extentions;
 using System.Linq.Expressions;
 using LinqToDB.Data;
 
@@ -26,56 +25,56 @@ namespace Repositories
                                 
                 if (entity.Id == 0)
                 {
-                    entity.Id = (long)(await db.InsertWithIdentityAsyncWithLock(entity));
+                    entity.Id = (long)(await db.InsertWithIdentityAsync(entity));
                         
                 }
                 else
                 {
                         
-                    await db.GetTable<BookingsToClientsLink>().DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                    await db.GetTable<BookingsToClientsLink>().DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                    await db.GetTable<BookingsToClientsLink>().DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.GetTable<BookingsToClientsLink>().DeleteAsync(x => x.BookingId == entity.Id);
+                    await db.GetTable<BookingsToCoachesLink>().DeleteAsync(x => x.BookingId == entity.Id);
+                    await db.GetTable<BookingsToHorsesLink>().DeleteAsync(x => x.BookingId == entity.Id);
                         
-                    await db.UpdateAsyncWithLock(entity);
+                    await db.UpdateAsync(entity);
                 }
 
 
                 foreach (var c in entity.BookingsToClientsLinks)
                 {
                     c.BookingId = entity.Id;
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
                 }
 
                 foreach (var c in entity.BookingsToCoachesLinks)
                 {
                     c.BookingId = entity.Id;
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
                 }
 
                 foreach (var c in entity.BookingsToHorsesLinks)
                 {
                     c.BookingId = entity.Id;
-                    await db.InsertWithIdentityAsyncWithLock(c);
+                    await db.InsertWithIdentityAsync(c);
                 }                                    
 
                 return entity.Id;
             }, dbContext);
         }
 
-        private async Task<List<Booking>> AccessFilter(List<Booking> bookings, DataConnection db)
+        private List<Booking> AccessFilter(List<Booking> bookings)
         {            
             foreach (var b in bookings)
             {                
-                b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false);
+                b.BookingPayments = b.BookingPayments.Where(x => x.IsDeleted == false).ToList();
                 b.Service = b.Service.IsDeleted ? null : b.Service;
-                b.BookingsToHorsesLinks = b.BookingsToHorsesLinks.Where(x => !x.Hor.IsDeleted);
-                b.BookingsToCoachesLinks = b.BookingsToCoachesLinks.Where(x => !x.Coach.IsDeleted);
+                b.BookingsToHorsesLinks = b.BookingsToHorsesLinks.Where(x => !x.Hor.IsDeleted).ToList();
+                b.BookingsToCoachesLinks = b.BookingsToCoachesLinks.Where(x => !x.Coach.IsDeleted).ToList();
 
                 if (b.BookingsTemplateMetadata?.BookingTemplates != null)
-                    b.BookingsTemplateMetadata.BookingTemplates = b.BookingsTemplateMetadata.BookingTemplates.Where(x => x.IsDeleted == false);                
+                    b.BookingsTemplateMetadata.BookingTemplates = b.BookingsTemplateMetadata.BookingTemplates.Where(x => x.IsDeleted == false).ToList();                
             }
 
-            return await Task.FromResult(bookings);
+            return bookings;
         }        
 
         public async Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, DataConnection dbContext = null)
@@ -359,7 +358,7 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                var result = await Task.FromResult(
+                var result = await
                     db.GetTable<Booking>()
                         .LoadWith(x => x.BookingsTemplateMetadata)
                         .LoadWith(x => x.BookingsTemplateMetadata.BookingTemplates)
@@ -379,10 +378,10 @@ namespace Repositories
                         .LoadWith(x => x.BookingsToHorsesLinks.First().Hor.HorsesScheduleData)
                         .Where(x => x.IsDeleted == false)
                         .Where(where)
-                        .OrderBy(x => x.BeginTime).ToList()
-                );
+                        .OrderBy(x => x.BeginTime)
+                        .ToListAsync();                
 
-                return await AccessFilter(result, db);
+                return AccessFilter(result);
 
             }, dbContext);
         }
@@ -392,7 +391,7 @@ namespace Repositories
         {
             await RunWithinTransaction(async (db) =>
             {
-                await db.GetTable<BookingPayments>().Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsyncWithLock();                                    
+                await db.GetTable<BookingPayments>().Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsync();                                    
 
                 await base.Delete(id, db);
 

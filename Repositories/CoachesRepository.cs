@@ -7,7 +7,6 @@ using LinqToDB;
 using Repositories.Interfaces;
 using Shared.Attributes;
 using System.Linq;
-using DbLayer.Extentions;
 using System.Linq.Expressions;
 using LinqToDB.Data;
 
@@ -45,7 +44,7 @@ namespace Repositories
                 {
                     var serviceToCoachesLinks = db.GetTable<CoachRolesToServicesLink>().Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId }).ToList();
                     foreach (var c in serviceToCoachesLinks)
-                        await db.InsertWithIdentityAsyncWithLock(c);
+                        await db.InsertWithIdentityAsync(c);
                 }
 
                 //assign all coach services to the new staff member
@@ -56,7 +55,7 @@ namespace Repositories
 
                     var links = db.GetTable<Service>().Where(x => !hashSet.Contains(x.Id)).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.Id }).ToList();
                     foreach (var c in links)
-                        await db.InsertWithIdentityAsyncWithLock(c);
+                        await db.InsertWithIdentityAsync(c);
                 }
 
                 return coachId;
@@ -71,21 +70,22 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(
-                    db.GetTable<Coach>()
-                    .LoadWith(x => x.ServiceToCoachesLinks)
-                    .Where(where)
-                    .Where(x => x.IsDeleted == false)
-                    .OrderBy(x => x.Name)
-                    .ToList()
-                    .Select(x =>
-                    {
-                        var res = x;
-                        res.Schedules = LoadSchedules(x.Id, db).ToList();
-                        return res;
-                    })
-                    .ToList()
-                );
+            return (await
+                db.GetTable<Coach>()
+                .LoadWith(x => x.ServiceToCoachesLinks)
+                .Where(where)
+                .Where(x => x.IsDeleted == false)
+                .OrderBy(x => x.Name)
+                .ToListAsync()
+                )
+                .Select(x =>
+                {
+                    var res = x;
+                    res.Schedules = LoadSchedules(x.Id, db).ToList();
+                    return res;
+                })
+                .ToList();
+                
             }, dbContext);
         }
     }

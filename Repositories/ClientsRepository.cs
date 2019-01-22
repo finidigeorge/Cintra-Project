@@ -18,11 +18,11 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(db.GetTable<Client>()
+                return await db.GetTable<Client>()
                     .Where(where)
                     .Where((x) => x.IsDeleted == false)
                     .OrderBy(x => x.Name)
-                    .ToList());
+                    .ToListAsync();
             }, dbContext);
         }
     }

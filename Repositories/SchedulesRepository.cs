@@ -21,7 +21,7 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(db.GetTable<Schedule>().LoadWith(x => x.SchedulesData).Where(where).Where(x => x.IsDeleted == false).ToList());
+                return await db.GetTable<Schedule>().LoadWith(x => x.SchedulesData).Where(where).Where(x => x.IsDeleted == false).ToListAsync();
             }, dbContext);
         }
 

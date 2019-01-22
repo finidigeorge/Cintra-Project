@@ -16,7 +16,7 @@ namespace Mapping
             {
                 if (map.SourceType.GetProperty(propName) != null)
                 {
-                    expr.ForSourceMember(propName, opt => opt.Ignore());
+                    expr.ForSourceMember(propName, opt => opt.DoNotValidate());
                 }
                 if (map.DestinationType.GetProperty(propName) != null)
                 {

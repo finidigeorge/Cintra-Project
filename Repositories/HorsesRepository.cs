@@ -1,16 +1,12 @@
-﻿using System;
+﻿using DataModels;
+using LinqToDB;
+using LinqToDB.Data;
+using Shared.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
-using DataModels;
-using DbLayer.Extentions;
-using LinqToDB;
-using LinqToDB.Data;
-using Repositories.Interfaces;
-using Shared.Attributes;
-using Shared.Extentions;
 
 namespace Repositories
 {
@@ -29,9 +25,10 @@ namespace Repositories
 
                 if (isNew)
                 {
-                    var serviceToHorsesLinks = db.GetTable<ServiceToHorsesLink>().Where(x => x.HorseId == entity.Id).Select(x => new ServiceToHorsesLink() { HorseId = id, ServiceId = x.ServiceId }).ToList();
+                    var serviceToHorsesLinks = db.GetTable<ServiceToHorsesLink>().Where(x => x.HorseId == entity.Id)
+                        .Select(x => new ServiceToHorsesLink() { HorseId = id, ServiceId = x.ServiceId }).ToList();
                     foreach (var c in serviceToHorsesLinks)
-                        await db.InsertWithIdentityAsyncWithLock(c);
+                        await db.InsertWithIdentityAsync(c);
                 }
 
                 return id;
@@ -44,14 +41,13 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(
+                return await
                     db.GetTable<Hors>()
                         .LoadWith(x => x.HorsesScheduleData)
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .Where(where).Where(x => x.IsDeleted == false)
                         .OrderBy(x => x.Nickname)
-                        .ToList()
-                );
+                        .ToListAsync();                
             }, dbContext);
         }
     }
