@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using LinqToDB.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Repositories.Interfaces
 {
     public interface IBookingPaymentsRepository: IGenericRepository<BookingPayments>
     {
-        Task SynchronizeWithBooking(long bookingId, BookingPayments payment, CintraDB dbContext = null);
+        Task SynchronizeWithBooking(long bookingId, BookingPayments payment, DataConnection dbContext = null);
     }
 }

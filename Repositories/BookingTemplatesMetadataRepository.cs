@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using DbLayer.Extentions;
 using LinqToDB;
+using LinqToDB.Data;
 using Mapping;
 using Repositories.Interfaces;
 using Shared.Attributes;
@@ -23,7 +24,7 @@ namespace Repositories
 
         private static readonly SemaphoreSlim _lockObject = new SemaphoreSlim(1, 1);
 
-        public async Task GenerateAllPermanentBookings(DateTime onDate, CintraDB dbContext = null)
+        public async Task GenerateAllPermanentBookings(DateTime onDate, DataConnection dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {                
@@ -32,8 +33,8 @@ namespace Repositories
                     await _lockObject.WaitAsync();
 
                     var metadataList =
-                        from m in db.BookingsTemplateMetadata
-                        join t in db.BookingTemplates on m.Id equals t.TemplateMetadataId
+                        from m in db.GetTable<BookingsTemplateMetadata>()
+                        join t in db.GetTable<BookingTemplates>() on m.Id equals t.TemplateMetadataId
                         where onDate >= m.StartDate && m.EndDate == null && t.DayOfWeek == onDate.ToEuropeanDayNumber() && !t.IsDeleted
                         select m;                    
 
@@ -59,7 +60,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        private async Task<Booking> UpdateFromPrevBooking(BookingsTemplateMetadata metadata, DateTime onDate, CintraDB db, Booking booking)
+        private async Task<Booking> UpdateFromPrevBooking(BookingsTemplateMetadata metadata, DateTime onDate, DataConnection db, Booking booking)
         {
             var daysToSubtract = -7;
 
@@ -67,7 +68,7 @@ namespace Repositories
                 daysToSubtract = -14;
 
             var prevWeekDate = onDate.AddDays(daysToSubtract);
-            var prevBooking = await db.Bookings                
+            var prevBooking = await db.GetTable<Booking>()
                 .FirstOrDefaultAsync(x => x.DateOn == prevWeekDate && x.TemplateMetadataId == metadata.Id && !x.IsDeleted);
 
             if (prevBooking != null)
@@ -92,9 +93,9 @@ namespace Repositories
             return booking;
         }
 
-        private async Task GenerateWeekEvents(DateTime onDate, CintraDB db, BookingsTemplateMetadata metadata)
+        private async Task GenerateWeekEvents(DateTime onDate, DataConnection db, BookingsTemplateMetadata metadata)
         {
-            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadata.Id);
+            var alreadyGenerated = await db.GetTable<Booking>().AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadata.Id);
 
             if (!alreadyGenerated)
             {
@@ -116,9 +117,9 @@ namespace Repositories
             }
         }
 
-        private async Task GenerateFortnightEvents(DateTime onDate, CintraDB db, BookingsTemplateMetadata metadata)
+        private async Task GenerateFortnightEvents(DateTime onDate, DataConnection db, BookingsTemplateMetadata metadata)
         {
-            var alreadyGenerated = await db.Bookings.AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadata.Id);
+            var alreadyGenerated = await db.GetTable<Booking>().AnyAsync(x => x.DateOn == onDate && x.TemplateMetadataId == metadata.Id);
 
             if (!alreadyGenerated)
             {
@@ -151,16 +152,16 @@ namespace Repositories
             }
         }
 
-        public async Task CancelAllBookings(long metadataId, DateTime onDate, CintraDB dbContext = null)
+        public async Task CancelAllBookings(long metadataId, DateTime onDate, DataConnection dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {
-                await db.BookingsTemplateMetadata
+                await db.GetTable<BookingsTemplateMetadata>()
                     .Where(x => x.Id == metadataId)
                     .Set(x => x.EndDate, onDate)
                     .UpdateAsyncWithLock();
 
-                await db.Bookings
+                await db.GetTable<Booking>()
                     .Where(x => x.TemplateMetadataId == metadataId && x.DateOn >= onDate)
                     .Set(x => x.IsDeleted, true)
                     .UpdateAsyncWithLock();

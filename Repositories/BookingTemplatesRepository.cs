@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using DbLayer.Extentions;
 using LinqToDB;
+using LinqToDB.Data;
 using Repositories.Interfaces;
 using Shared.Attributes;
 using System;
@@ -15,7 +16,7 @@ namespace Repositories
     [PerScope]
     public class BookingTemplatesRepository : GenericPreservableRepository<BookingTemplates>, IBookingTemplateRepository
     {
-        public override async Task<long> Create(BookingTemplates entity, CintraDB dbContext = null)
+        public override async Task<long> Create(BookingTemplates entity, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -24,9 +25,9 @@ namespace Repositories
 
                 else
                 {
-                    await db.BookingTemplatesToClientsLink.DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
-                    await db.BookingTemplatesToCoachesLink.DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
-                    await db.BookingTemplatesToHorsesLink.DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+                    await db.GetTable<BookingTemplatesToClientsLink>().DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+                    await db.GetTable<BookingTemplatesToCoachesLink>().DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
+                    await db.GetTable<BookingTemplatesToHorsesLink>().DeleteAsyncWithLock(x => x.BookingTemplateId == entity.Id);
 
                     await db.UpdateAsyncWithLock(entity);
                 }
@@ -56,12 +57,12 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task<List<BookingTemplates>> GetByParams(Expression<Func<BookingTemplates, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<BookingTemplates>> GetByParams(Expression<Func<BookingTemplates, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
-                return await Task.FromResult(
-                    db.BookingTemplates
+                return await
+                    db.GetTable<BookingTemplates>()
                         .LoadWith(x => x.BookingTemplatesToClientsLinks)
                         .LoadWith(x => x.BookingTemplatesToClientsLinks.First().Client)
                         .LoadWith(x => x.BookingTemplatesToCoachesLinks)
@@ -76,8 +77,8 @@ namespace Repositories
                         .LoadWith(x => x.BookingTemplatesToHorsesLinks.First().Hor.HorsesScheduleData)
                         .Where(where)
                         .Where(x => x.IsDeleted == false)
-                        .ToList()
-                );
+                        .ToListAsync()
+                    ;
 
             }, dbContext);
         }

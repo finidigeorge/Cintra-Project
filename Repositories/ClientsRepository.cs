@@ -1,5 +1,6 @@
 ﻿using DataModels;
 using LinqToDB;
+using LinqToDB.Data;
 using Shared.Attributes;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Repositories
     [PerScope]
     public class ClientsRepository: GenericPreservableRepository<Client>
     {
-        public override async Task<List<Client>> GetByParams(Expression<Func<Client, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<Client>> GetByParams(Expression<Func<Client, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {

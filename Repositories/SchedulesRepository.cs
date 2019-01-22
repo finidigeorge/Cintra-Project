@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataModels;
 using LinqToDB;
+using LinqToDB.Data;
 using Shared.Attributes;
 using Shared.Dto.Interfaces;
 
@@ -16,7 +17,7 @@ namespace Repositories
     {
         private readonly SchedulesDataRepository _dataRepository = new SchedulesDataRepository();
 
-        public override async Task<List<Schedule>> GetByParams(Expression<Func<Schedule, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<Schedule>> GetByParams(Expression<Func<Schedule, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -24,7 +25,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task Delete(long id, CintraDB dbContext = null)
+        public override async Task Delete(long id, DataConnection dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {

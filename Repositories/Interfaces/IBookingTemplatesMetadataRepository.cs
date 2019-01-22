@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using LinqToDB.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Repositories.Interfaces
 {
     public interface IBookingTemplatesMetadataRepository: IGenericRepository<BookingsTemplateMetadata>
     {
-        Task CancelAllBookings(long metadataId, DateTime onDate, CintraDB dbContext = null);
-        Task GenerateAllPermanentBookings(DateTime onDate, CintraDB dbContext = null);
+        Task CancelAllBookings(long metadataId, DateTime onDate, DataConnection dbContext = null);
+        Task GenerateAllPermanentBookings(DateTime onDate, DataConnection dbContext = null);
     }
 }

@@ -9,19 +9,20 @@ using LinqToDB;
 using System.Linq;
 using DbLayer.Extentions;
 using System.Linq.Expressions;
+using LinqToDB.Data;
 
 namespace Repositories
 {
     [PerScope]
     public class ServicesRepository : GenericPreservableRepository<Service>
     {
-        public override async Task<long> Create(Service entity, CintraDB dbContext = null)
+        public override async Task<long> Create(Service entity, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var serviceId = await base.Create(entity, db);
 
-                await db.ServiceToCoachesLink
+                await db.GetTable<ServiceToCoachesLink>()
                         .Where(x => x.ServiceId == entity.Id)
                         .DeleteAsyncWithLock();
 
@@ -29,7 +30,7 @@ namespace Repositories
                     await db.InsertWithIdentityAsyncWithLock(c);
 
 
-                await db.ServiceToHorsesLink
+                await db.GetTable<ServiceToCoachesLink>()
                     .Where(x => x.ServiceId == entity.Id)
                     .DeleteAsyncWithLock();
 
@@ -43,12 +44,12 @@ namespace Repositories
             );
         }
 
-        public override async Task<List<Service>> GetByParams(Expression<Func<Service, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<Service>> GetByParams(Expression<Func<Service, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.Services
+                    db.GetTable<Service>()
                         .LoadWith(x => x.ServiceToCoachesLinks)
                         .LoadWith(x => x.ServiceToCoachesLinks.First().Coach)
                         .LoadWith(x => x.ServiceToHorsesLinks)

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DataModels;
 using DbLayer.Extentions;
 using LinqToDB;
+using LinqToDB.Data;
 using Repositories.Interfaces;
 using Shared.Attributes;
 using Shared.Extentions;
@@ -16,7 +17,7 @@ namespace Repositories
     [PerScope]
     public class HorsesRepository : GenericPreservableRepository<Hors>
     {
-        public override async Task<long> Create(Hors entity, CintraDB dbContext = null)
+        public override async Task<long> Create(Hors entity, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -28,7 +29,7 @@ namespace Repositories
 
                 if (isNew)
                 {
-                    var serviceToHorsesLinks = db.ServiceToHorsesLink.Where(x => x.HorseId == entity.Id).Select(x => new ServiceToHorsesLink() { HorseId = id, ServiceId = x.ServiceId }).ToList();
+                    var serviceToHorsesLinks = db.GetTable<ServiceToHorsesLink>().Where(x => x.HorseId == entity.Id).Select(x => new ServiceToHorsesLink() { HorseId = id, ServiceId = x.ServiceId }).ToList();
                     foreach (var c in serviceToHorsesLinks)
                         await db.InsertWithIdentityAsyncWithLock(c);
                 }
@@ -39,12 +40,12 @@ namespace Repositories
             );
         }
 
-        public override async Task<List<Hors>> GetByParams(Expression<Func<Hors, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<Hors>> GetByParams(Expression<Func<Hors, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 return await Task.FromResult(
-                    db.Horses
+                    db.GetTable<Hors>()
                         .LoadWith(x => x.HorsesScheduleData)
                         .LoadWith(x => x.ServiceToHorsesLinks)
                         .Where(where).Where(x => x.IsDeleted == false)

@@ -1,12 +1,12 @@
 using DataModels;
 using Mapping;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Shared.Dto;
 using System.Collections.Generic;
 
 namespace Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MappingTests
     {
 
@@ -17,7 +17,7 @@ namespace Tests
             dto = ObjectMapper.Map<T>(result);
         }
 
-        [TestMethod]
+        [Test]
         public void BookingsMapping()
         {
             var dto = new BookingDto()
@@ -40,19 +40,19 @@ namespace Tests
             Assert.IsNotNull(dto.BookingPayment);
         }
 
-        [TestMethod]
+        [Test]
         public void BookingPaymentMapping()
         {
             TestMapping<BookingPaymentDto, BookingPayments>();
         }
 
-        [TestMethod]
+        [Test]
         public void ClientMapping()
         {
             TestMapping<ClientDto, Client>();            
         }
 
-        [TestMethod]
+        [Test]
         public void CoachMapping()
         {
             var dto = new CoachDto() { Schedules = new List<ScheduleDto>() };
@@ -60,13 +60,13 @@ namespace Tests
             dto = ObjectMapper.Map<CoachDto>(result);
         }
 
-        [TestMethod]
+        [Test]
         public void HorsesScheduleDataMapping()
         {
             TestMapping<HorseScheduleDataDto, HorsesScheduleData>();
         }
 
-        [TestMethod]
+        [Test]
         public void HorseMapping()
         {
             var dto = new HorseDto()
@@ -80,31 +80,31 @@ namespace Tests
             dto = ObjectMapper.Map<HorseDto>(result);
         }
 
-        [TestMethod]
+        [Test]
         public void PaymentTypeMapping()
         {
             TestMapping<PaymentTypeDto, PaymentTypes>();
         }
 
-        [TestMethod]
+        [Test]
         public void ScheduleMapping()
         {
             TestMapping<ScheduleDto, Schedule>();
         }
 
-        [TestMethod]
+        [Test]
         public void ScheduleDataMapping()
         {
             TestMapping<ScheduleDataDto, SchedulesData>();
         }
 
-        [TestMethod]
+        [Test]
         public void ServiceMapping()
         {
             TestMapping<ServiceDto, Service>();
         }
 
-        [TestMethod]
+        [Test]
         public void UserMapping()
         {            
             var dto = new UserDto() { UserRole = new UserRoleDto() };            
@@ -112,7 +112,7 @@ namespace Tests
             dto = ObjectMapper.Map<UserDto>(result);
         }
 
-        [TestMethod]
+        [Test]
         public void UserRoleMapping()
         {
             TestMapping<UserRoleDto, UserRoles>();            

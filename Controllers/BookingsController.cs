@@ -14,6 +14,7 @@ using System.Linq;
 using Shared.Interfaces;
 using Shared.Extentions;
 using Shared;
+using LinqToDB.Data;
 
 namespace Controllers
 {
@@ -56,7 +57,7 @@ namespace Controllers
             return await CreateInternal(entity);
         }
 
-        private async Task<long> CreateInternal(BookingDto entity, CintraDB dbContext = null)
+        private async Task<long> CreateInternal(BookingDto entity, DataConnection dbContext = null)
         {
             try
             {

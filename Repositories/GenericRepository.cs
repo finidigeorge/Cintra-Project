@@ -13,16 +13,17 @@ using Shared.Dto.Interfaces;
 using DbLayer.Interfaces;
 using System.Threading;
 using DbLayer.Extentions;
+using LinqToDB.Data;
 
 namespace Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class, IUniqueDto
     {
-        public async Task<dynamic> RunWithinTransaction(Func<CintraDB, Task<dynamic>> fetcher, CintraDB dbContext = null)
+        public async Task<dynamic> RunWithinTransaction(Func<DataConnection, Task<dynamic>> fetcher, DataConnection dbContext = null)
         {
             var isTransactional = dbContext == null;
             bool isSuccess = true;
-            var db = dbContext ?? new CintraDB();
+            var db = dbContext ?? new DataConnection();
 
             try
             {
@@ -50,7 +51,7 @@ namespace Repositories
             }
         }
 
-        public virtual async Task<long> Create(T entity, CintraDB dbContext = null)
+        public virtual async Task<long> Create(T entity, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -65,7 +66,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public virtual async Task Delete(long id, CintraDB dbContext = null)
+        public virtual async Task Delete(long id, DataConnection dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {
@@ -78,12 +79,12 @@ namespace Repositories
             }, dbContext);
         }
 
-        public virtual async Task<List<T>> GetAll(CintraDB dbContext = null)
+        public virtual async Task<List<T>> GetAll(DataConnection dbContext = null)
         {
             return (await GetByParams((x) => true, dbContext)).ToList();
         }
 
-        public virtual async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null)
+        public virtual async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -97,7 +98,7 @@ namespace Repositories
         /// <typeparam name="T">linqToDb Table mapped</typeparam>
         /// <param name="id"> Have to be of the same type of primary key atribute of T table mapped</param>
         /// <returns>T linqToDb mapped class</returns>
-        public virtual async Task<T> GetById(long id, CintraDB dbContext = null)
+        public virtual async Task<T> GetById(long id, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -116,7 +117,7 @@ namespace Repositories
         /// <param name="propertyName">Name of property</param>
         /// <param name="valueToFilter">Value to filter query</param>
         /// <returns>List of T</returns>
-        public virtual async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, CintraDB dbContext = null)
+        public virtual async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, DataConnection dbContext = null)
 
         {
             if (string.IsNullOrWhiteSpace(propertyName))

@@ -43,7 +43,7 @@ namespace Cintra
             // Setup options with DI
             services.AddOptions();
 
-            // configure lin2db
+            // configure linq2db
             LinqToDB.Data.DataConnection.DefaultSettings = new DbSettings(Configuration.GetSection("LinqToDb"));
             LinqToDB.Common.Configuration.Linq.AllowMultipleQuery = true;
             LinqToDB.Common.Configuration.Linq.IgnoreEmptyUpdate = true;            

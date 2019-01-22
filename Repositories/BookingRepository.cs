@@ -12,13 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 using DbLayer.Extentions;
 using System.Linq.Expressions;
+using LinqToDB.Data;
 
 namespace Repositories
 {
     [PerScope]
     public class BookingRepository : GenericPreservableRepository<Booking>, IBookingRepository
     {
-        public override async Task<long> Create(Booking entity, CintraDB dbContext = null)
+        public override async Task<long> Create(Booking entity, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -31,9 +32,9 @@ namespace Repositories
                 else
                 {
                         
-                    await db.BookingsToHorsesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                    await db.BookingsToClientsLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
-                    await db.BookingsToCoachesLink.DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.GetTable<BookingsToClientsLink>().DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.GetTable<BookingsToClientsLink>().DeleteAsyncWithLock(x => x.BookingId == entity.Id);
+                    await db.GetTable<BookingsToClientsLink>().DeleteAsyncWithLock(x => x.BookingId == entity.Id);
                         
                     await db.UpdateAsyncWithLock(entity);
                 }
@@ -61,7 +62,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        private async Task<List<Booking>> AccessFilter(List<Booking> bookings, CintraDB db)
+        private async Task<List<Booking>> AccessFilter(List<Booking> bookings, DataConnection db)
         {            
             foreach (var b in bookings)
             {                
@@ -77,14 +78,14 @@ namespace Repositories
             return await Task.FromResult(bookings);
         }        
 
-        public async Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasCoachNotOverlappedBooking(Coach coach, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var result = new CheckResultDto() { Result = true };
 
                 var overlappedBooking =
-                    (await db.Bookings
+                    (await db.GetTable<Booking>()
                         .LoadWith(x => x.Service)
                         .LoadWith(x => x.BookingsToCoachesLinks)
                         .Where(
@@ -107,7 +108,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<CheckResultDto> HasCoachScheduleFitBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasCoachScheduleFitBooking(Coach coach, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction((db) =>
             {               
@@ -145,7 +146,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<CheckResultDto> HasCoachScheduleFitBreaks(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasCoachScheduleFitBreaks(Coach coach, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction((db) =>
             {
@@ -185,7 +186,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        private async Task<bool> IsCoachAvialableForBooking(Coach coach, Booking bookingData, CintraDB dbContext = null)
+        private async Task<bool> IsCoachAvialableForBooking(Coach coach, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {                
@@ -216,14 +217,14 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<CheckResultDto> HasHorseNotOverlappedBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasHorseNotOverlappedBooking(Hors horse, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var result = new CheckResultDto() { Result = true };
 
                 var overlappedBooking =
-                (await db.Bookings
+                (await db.GetTable<Booking>()
                     .LoadWith(x => x.BookingsToHorsesLinks)                    
                     .Where(
                         x => x.IsDeleted == false &&
@@ -243,14 +244,14 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<CheckResultDto> HasHorseWorkedLessThanAllowed(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasHorseWorkedLessThanAllowed(Hors horse, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var result = new CheckResultDto() { Result = true };
 
                 var workedMinutes =
-                (await db.Bookings
+                (await db.GetTable<Booking>()
                     .Where(
                         x => x.IsDeleted == false &&
                                 x.BookingsToHorsesLinks.Any(h => h.HorseId == horse.Id) &&
@@ -271,14 +272,14 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<CheckResultDto> HasHorseRequiredBreak(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasHorseRequiredBreak(Hors horse, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var result = new CheckResultDto() { Result = true };
                 var lastBooking =
                     (await
-                        db.Bookings                                                
+                        db.GetTable<Booking>()
                         .Where(x => x.IsDeleted == false &&
                               x.BookingsToHorsesLinks.Any(h => h.HorseId == horse.Id) &&
                               x.DateOn == bookingData.DateOn &&
@@ -303,7 +304,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<CheckResultDto> HasHorseScheduleFitBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        public async Task<CheckResultDto> HasHorseScheduleFitBooking(Hors horse, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction((db) =>
             {
@@ -338,7 +339,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public async Task<bool> IsHorseAvialableForBooking(Hors horse, Booking bookingData, CintraDB dbContext = null)
+        public async Task<bool> IsHorseAvialableForBooking(Hors horse, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -354,12 +355,12 @@ namespace Repositories
             }, dbContext);
         }                
 
-        public override async Task<List<Booking>> GetByParams(Expression<Func<Booking, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<Booking>> GetByParams(Expression<Func<Booking, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
                 var result = await Task.FromResult(
-                    db.Bookings
+                    db.GetTable<Booking>()
                         .LoadWith(x => x.BookingsTemplateMetadata)
                         .LoadWith(x => x.BookingsTemplateMetadata.BookingTemplates)
                         .LoadWith(x => x.BookingPayments)
@@ -387,11 +388,11 @@ namespace Repositories
         }
 
 
-        public override async Task Delete(long id, CintraDB dbContext = null)
+        public override async Task Delete(long id, DataConnection dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {
-                await db.BookingPayments.Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsyncWithLock();                                    
+                await db.GetTable<BookingPayments>().Where(p => p.BookingId == id).Set(x => x.IsDeleted, true).UpdateAsyncWithLock();                                    
 
                 await base.Delete(id, db);
 
@@ -408,7 +409,7 @@ namespace Repositories
                 sb.Append(message);            
         }
 
-        public async Task<String> RunValidations(Booking booking, bool ErrorsValidation = true, CintraDB dbContext = null)
+        public async Task<String> RunValidations(Booking booking, bool ErrorsValidation = true, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {

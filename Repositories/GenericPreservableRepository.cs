@@ -2,6 +2,7 @@
 using DbLayer.Extentions;
 using DbLayer.Interfaces;
 using LinqToDB;
+using LinqToDB.Data;
 using LinqToDB.Mapping;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Repositories
 {
     public class GenericPreservableRepository<T> : GenericRepository<T> where T : class, IPreservable
     {
-        public override async Task Delete(long id, CintraDB dbContext = null)
+        public override async Task Delete(long id, DataConnection dbContext = null)
         {
             await RunWithinTransaction(async (db) =>
             {
@@ -30,12 +31,12 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task<List<T>> GetAll(CintraDB dbContext = null)
+        public override async Task<List<T>> GetAll(DataConnection dbContext = null)
         {
             return (await GetByParams((x) => x.IsDeleted == false, dbContext)).ToList();
         }
 
-        public override async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, CintraDB dbContext = null)
+        public override async Task<List<T>> GetByParams(Expression<Func<T, bool>> where, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
             {
@@ -43,7 +44,7 @@ namespace Repositories
             }, dbContext);
         }
 
-        public override async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, CintraDB dbContext = null)
+        public override async Task<List<T>> GetByPropertyValue<D>(string propertyName, D valueToFilter, DataConnection dbContext = null)
 
         {
             if (string.IsNullOrWhiteSpace(propertyName))

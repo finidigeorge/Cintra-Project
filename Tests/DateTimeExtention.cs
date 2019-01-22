@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using Shared.Extentions;
 using System;
 using System.Collections.Generic;
@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Tests
 {
-    [TestClass]
+    [TestFixture]
     public class DateTimeExtentionTest
     {
-        [TestMethod]
+        [Test]
         public void TruncateToWeekStartTest()
         {
             var date = new DateTime(2018, 4, 26, 12, 0, 0);
@@ -20,7 +20,7 @@ namespace Tests
             Assert.IsTrue(weekStart.Year == 2018);
         }
 
-        [TestMethod]
+        [Test]
         public void IsOverlapTest()
         {
             // ----

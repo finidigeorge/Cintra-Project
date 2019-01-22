@@ -44,7 +44,7 @@ namespace Client.Commands
 
         public void Execute(object parameter)
         {
-            AsyncRunner(parameter);            
+            AsyncRunner(parameter).Wait();            
         }
 
         public async Task ExecuteAsync(object parameter)
