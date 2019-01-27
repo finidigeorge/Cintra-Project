@@ -16,15 +16,15 @@ namespace Client.ViewModels
         //UI Event wrappers commands
         public ICommand NextDayCommand { get; set; }
         public ICommand PrevDayCommand { get; set; }
-        public ICommand AddDailyScheduledIntervalCommand { get; set; }
-        public ICommand UpdateDailyScheduledIntervalCommand { get; set; }
-        public ICommand DeleteDailyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand AddDailyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand UpdateDailyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand DeleteDailyScheduledIntervalCommand { get; set; }
 
         public ICommand NextWeekCommand { get; set; }
         public ICommand PrevWeekCommand { get; set; }
-        public ICommand AddWeeklyScheduledIntervalCommand { get; set; }
-        public ICommand UpdateWeeklyScheduledIntervalCommand { get; set; }
-        public ICommand DeleteWeeklyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand AddWeeklyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand UpdateWeeklyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand DeleteWeeklyScheduledIntervalCommand { get; set; }
 
         public IList<ScheduleDto> DataSource { get; set; } = new List<ScheduleDto>();
         public CoachDtoUi Coach { get; set; }

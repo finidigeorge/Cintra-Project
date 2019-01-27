@@ -69,7 +69,7 @@ namespace Client.Windows
                 }
             };
 
-            Model.AddWeeklyScheduledIntervalCommand = new Command<object>(() =>
+            Model.AddWeeklyScheduledIntervalCommand = new Command<object>((param) =>
             {
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly, Model.BookingData.BeginTime, Model.BookingData.EndTime);
                 if (editorResult.Item1)
@@ -80,21 +80,21 @@ namespace Client.Windows
 
             }, (x) => true);
 
-            Model.UpdateWeeklyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
+            Model.UpdateWeeklyScheduledIntervalCommand = new Command<object>((param) => { }, (x) => false);
 
-            Model.DeleteWeeklyScheduledIntervalCommand = new Command<object>(() =>
+            Model.DeleteWeeklyScheduledIntervalCommand = new Command<object>((param) =>
             {
                 WeeklyScheduler.DeleteEvent(SelectedEvent.Id);
             }, (x) => SelectedEvent != null);
 
-            Model.NextWeekCommand = new Command<object>(() =>
+            Model.NextWeekCommand = new Command<object>((param) =>
             {
                 WeeklyScheduler.NextPage();
                 Model.WeekNumber++;
 
             }, (x) => Model.WeekNumber == 0);
 
-            Model.PrevWeekCommand = new Command<object>(() =>
+            Model.PrevWeekCommand = new Command<object>((param) =>
             {
                 WeeklyScheduler.PrevPage();
                 Model.WeekNumber--;

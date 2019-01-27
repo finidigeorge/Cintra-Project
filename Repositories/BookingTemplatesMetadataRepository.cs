@@ -31,11 +31,12 @@ namespace Repositories
                 {
                     await _lockObject.WaitAsync();
 
-                    var metadataList =
-                        from m in db.GetTable<BookingsTemplateMetadata>()
-                        join t in db.GetTable<BookingTemplates>() on m.Id equals t.TemplateMetadataId
-                        where onDate >= m.StartDate && m.EndDate == null && t.DayOfWeek == onDate.ToEuropeanDayNumber() && !t.IsDeleted
-                        select m;                    
+                    var metadataList = await
+                        (from m in db.GetTable<BookingsTemplateMetadata>()
+                         join t in db.GetTable<BookingTemplates>() on m.Id equals t.TemplateMetadataId
+                         where onDate >= m.StartDate && m.EndDate == null && t.DayOfWeek == onDate.ToEuropeanDayNumber() && !t.IsDeleted
+                         select m
+                        ).ToListAsync();
 
                     foreach (var m in metadataList)
                     {                        

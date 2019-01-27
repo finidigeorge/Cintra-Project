@@ -24,10 +24,13 @@ namespace Client.ViewModels
         public ICommand AddClientCommand { get => _parentVm.AddClientCommand; }
         public ICommand DeleteClientCommand { get; set; }
 
+        public Task Initialization { get; private set; }
+
         public BookingEditClientVm(BookingEditWindowVm parentVm, ClientDtoUi clientDto)
         {
             _parentVm = parentVm;
-            Model.RefreshDataCommand.Execute(null);
+            Initialization = Model.RefreshDataCommand.ExecuteAsync(null);
+
             Model.SelectedItem = clientDto;
 
             Model.OnSelectedItemChanged += (sender, client) =>
@@ -36,9 +39,9 @@ namespace Client.ViewModels
                 _parentVm.RunClientValidations();
             };
 
-            DeleteClientCommand = new AsyncCommand<object>(async (param) =>
+            DeleteClientCommand = new Command<object>((param) =>
             {
-                await _parentVm.DeleteClientCommand.ExecuteAsync(Id);
+                _parentVm.DeleteClientCommand.Execute(Id);
             }, (x) => _parentVm.CanDeleteClient);            
         }
     }

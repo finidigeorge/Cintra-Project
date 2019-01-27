@@ -32,7 +32,7 @@ namespace Client.ViewModels
         private BookingDtoUi _bookingData;
         private bool enableChecks = true;
 
-        private void SetUpLinkedDtoCollection<T>(IAsyncCommand command, List<T> collection) where T: IUniqueDto
+        private void SetUpLinkedDtoCollection<T>(ICommand command, List<T> collection) where T: IUniqueDto
         {
             if ((collection?.Any() ?? false))
                 collection.ForEach(x => command.Execute(x));
@@ -86,19 +86,19 @@ namespace Client.ViewModels
         
         public ICommand GetServicesCommand { get => ServicesModel.RefreshDataCommand; }
 
-        public IAsyncCommand AddCoachCommand { get; set; }
+        public ICommand AddCoachCommand { get; set; }
         public ICommand SyncCoachesCommand { get; set; }
-        public IAsyncCommand DeleteCoachCommand { get; set; }
+        public ICommand DeleteCoachCommand { get; set; }
         public bool CanDeleteCoach { get => CoachesVms.Count > 1; }
 
-        public IAsyncCommand AddHorseCommand { get; set; }
+        public ICommand AddHorseCommand { get; set; }
         public ICommand SyncHorsesCommand { get; set; }
-        public IAsyncCommand DeleteHorseCommand { get; set; }
+        public ICommand DeleteHorseCommand { get; set; }
         public bool CanDeleteHorse { get => HorsesVms.Count > 1; }
 
-        public IAsyncCommand AddClientCommand { get; set; }
+        public ICommand AddClientCommand { get; set; }
         public ICommand SyncClientsCommand { get; set; }
-        public IAsyncCommand DeleteClientCommand { get; set; }
+        public ICommand DeleteClientCommand { get; set; }
         public bool CanDeleteClient { get => ClientsVms.Count > 1; }        
 
         public ServicesRefVm ServicesModel { get; set; } = new ServicesRefVm();        
@@ -186,13 +186,13 @@ namespace Client.ViewModels
 
         private void SetCommands()
         {
-            AddCoachCommand = new AsyncCommand<object>(async (param) =>
+            AddCoachCommand = new Command<object>((param) =>
             {
                 var coachDto = ObjectMapper.Map<CoachDtoUi>(param);
                 var c = new BookingEditCoachVm(this, coachDto);
                 CoachesVms.Add(c);                
             }, (x) => CoachesVms.Count < MaxCoaches);
-            SyncCoachesCommand = new Command<object>(() =>
+            SyncCoachesCommand = new Command<object>((param) =>
             {
                 if (_bookingData.Coaches == null)
                     _bookingData.Coaches = new List<CoachDto>();
@@ -204,22 +204,22 @@ namespace Client.ViewModels
                         _bookingData.Coaches.Add(c.Model.SelectedItem);
 
             }, (x) => CoachesVms.Count > 0);
-            DeleteCoachCommand = new AsyncCommand<Guid>(async (param) =>
+            DeleteCoachCommand = new Command<Guid>((param) =>
             {
                 var c = CoachesVms.First(x => x.Id == param);
                 _bookingData.Coaches.Remove(c.Model.SelectedItem);
 
-                await Task.FromResult(CoachesVms.Remove(c));
+                CoachesVms.Remove(c);
             }, (x) => CanDeleteCoach);
 
 
-            AddHorseCommand = new AsyncCommand<object>(async (param) =>
+            AddHorseCommand = new Command<object>((param) =>
             {
                 var horseDto = ObjectMapper.Map<HorseDtoUi>(param);
                 var h = new BookingEditHorseVm(this, horseDto);
                 HorsesVms.Add(h);                
             }, (x) => HorsesVms.Count < MaxHorses && (!_bookingData?.Service?.NoHorseRequired ?? false));
-            SyncHorsesCommand = new Command<object>(() =>
+            SyncHorsesCommand = new Command<object>((param) =>
             {
                 if (_bookingData.Horses == null)
                     _bookingData.Horses = new List<HorseDto>();
@@ -231,22 +231,21 @@ namespace Client.ViewModels
                         _bookingData.Horses.Add(c.Model.SelectedItem);
 
             }, (x) => HorsesVms.Count > 0);
-            DeleteHorseCommand = new AsyncCommand<Guid>(async (param) =>
+            DeleteHorseCommand = new Command<Guid>((param) =>
             {
                 var c = HorsesVms.First(x => x.Id == param);
                 _bookingData.Horses.Remove(c.Model.SelectedItem);
-
-                await Task.FromResult(HorsesVms.Remove(c));
+                HorsesVms.Remove(c);
             }, (x) => CanDeleteHorse);
 
-            AddClientCommand = new AsyncCommand<object>(async (param) =>
+            AddClientCommand = new Command<object>((param) =>
             {
                 var clientDto = ObjectMapper.Map<ClientDtoUi>(param);
                 var c = new BookingEditClientVm(this, clientDto);                
                 ClientsVms.Add(c);
 
             }, (x) => ClientsVms.Count < MaxClients);
-            SyncClientsCommand = new Command<object>(() =>
+            SyncClientsCommand = new Command<object>((param) =>
             {
                 if (_bookingData.Clients == null)
                     _bookingData.Clients = new List<ClientDto>();
@@ -258,12 +257,11 @@ namespace Client.ViewModels
                         _bookingData.Clients.Add(c.Model.SelectedItem);
 
             }, (x) => ClientsVms.Count > 0);
-            DeleteClientCommand = new AsyncCommand<Guid>(async (param) =>
+            DeleteClientCommand = new Command<Guid>((param) =>
             {
                 var c = ClientsVms.First(x => x.Id == param);
                 _bookingData.Clients.Remove(c.Model.SelectedItem);
-
-                await Task.FromResult(ClientsVms.Remove(c));
+                ClientsVms.Remove(c);
             }, (x) => CanDeleteClient);
         }        
 

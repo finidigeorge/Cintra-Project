@@ -73,24 +73,24 @@ namespace Client.Windows
                 }
             }, (x) => true);
 
-            Model.NextDayCommand = new Command<object>(() =>
+            Model.NextDayCommand = new Command<object>((param) =>
             {
                 Model.CurrentDate = Model.CurrentDate.AddDays(1);                
             }, (x) => true);
 
-            Model.PrevDayCommand = new Command<object>(() =>
+            Model.PrevDayCommand = new Command<object>((param) =>
             {
                 Model.CurrentDate = Model.CurrentDate.AddDays(-1);                
             }, x => true);
 
-            Model.AddDailyScheduledIntervalCommand = new Command<object>(async () =>
+            Model.AddDailyScheduledIntervalCommand = new AsyncCommand<object>(async (param) =>
             {
                 var res = ShowScheduleEditor();
                 await CreateNewBooking(res);
 
             }, (x) => Model.HasAdminRights());            
 
-            Model.UpdateDailyScheduledIntervalCommand = new Command<object>(async () => 
+            Model.UpdateDailyScheduledIntervalCommand = new AsyncCommand<object>(async (param) => 
             {
                 var res = ShowScheduleEditor(Model.SelectedItem);
                 if (res.IsBooked)
@@ -100,7 +100,7 @@ namespace Client.Windows
                 }
             }, (x) => Model.SelectedItem != null && Model.HasAdminRights());
 
-            Model.DeleteDailyScheduledIntervalCommand = new Command<object>(async () =>
+            Model.DeleteDailyScheduledIntervalCommand = new AsyncCommand<object>(async (param) =>
             {                
                 if (Model.SelectedItem.BookingTemplateMetadata != null)
                 { 
@@ -123,7 +123,7 @@ namespace Client.Windows
                 }
                 else
                 {
-                    Model.BeginDeleteItemCommand.Execute(null);                    
+                    await Model.BeginDeleteItemCommand.ExecuteAsync(null);                    
                 }
 
                 Model.SelectedItem = null;

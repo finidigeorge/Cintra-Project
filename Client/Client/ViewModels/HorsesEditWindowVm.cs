@@ -14,7 +14,7 @@ namespace Client.ViewModels
 {
     public class HorsesEditWindowVm: BaseVm
     {
-        public ICommand AddUnavalabilityInterval { get; set; }
+        public IAsyncCommand AddUnavalabilityInterval { get; set; }
         public ICommand DeleteUnavalabilityInterval { get; set; }
 
         public HorseSchedulesRefVm HorsesScheduleModel { get; set; } = new HorseSchedulesRefVm();

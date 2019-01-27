@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Client.ViewModels
@@ -29,7 +30,11 @@ namespace Client.ViewModels
         public BookingEditCoachVm(BookingEditWindowVm parentVm, CoachDtoUi coach)
         {
             _parentVm = parentVm;
-            Model.RefreshDataCommand.Execute(null);
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await Model.RefreshDataCommand.ExecuteAsync(null);
+            });
+            
             Model.SelectedItem = coach;
             DisplayOnlyAssignedCoaches = coach?.ShowOnlyAssignedCoaches ?? true;
 
@@ -68,15 +73,15 @@ namespace Client.ViewModels
                 }
             });
 
-            DeleteCoachCommand = new AsyncCommand<object>(async (param) =>
+            DeleteCoachCommand = new Command<object>((param) =>
             {
-                await _parentVm.DeleteCoachCommand.ExecuteAsync(Id);
+                _parentVm.DeleteCoachCommand.Execute(Id);
             }, (x) => _parentVm.CanDeleteCoach);
 
-            PropertyChanged += (sender, args) => {
+            PropertyChanged += async (sender, args) => {
                 if (args.PropertyName == nameof(DisplayOnlyAssignedCoaches))
                 {
-                    GetCoachesCommand.Execute(null);
+                    await GetCoachesCommand.ExecuteAsync(null);
                 }
             };            
         }

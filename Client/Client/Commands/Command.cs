@@ -13,9 +13,9 @@ namespace Client.Commands
 {
     public class Command<T> : ICommand
     {        
-        private readonly Action _action;
+        private readonly Action<T> _action;
         protected readonly Predicate<T> _canExecute;
-        public Command(Action action, Predicate<T> canExecute = null)
+        public Command(Action<T> action, Predicate<T> canExecute = null)
         {
             _action = action;
             _canExecute = canExecute;
@@ -41,7 +41,7 @@ namespace Client.Commands
         {
             try
             {
-                _action(); 
+                _action((T)parameter); 
             }
             catch (Exception e)
             {

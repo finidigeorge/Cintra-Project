@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 
@@ -29,7 +30,12 @@ namespace Client.ViewModels
         public BookingEditHorseVm(BookingEditWindowVm parentVm, HorseDtoUi horseDto)
         {
             _parentVm = parentVm;
-            Model.RefreshDataCommand.Execute(null);
+
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {                
+                await Model.RefreshDataCommand.ExecuteAsync(null);
+            });
+            
             Model.SelectedItem = horseDto;
 
             Model.OnSelectedItemChanged += async (sender, horse) =>
@@ -65,9 +71,9 @@ namespace Client.ViewModels
                 }
             });
 
-            DeleteHorseCommand = new AsyncCommand<object>(async (param) =>
+            DeleteHorseCommand = new Command<object>((param) =>
             {
-                await _parentVm.DeleteHorseCommand.ExecuteAsync(Id);
+                _parentVm.DeleteHorseCommand.Execute(Id);
             }, (x) => _parentVm.CanDeleteHorse);
         }
     }

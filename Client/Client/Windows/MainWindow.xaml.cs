@@ -28,49 +28,39 @@ namespace Client
         {
             InitializeComponent();
 
-            Model.ShowBookingWindowCommand = new Command<object>(() =>
-            {
-                var thread = new Thread(() =>
-                {
-                    bookingWindow = new BookingWindow();
-                    bookingWindowIsRunning = true;
-                    bookingWindow.Show();
-
-                    bookingWindow.Closed += (sender2, e2) => { bookingWindow.Dispatcher.InvokeShutdown(); bookingWindowIsRunning = false; };
-
-                    System.Windows.Threading.Dispatcher.Run();
-                });
-
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
-
+            Model.ShowBookingWindowCommand = new Command<object>((param) =>
+            {                
+                bookingWindow = new BookingWindow();
+                bookingWindowIsRunning = true;
+                bookingWindow.Closed += (sender2, e2) => { bookingWindowIsRunning = false; };
+                bookingWindow.Show();                
+                           
             }, x => Model.AuthVm.IsAuthenticated && !bookingWindowIsRunning);
 
-            Model.ShowLoginDialogCommand = new Command<object>(() =>
+            Model.ShowLoginDialogCommand = new Command<object>((param) =>
             {
                 new LoginWindow() { DataContext = Model.AuthVm, Owner = this }.ShowDialog();
 
                 if (Model.AuthVm.IsAuthenticated)
-                {
-                    HorsesRefView.Model.RefreshDataCommand.Execute(null);
+                {                    
                     Model.ShowBookingWindowCommand.Execute(null);
                 }
 
             }, x => true);
 
-            Model.ShowChangePasswordDialogCommand = new Command<object>(() =>
+            Model.ShowChangePasswordDialogCommand = new Command<object>((param) =>
             {
                 new ChangePasswordWindow() { DataContext = new ChangePasswordVm(), Owner = this }.ShowDialog();
             }, x => true);
 
-            Model.ShowExitDialogCommand = new Command<object>(ExitAppCommandAction, x => true);
+            Model.ShowExitDialogCommand = new Command<object>((param) => ExitAppCommandAction(), x => true);
 
-            Model.RunClientHistoryReportCommand = new Command<object>(() =>
+            Model.RunClientHistoryReportCommand = new Command<object>((param) =>
             {
                 new ClientLessonsReportWindow() { Owner = this }.ShowDialog();
             }, x => Model.AuthVm.IsAuthenticated && Model.AuthVm.IsAdmin);
 
-            Model.RunHorsesWorkloadReportCommand = new Command<object>(() =>
+            Model.RunHorsesWorkloadReportCommand = new Command<object>((param) =>
             {
                 new HorsesWorkloadReportWindow() { Owner = this }.ShowDialog();
             }, x => Model.AuthVm.IsAuthenticated && Model.AuthVm.IsAdmin);

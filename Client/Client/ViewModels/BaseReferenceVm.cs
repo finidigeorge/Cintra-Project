@@ -177,11 +177,11 @@ namespace Client.ViewModels
             }, (x) => CanDeleteSelectedItem);
 
 
-            BeginDeleteItemCommand = new Command<object>(() =>
+            BeginDeleteItemCommand = new AsyncCommand<object>(async (param) =>
             {
                 if (CustomMessageBox.Show(Messages.DELETE_RECODRD_CONFIRM_MSG, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    DeleteSelectedItemCommand.Execute(SelectedItem);
+                    await DeleteSelectedItemCommand.ExecuteAsync(SelectedItem);
                 }
 
             }, (x) => CanDeleteSelectedItem);
@@ -260,7 +260,7 @@ namespace Client.ViewModels
         //UI Event wrappers commands
         public ICommand BeginEditItemCommand { get; set; }
         public ICommand BeginAddItemCommand { get; set; }
-        public ICommand BeginDeleteItemCommand { get; set; }
+        public IAsyncCommand BeginDeleteItemCommand { get; set; }
 
 
         public bool IsEditModeEnabled { get; protected set; } = true;

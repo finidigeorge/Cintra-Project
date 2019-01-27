@@ -24,11 +24,11 @@ namespace Client.ViewModels
 
         public ServiceEditWindowVm()
         {
-            SelectAllHorsesCommand = new Command<object>(() => { foreach (var c in Horses) c.IsSelected = true; });
-            UnselectAllHorsesCommand = new Command<object>(() => { foreach (var c in Horses) c.IsSelected = false; });
+            SelectAllHorsesCommand = new Command<object>((param) => { foreach (var c in Horses) c.IsSelected = true; });
+            UnselectAllHorsesCommand = new Command<object>((param) => { foreach (var c in Horses) c.IsSelected = false; });
 
-            SelectAllCoachesCommand = new Command<object>(() => { foreach (var c in Coaches) c.IsSelected = true; });
-            UnselectAllCoachesCommand = new Command<object>(() => { foreach (var c in Coaches) c.IsSelected = false; });
+            SelectAllCoachesCommand = new Command<object>((param) => { foreach (var c in Coaches) c.IsSelected = true; });
+            UnselectAllCoachesCommand = new Command<object>((param) => { foreach (var c in Coaches) c.IsSelected = false; });
         }    
 
         private ServiceDtoUi _serviceData;

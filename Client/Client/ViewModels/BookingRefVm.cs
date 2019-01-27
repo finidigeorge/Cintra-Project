@@ -53,8 +53,8 @@ namespace Client.ViewModels
         //UI Event wrappers commands
         public ICommand NextDayCommand { get; set; }
         public ICommand PrevDayCommand { get; set; }
-        public ICommand AddDailyScheduledIntervalCommand { get; set; }
-        public ICommand UpdateDailyScheduledIntervalCommand { get; set; }
-        public ICommand DeleteDailyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand AddDailyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand UpdateDailyScheduledIntervalCommand { get; set; }
+        public IAsyncCommand DeleteDailyScheduledIntervalCommand { get; set; }
     }
 }

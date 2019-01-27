@@ -29,7 +29,11 @@ namespace Client.Windows.Reports
         public ClientLessonsReportWindow()
         {
             InitializeComponent();
-            Model.ClientsModel.RefreshDataCommand.Execute(null);
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await Model.ClientsModel.RefreshDataCommand.ExecuteAsync(null);
+            });
+            
         }        
 
         private void Button_Click(object sender, RoutedEventArgs e)

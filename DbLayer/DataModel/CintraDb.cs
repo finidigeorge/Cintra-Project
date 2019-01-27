@@ -12,6 +12,7 @@ namespace DataModels
         partial void InitDataContext()
         {
             DataConnectionExtensions.Execute(this, "PRAGMA foreign_keys = ON");
+            DataConnectionExtensions.Execute(this, "PRAGMA journal_mode=WAL;");
             DataConnectionExtensions.Execute(this, "PRAGMA synchronous = 1");
         }
     }

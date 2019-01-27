@@ -17,15 +17,15 @@ namespace Client.ViewModels
 {
     public class ServicesRefVm : BaseReferenceVm<ServiceDto, ServiceDtoUi>
     {
-        public ICommand DisplayEditServiceCommand { get; set; }
+        public IAsyncCommand DisplayEditServiceCommand { get; set; }
 
         public ServicesRefVm()
         {
             Client = RestClientFactory.GetClient<ServiceDto>();
-            DisplayEditServiceCommand = new Command<object>(ShowServiceEditor, (x) => CanEditSelectedItem);
+            DisplayEditServiceCommand = new AsyncCommand<object>(async (param) => await ShowServiceEditor(), (x) => CanEditSelectedItem);
         }
 
-        private void ShowServiceEditor()
+        private async Task ShowServiceEditor()
         {
             var editor = new ServiceEditWindow()
             {
@@ -41,7 +41,7 @@ namespace Client.ViewModels
                 SelectedItem.Horses.Clear();
                 SelectedItem.Horses.AddRange(editor.Model.GetSelectedHorses());
 
-                UpdateSelectedItemCommand.Execute(SelectedItem);
+                await UpdateSelectedItemCommand.ExecuteAsync(SelectedItem);
             }
         }
     }

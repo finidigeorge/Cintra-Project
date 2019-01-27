@@ -38,17 +38,17 @@ namespace Client.Windows
             InitializeComponent();            
 
             #region Day Scheduler
-            Model.NextDayCommand = new Command<object>(() =>
+            Model.NextDayCommand = new Command<object>((param) =>
             {
                 DailyScheduler.NextPage();
             }, (x) => true);
 
-            Model.PrevDayCommand = new Command<object>(() =>
+            Model.PrevDayCommand = new Command<object>((param) =>
             {
                 DailyScheduler.PrevPage();
             }, (x) => true);
 
-            Model.AddDailyScheduledIntervalCommand = new Command<object>(async  () =>
+            Model.AddDailyScheduledIntervalCommand = new AsyncCommand<object>(async (param) =>
             {
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Daily);
                 if (editorResult.Item1)
@@ -64,12 +64,12 @@ namespace Client.Windows
 
             }, (x) => Model.SelectedItem != null);
 
-            Model.UpdateDailyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
+            Model.UpdateDailyScheduledIntervalCommand = new AsyncCommand<object>(async (param) => { await Task.FromResult(new object()); }, (x) => false);
 
-            Model.DeleteDailyScheduledIntervalCommand = new Command<object>(() =>
+            Model.DeleteDailyScheduledIntervalCommand = new AsyncCommand<object>(async (param) =>
             {                
                 var item = Model.ScheduleDailyDataModel.SelectedItem;
-                Model.ScheduleDailyDataModel.BeginDeleteItemCommand.Execute(item);
+                await Model.ScheduleDailyDataModel.BeginDeleteItemCommand.ExecuteAsync(item);
                 DailyScheduler.DeleteEvent(item.EventGuid);
                 Model.ScheduleDailyDataModel.SelectedItem = null;
 
@@ -79,17 +79,17 @@ namespace Client.Windows
 
             #region Week Scheduler
 
-            Model.NextWeekCommand = new Command<object>(() =>
+            Model.NextWeekCommand = new Command<object>((param) =>
             {
                 WeeklyScheduler.NextPage();
             }, (x) => true);
 
-            Model.PrevWeekCommand = new Command<object>(() =>
+            Model.PrevWeekCommand = new Command<object>((param) =>
             {
                 WeeklyScheduler.PrevPage();
             }, (x) => true);
 
-            Model.AddWeeklyScheduledIntervalCommand = new Command<object>(async () =>
+            Model.AddWeeklyScheduledIntervalCommand = new AsyncCommand<object>(async (param) =>
             {
                 var editorResult = ShowScheduleEditor(ScheduleIntervalEnum.Weekly);
                 if (editorResult.Item1)
@@ -108,12 +108,12 @@ namespace Client.Windows
 
             }, (x) => Model.SelectedItem != null);
 
-            Model.UpdateWeeklyScheduledIntervalCommand = new Command<object>(() => { }, (x) => false);
+            Model.UpdateWeeklyScheduledIntervalCommand = new AsyncCommand<object>(async (param) => { await Task.FromResult(new object()); }, (x) => false);
 
-            Model.DeleteWeeklyScheduledIntervalCommand = new Command<object>(() =>
+            Model.DeleteWeeklyScheduledIntervalCommand = new AsyncCommand<object>(async (param) =>
             {
                 var item = Model.ScheduleWeeklyDataModel.SelectedItem;
-                Model.ScheduleWeeklyDataModel.BeginDeleteItemCommand.Execute(item);
+                await Model.ScheduleWeeklyDataModel.BeginDeleteItemCommand.ExecuteAsync(item);
                 WeeklyScheduler.DeleteEvent(item.EventGuid);
                 Model.ScheduleWeeklyDataModel.SelectedItem = null;
 

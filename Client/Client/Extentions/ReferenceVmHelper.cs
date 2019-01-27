@@ -28,9 +28,9 @@ namespace Client.Extentions
                 dataGrid.RowEditEnding += DataGrid_RowEditEnding;
             }
 
-            vm.BeginEditItemCommand = new Command<object>(() =>
+            vm.BeginEditItemCommand = new Command<object>((param) =>
             {
-                dataGrid.Dispatcher.BeginInvoke(new DispatcherOperationCallback((param) =>
+                dataGrid.Dispatcher.BeginInvoke(new DispatcherOperationCallback((p) =>
                 {
                     dataGrid.IsReadOnly = false;
                     dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
@@ -39,13 +39,13 @@ namespace Client.Extentions
                 
             }, (x) => vm.CanEditSelectedItem);
 
-            vm.BeginAddItemCommand = new Command<object>(() =>
+            vm.BeginAddItemCommand = new Command<object>((param) =>
             {
                 dataGrid.IsReadOnly = false;
                 dataGrid.SelectedItem = vm.AddEmptyItem();
                 dataGrid.ScrollIntoView(dataGrid.SelectedItem);
 
-                dataGrid.Dispatcher.BeginInvoke(new DispatcherOperationCallback((param) =>
+                dataGrid.Dispatcher.BeginInvoke(new DispatcherOperationCallback((p) =>
                 {                                        
                     dataGrid.EditItemEventHandler(vm.SelectedItem, null, columnIndex);
                     return null;

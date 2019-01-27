@@ -22,7 +22,7 @@ namespace Client.Controls
         {
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);   
-            Model.ShowAvalabilityEditorCommand = new Command<object>(() => ShowScheduleEditor(), (x) => true);
+            Model.ShowAvalabilityEditorCommand = new Command<object>((param) => ShowScheduleEditor(), (x) => true);
         }
 
         private void ShowScheduleEditor()

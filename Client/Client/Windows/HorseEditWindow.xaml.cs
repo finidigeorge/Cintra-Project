@@ -31,11 +31,11 @@ namespace Client.Windows
         {
             InitializeComponent();            
             
-            Model.AddUnavalabilityInterval = new Command<object>(ShowAddIntervalDialog);
-            Model.DeleteUnavalabilityInterval = new Command<object>(DeleteInterval);
+            Model.AddUnavalabilityInterval = new AsyncCommand<object>(async (param) => await ShowAddIntervalDialog());
+            Model.DeleteUnavalabilityInterval = new AsyncCommand<object>(async (param) => await DeleteInterval());
         }
 
-        private void ShowAddIntervalDialog()
+        private async Task ShowAddIntervalDialog()
         {
             var editor = new HorseEditScheduleWindow()
             {
@@ -62,16 +62,16 @@ namespace Client.Windows
                     data.DayOfWeek = null;                    
                 }
 
-                Model.HorsesScheduleModel.AddItemCommand.Execute(data);
+                await Model.HorsesScheduleModel.AddItemCommand.ExecuteAsync(data);
             }
         }
 
-        private void DeleteInterval()
+        private async Task DeleteInterval()
         {
             MessageBoxResult result = CustomMessageBox.Show(Messages.DELETE_RECODRD_CONFIRM_MSG, "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                Model.HorsesScheduleModel.DeleteSelectedItemCommand.Execute(null);
+                await Model.HorsesScheduleModel.DeleteSelectedItemCommand.ExecuteAsync(null);
             }
         }
 

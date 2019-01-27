@@ -16,10 +16,7 @@ namespace Client.ViewModels.Reports
         public ICommand RunReportCommand { get; set; } 
         public BaseReportVm()
         {
-            RunReportCommand = new Command<object>(() =>
-            {
-                RunReport();
-            }, x => true);
+            RunReportCommand = new Command<object>((param) => RunReport(), x => true);
 
         }
 

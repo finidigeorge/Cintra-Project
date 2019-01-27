@@ -16,7 +16,7 @@ namespace Client.Controls
         {
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);
-            Model.DisplayEditItemScheduleCommand = new Command<object>(ShowScheduleEditor, (x) => Model.CanEditSelectedItem);
+            Model.DisplayEditItemScheduleCommand = new Command<object>((param) => ShowScheduleEditor(), (x) => Model.CanEditSelectedItem);
         }
 
         private void ShowScheduleEditor()

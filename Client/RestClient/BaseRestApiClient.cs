@@ -35,7 +35,7 @@ namespace RestClient
 
             var request = new RestRequest(path, method) { RequestFormat = DataFormat.Json, JsonSerializer = _serializer };
             if (body != null)
-                request.AddBody(body);
+                request.AddJsonBody(body);
 
             var response = await client.ExecuteTaskAsync<T1>(request);
 
