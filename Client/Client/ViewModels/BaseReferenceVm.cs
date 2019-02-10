@@ -114,7 +114,7 @@ namespace Client.ViewModels
 
             RefreshDataCommand = new AsyncCommand<object>(async (x) =>
             {
-                await GetItemsCommand.ExecuteAsync(x);
+                await GetItemsCommand.ExecuteAsync(x);                
             }, (x) => HasValidUser());
 
             AddItemCommand = new AsyncCommand<T1>(async (param) =>

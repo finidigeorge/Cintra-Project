@@ -42,7 +42,8 @@ namespace Client
                 new LoginWindow() { DataContext = Model.AuthVm, Owner = this }.ShowDialog();
 
                 if (Model.AuthVm.IsAuthenticated)
-                {                    
+                {
+                    HorsesRefView.Model.RefreshDataCommand.Execute(null);
                     Model.ShowBookingWindowCommand.Execute(null);
                 }
 

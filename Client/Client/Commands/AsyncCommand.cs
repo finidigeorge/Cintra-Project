@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,12 +12,6 @@ namespace Client.Commands
 {
     public class AsyncCommand<T> : IAsyncCommand
     {
-        private static readonly TaskFactory _myTaskFactory = new
-          TaskFactory(CancellationToken.None,
-                      TaskCreationOptions.None,
-                      TaskContinuationOptions.None,
-                      TaskScheduler.Default);
-
         protected readonly Predicate<T> _canExecute;
         protected Func<T, Task> _asyncExecute;
 
@@ -42,9 +37,10 @@ namespace Client.Commands
             return _canExecute((T)parameter);
         }
 
-        public void Execute(object parameter)
-        {
-            AsyncRunner(parameter).Wait();            
+        //fire and forget run
+        public async void Execute(object parameter)
+        {            
+            await AsyncRunner(parameter);            
         }
 
         public async Task ExecuteAsync(object parameter)
@@ -60,8 +56,17 @@ namespace Client.Commands
             } catch(Exception e)            
             {
                 Log.Error(e, $"Messsage: {e.Message} Source: {e.Source}, Trace: {e.StackTrace}");
-                CustomMessageBox.Show($"{Messages.COMMAND_ERROR_MSG} {e.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                
+                var thread = new Thread(() =>
+                {
+                    CustomMessageBox.Show($"{Messages.COMMAND_ERROR_MSG} {e.Message}", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    System.Windows.Threading.Dispatcher.Run();
+                });
+
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();                
             }        
         }
     }

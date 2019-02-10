@@ -15,7 +15,7 @@ namespace Tests.Integration
 
         [SetUp]
         public void IntegrationTestBaseSetUp()
-        {
+        {            
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.test.json")
@@ -32,7 +32,12 @@ namespace Tests.Integration
             LinqToDB.Common.Configuration.Linq.AllowMultipleQuery = true;
             LinqToDB.Common.Configuration.Linq.IgnoreEmptyUpdate = true;
 
-            ServiceProvider = services.BuildServiceProvider();
+            ServiceProvider = services.BuildServiceProvider();            
+        }
+
+        protected Hors GetHorse()
+        {
+            return new Hors() { Nickname = "TestHorse", MaxWorkingHours = 4 };
         }
 
     }
