@@ -177,6 +177,9 @@
     <Compile Include="ViewModels\BookingEditWindowVm.cs" />
     <Compile Include="ViewModels\BookingRefVm.cs" />
     <Compile Include="ViewModels\ClientsRefVm.cs" />
+    <Compile Include="ViewModels\Filter\ClientSearchFilter.cs" />
+    <Compile Include="ViewModels\Filter\HorseSearchFilter.cs" />
+    <Compile Include="ViewModels\Filter\IFilterDefinition.cs" />
     <Compile Include="ViewModels\HorseSchedulesRefVm.cs" />
     <Compile Include="ViewModels\HorsesEditWindowVm.cs" />
     <Compile Include="ViewModels\Interfaces\IReportVm.cs" />

@@ -35,6 +35,11 @@ namespace Client.Controls
             editor.Model.HorseData = Model.SelectedItem;            
             editor.ShowDialog();
         }
+
+        private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = string.Empty;
+        }
     }
 
 

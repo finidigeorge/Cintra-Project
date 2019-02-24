@@ -1,4 +1,7 @@
-﻿using Common.DtoMapping;
+﻿using Client.Commands;
+using Client.ViewModels.Filter;
+using Common.DtoMapping;
+using PropertyChanged;
 using RestClient;
 using Shared.Dto;
 using System.Windows.Input;
@@ -11,8 +14,19 @@ namespace Client.ViewModels
 
         public HorsesRefVm()
         {
-            Client = new HorsesClient();            
-        }        
+            Client = new HorsesClient();
+            Filter = new HorseSearchFilter();
+        }
+                
+        public string FilterExpression
+        {
+            get => Filter.SearchExpression;
+            set
+            {
+                Filter.SearchExpression = value;
+                ItemsCollectionView.Refresh();
+            }
+        }
     }
 
 }

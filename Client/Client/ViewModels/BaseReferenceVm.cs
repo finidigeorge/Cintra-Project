@@ -14,6 +14,7 @@ using System.Windows.Input;
 using Client.Annotations;
 using Client.Commands;
 using Client.Security;
+using Client.ViewModels.Filter;
 using Client.ViewModels.Interfaces;
 using Common;
 using Common.DtoMapping;
@@ -40,7 +41,7 @@ namespace Client.ViewModels
         public event EventHandler<T1> OnSelectedItemChanged;
         public T1 SelectedItem { get; set; }
        
-        private ObservableCollection<T1> _items;
+        private ObservableCollection<T1> _items;       
 
         //manual implementation of NotifyPropertyChanged
         [DoNotNotify]
@@ -51,7 +52,6 @@ namespace Client.ViewModels
             {
                 Set(ref _items, value, nameof(Items));
                 _items.CollectionChanged += OnCollectionChanged;
-
                 _itemsCollectionView = CollectionViewSource.GetDefaultView(_items);                
             }
         }
@@ -63,7 +63,7 @@ namespace Client.ViewModels
             return await Client.GetAll();
         }
 
-        protected bool HasValidUser()
+        public bool HasValidUser()
         {
             var principal = Thread.CurrentPrincipal as UserPrincipal;
             if (principal != null && principal.Identity != null && principal.Identity.IsAuthenticated)
@@ -81,6 +81,7 @@ namespace Client.ViewModels
             return false;
         }
 
+        #region Constructor
         protected BaseReferenceVm()
         {            
             GetItemsCommand = new AsyncCommand<object>(async (x) =>
@@ -98,7 +99,7 @@ namespace Client.ViewModels
                     else
                         Items.Clear();
 
-                    foreach (var item in (await GetAll()).ToList<T, T1>())
+                    foreach(var item in (await GetAll()).ToList<T, T1>())
                         Items.Add(item);
 
                     if (selectedItemId != 0)
@@ -121,10 +122,9 @@ namespace Client.ViewModels
             {
                 BeforeAddItemHandler(param);
 
+                await _lockObject.WaitAsync();
                 try
                 {
-                    await _lockObject.WaitAsync();
-
                     var id = await Client.Create(ObjectMapper.Map<T>(param));
                     var item = ObjectMapper.Map<T1>(await Client.GetById(id));
 
@@ -162,9 +162,9 @@ namespace Client.ViewModels
 
             DeleteSelectedItemCommand = new AsyncCommand<T1>(async (param) =>
             {
+                await _lockObject.WaitAsync();
                 try
-                {
-                    await _lockObject.WaitAsync();
+                {                    
                     await DeleteItemCommand.ExecuteAsync(SelectedItem);
                     if (SelectedItem != null)
                         Items.Remove(Items.First(i => i.Id == SelectedItem.Id));
@@ -193,9 +193,16 @@ namespace Client.ViewModels
                 if (args.PropertyName == nameof(SelectedItem))
                 {
                     OnSelectedItemChanged?.Invoke(o, SelectedItem);
-                }
+                }                
             };
+
+            ClearSearchCommand = new AsyncCommand<object>(async (param) => 
+            {
+                Filter?.Reset();                
+                await RefreshDataCommand.ExecuteAsync(param);
+            }, (x) => true);
         }
+        #endregion
 
         protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -224,11 +231,11 @@ namespace Client.ViewModels
             }
 
             //delete from collection handler
-            if (action == NotifyCollectionChangedAction.Remove && e.OldItems?.Count > 0)
+            /*if (action == NotifyCollectionChangedAction.Remove && e.OldItems?.Count > 0)
             {                
-                /*ItemsCollectionView.Refresh();
-                OnPropertyChanged(nameof(ItemsCollectionView));*/
-            }            
+                ItemsCollectionView.Refresh();
+                OnPropertyChanged(nameof(ItemsCollectionView));
+            }  */          
         }
 
         public T1 AddEmptyItem()
@@ -246,6 +253,14 @@ namespace Client.ViewModels
         protected virtual void BeforeEditItemHandler(T1 item)
         {
         }
+
+        //not implemented yet
+        public IList<T1> SelectedItems { get; protected set; }
+
+        public bool IsSelectionModeEnabled { get; protected set; }
+        public bool IsMultiSelectionModeEnabled { get; protected set; }
+
+        #region Refernce Command defininions
 
         //predefined back end related Commands 
         public IAsyncCommand RefreshDataCommand { get; set; }
@@ -269,12 +284,22 @@ namespace Client.ViewModels
         public bool CanEditSelectedItem => IsEditModeEnabled && SelectedItem != null && HasValidUser();
         public bool CanDeleteSelectedItem => IsEditModeEnabled && SelectedItem != null && HasValidUser();
 
-        //not implemented yet
-        public IList<T1> SelectedItems { get; protected set; }
+        #endregion
 
-       
-        public bool IsSelectionModeEnabled { get; protected set; }
-        public bool IsMultiSelectionModeEnabled { get; protected set; }
-                        
+        #region Filter
+
+        private IFilterDefinition<T1> _filter;
+        public IFilterDefinition<T1> Filter {
+            get => _filter;
+            set
+            {
+                _filter = value;
+                _itemsCollectionView.Filter = _filter != null ? new Predicate<object>(x => _filter.IsSatisfiedBy((T1)x)) : null;
+            }
+        }
+        public IAsyncCommand ClearSearchCommand { get; set; }
+
+        #endregion
+
     }
 }

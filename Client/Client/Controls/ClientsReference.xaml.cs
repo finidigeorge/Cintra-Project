@@ -29,5 +29,10 @@ namespace Client.Controls
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 1);
         }
+
+        private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = string.Empty;
+        }
     }
 }

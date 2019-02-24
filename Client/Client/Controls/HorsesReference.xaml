@@ -15,6 +15,7 @@
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
@@ -25,9 +26,19 @@
                 RefreshCommand="{Binding Path=RefreshDataCommand}"
             />
         </ToolBarPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="90"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Search for horses:"/>
+            <TextBox Name="SearchTextBox" Grid.Column="1" HorizontalAlignment="Stretch" Height="23"  TextWrapping="Wrap" Text="{Binding FilterExpression, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            <Button Grid.Column="2" Content="Clear search" Height="23" Command="{Binding Path=ClearSearchCommand}" Click="ClearSearchButton_Click"/>
+        </Grid>
         <DataGrid Name="ItemsDataGrid" 
-                  ItemsSource="{Binding Path=Items}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
-                  Grid.Row="1" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" 
+                  ItemsSource="{Binding Path=ItemsCollectionView}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
+                  Grid.Row="2" AutoGenerateColumns="False" SelectionMode="Single" MinRowHeight="16" 
                    
                   CanUserAddRows="False" CanUserDeleteRows="True"                
                   >
@@ -55,7 +66,7 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
-            
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Path = Id}" IsReadOnly="True" Width="32" />
                 <DataGridTemplateColumn IsReadOnly="True" Width="32">
@@ -74,5 +85,6 @@
                 <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
+        
     </Grid>
 </UserControl>

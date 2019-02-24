@@ -51,7 +51,7 @@ namespace Client.ViewModels
                         HorsesScheduleModel.SelectedItem = HorsesScheduleModel.Items.FirstOrDefault(i => i.Id == selectedItemId);
                     }
                     ;
-                }, x => true
+                }, (x) => HorsesScheduleModel.HasValidUser()
             );
         }
 

@@ -1,4 +1,5 @@
-﻿using Common.DtoMapping;
+﻿using Client.ViewModels.Filter;
+using Common.DtoMapping;
 using RestClient;
 using Shared.Dto;
 using System;
@@ -14,6 +15,17 @@ namespace Client.ViewModels
         public ClientsRefVm()
         {
             Client = RestClientFactory.GetClient<ClientDto>();
+            Filter = new ClientSearchFilter();
+        }
+
+        public string FilterExpression
+        {
+            get => Filter.SearchExpression;
+            set
+            {
+                Filter.SearchExpression = value;
+                ItemsCollectionView.Refresh();
+            }
         }
     }
 }
