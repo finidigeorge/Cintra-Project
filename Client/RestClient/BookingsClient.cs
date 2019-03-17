@@ -60,6 +60,11 @@ namespace RestClient
             return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorsesWorkedLessThanAllowed)}", RestSharp.Method.POST, entity);
         }
 
+        public async Task<CheckResultDto> HasHorseAssignedToAtLeastOneOfCoaches(BookingDto entity)
+        {
+            return await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.HasHorseAssignedToAtLeastOneOfCoaches)}", RestSharp.Method.POST, entity);
+        }
+
         public async Task InsertAll(List<BookingDto> entityList)
         {
             await SendRequest<CheckResultDto>($"api/{ControllerName}/{nameof(IBookingController.InsertAll)}", RestSharp.Method.POST, entityList);

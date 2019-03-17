@@ -31,6 +31,15 @@ namespace Repositories
                         await db.InsertWithIdentityAsync(c);
                 }
 
+                //update links
+                await db.GetTable<HorseToCoachesLink>()
+                        .Where(x => x.HorseId == entity.Id)
+                        .DeleteAsync();
+
+                foreach (var c in entity.HorseToCoachesLinks)
+                    await db.InsertWithIdentityAsync(c);
+
+
                 return id;
             },
             dbContext
@@ -45,6 +54,8 @@ namespace Repositories
                     db.GetTable<Hors>()
                         .LoadWith(x => x.HorsesScheduleData)
                         .LoadWith(x => x.ServiceToHorsesLinks)
+                        .LoadWith(x => x.HorseToCoachesLinks)
+                        .LoadWith(x => x.HorseToCoachesLinks.First().Coach)
                         .Where(where).Where(x => x.IsDeleted == false)
                         .OrderBy(x => x.Nickname)
                         .ToListAsync();                

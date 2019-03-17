@@ -22,18 +22,22 @@ namespace Client.Controls
         {
             InitializeComponent();
             ReferenceVmHelper.SetupUiCommands(Model, ItemsDataGrid, columnIndex: 2);   
-            Model.ShowAvalabilityEditorCommand = new Command<object>((param) => ShowScheduleEditor(), (x) => true);
+            Model.ShowAvalabilityEditorCommand = new AsyncCommand<object>(async(param) => await ShowScheduleEditor(), (x) => true);
         }
 
-        private void ShowScheduleEditor()
+        private async Task ShowScheduleEditor()
         {
             var editor = new HorseEditWindow()
             {
                 Owner = Application.Current.MainWindow,
             };
 
-            editor.Model.HorseData = Model.SelectedItem;            
+            editor.Model.HorseData = Model.SelectedItem;
             editor.ShowDialog();
+            Model.SelectedItem.AllowedCoaches.Clear();
+            Model.SelectedItem.AllowedCoaches.AddRange(editor.Model.GetSelectedCoached());                
+
+            await Model.UpdateSelectedItemCommand.ExecuteAsync(Model.SelectedItem);            
         }
 
         private void ClearSearchButton_Click(object sender, RoutedEventArgs e)

@@ -8,9 +8,15 @@
         xmlns:controls="clr-namespace:Client.Controls"
         mc:Ignorable="d"
         FontSize="14"
-        Title="Horse Edit Window" MinHeight="480" Width="740" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="Horse Edit Window" MinHeight="680" Height="680" Width="740" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" >
     <Window.Resources>
         <viewModels:HorsesEditWindowVm x:Key="ViewModel" />
+        <DataTemplate x:Key="ListBoxItemTemplate" >
+            <WrapPanel>
+                <CheckBox Focusable="False" IsChecked="{Binding IsSelected, Mode=TwoWay}" VerticalAlignment="Center" />
+                <ContentPresenter Content="{Binding Name, Mode=OneTime}"  Margin="2,0" />
+            </WrapPanel>
+        </DataTemplate>
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" >
         <Label Content="Horse: " HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Width="63"/>
@@ -31,7 +37,7 @@
                 <Image Source="/Resources/Images/Delete.ico" Width="21" />
             </StackPanel>
         </Button>
-        <ListView x:Name="SchedluleList" HorizontalAlignment="Left" Margin="10,82,0,66" ItemsSource="{Binding HorsesScheduleModel.ItemsCollectionView}" SelectedItem="{Binding HorsesScheduleModel.SelectedItem, Mode=TwoWay}" Width="714">
+        <ListView x:Name="SchedluleList" HorizontalAlignment="Left" Margin="10,80,0,320" ItemsSource="{Binding HorsesScheduleModel.ItemsCollectionView}" SelectedItem="{Binding HorsesScheduleModel.SelectedItem, Mode=TwoWay}" Width="714">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="BorderBrush" Value="LightGray" />
@@ -67,7 +73,13 @@
         <Button Content="Close"                
             Margin="0,0,10,10" Width="120" IsDefault="True" HorizontalAlignment="Right" IsEnabled="{Binding HorseData.IsValid}" Click="Button_Click" RenderTransformOrigin="0.506,1.385" Height="36" VerticalAlignment="Bottom"/>
         <CheckBox Visibility="Hidden" Content="Show full history" HorizontalAlignment="Left" Margin="429,54,0,0" VerticalAlignment="Top" Width="125"/>
-
-
+        <Label Content="Assigned Coaches:" HorizontalAlignment="Left" Margin="10,336,0,0" VerticalAlignment="Top" Width="208"/>
+        <CheckBox Name="AllCoachesAvailableCheckBox" Content="All coaches assigned" HorizontalContentAlignment="Right" HorizontalAlignment="Right" 
+                  Margin="0,342,10.286,0" VerticalAlignment="Top" Width="147"
+                  IsChecked="{Binding IsAllCoachesAssigned, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <ListBox ItemsSource="{Binding Coaches, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" 
+                 HorizontalAlignment="Left" Height="223" Margin="10,370,0,0" VerticalAlignment="Top" Width="714"
+                 IsEnabled="{Binding IsAssignedCoachesListEnabled, UpdateSourceTrigger=PropertyChanged}"
+                 />
     </Grid>
 </Window>

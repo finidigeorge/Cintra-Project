@@ -14,5 +14,7 @@ namespace Shared.Dto
         public virtual string NickName { get; set; }        
 
         public virtual List<HorseScheduleDataDto> HorseScheduleData { get; set; }
-}
+
+        public virtual List<CoachDto> AllowedCoaches { get; set; } = new List<CoachDto>();
+    }
 }

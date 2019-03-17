@@ -309,6 +309,7 @@ namespace Client.ViewModels
                 HorseValidationHoursPerDayWarning = null;
                 HorseValidationHoursInRowWarning = null;
 
+                //Errors
                 if (HasDuplicates(dto.Horses))
                     horseValidationError = "Booking has duplicate horses";
 
@@ -320,13 +321,19 @@ namespace Client.ViewModels
                 if (!res.Result)
                     horseValidationError = horseValidationError.Append(res.ErrorMessage);
 
-                res = await bookingsClient.HasHorsesRequiredBreak(dto);
+                res = await bookingsClient.HasHorseAssignedToAtLeastOneOfCoaches(dto);
+                if (!res.Result)
+                    horseValidationError = horseValidationError.Append(res.ErrorMessage);
+
+                //Warnings
                 if (!res.Result)
                     HorseValidationHoursInRowWarning = res.ErrorMessage;
 
                 res = await bookingsClient.HasHorsesWorkedLessThanAllowed(dto);
                 if (!res.Result)
                     HorseValidationHoursPerDayWarning = res.ErrorMessage;
+
+                
 
             }
 

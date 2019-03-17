@@ -18,6 +18,7 @@ namespace Repositories.Interfaces
         Task<CheckResultDto> HasHorseRequiredBreak(Hors horse, Booking bookingData, DataConnection dbContext = null);
         Task<CheckResultDto> HasHorseWorkedLessThanAllowed(Hors horse, Booking bookingData, DataConnection dbContext = null);
         Task<CheckResultDto> HasHorseScheduleFitBooking(Hors horse, Booking bookingData, DataConnection dbContext = null);
+        Task<CheckResultDto> HasHorseAssignedToAtLeastOneOfCoaches(Hors horse, Booking bookingData, DataConnection dbContext = null);
 
         Task<String> RunValidations(Booking booking, bool isErrors = true, DataConnection dbContext = null);        
     }

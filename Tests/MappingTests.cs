@@ -74,6 +74,10 @@ namespace Tests
                 Id = 0, NickName = "BB",
                 HorseScheduleData = new List<HorseScheduleDataDto>() {
                     new HorseScheduleDataDto() { Id = 1, UnavailabilityType = Shared.HorsesUnavailabilityEnum.DayOff}
+                },
+                AllowedCoaches = new List<CoachDto>()
+                {
+                    new CoachDto() { Id = 1, Name = "Coach", }
                 }
             };
             var result = ObjectMapper.Map<HorsesScheduleData>(dto);

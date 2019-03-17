@@ -22,6 +22,8 @@ namespace Shared.Interfaces
 
         Task<CheckResultDto> HasHorsesScheduleFitBooking(BookingDto entity);
 
+        Task<CheckResultDto> HasHorseAssignedToAtLeastOneOfCoaches(BookingDto entity);
+
         Task CancelAllBookings(long metadataId, long FromDate);
 
         Task InsertAll(List<BookingDto> entityList);

@@ -17,6 +17,7 @@
             <RowDefinition Height="32"/>
             <RowDefinition Height="32"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <ToolBarPanel DockPanel.Dock="Top" Grid.Row="0">
             <controls:ReferencesToolbar 
@@ -85,6 +86,13 @@
                 <DataGridTextColumn Header="NickName" Binding="{Binding Path = NickName, UpdateSourceTrigger=PropertyChanged}"  Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        
+        <Grid HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Assigned Coaches:" Grid.Column="0"/>
+            <Label Content="{Binding SelectedItem.SelectedCoaches}" Grid.Column="1"/>
+        </Grid>
     </Grid>
 </UserControl>

@@ -42,7 +42,10 @@ namespace Repositories
 
                 if (isNew && entity.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
                 {
-                    var serviceToCoachesLinks = db.GetTable<CoachRolesToServicesLink>().Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember).Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId }).ToList();
+                    var serviceToCoachesLinks = db.GetTable<CoachRolesToServicesLink>()
+                        .Where(x => x.CoachRoleId == (int)Shared.CoachRolesEnum.StaffMember)
+                        .Select(x => new ServiceToCoachesLink() { CoachId = coachId, ServiceId = x.ServiceId }).ToList();
+
                     foreach (var c in serviceToCoachesLinks)
                         await db.InsertWithIdentityAsync(c);
                 }
@@ -70,21 +73,21 @@ namespace Repositories
         {
             return await RunWithinTransaction(async (db) =>
             {
-            return (await
-                db.GetTable<Coach>()
-                .LoadWith(x => x.ServiceToCoachesLinks)
-                .Where(where)
-                .Where(x => x.IsDeleted == false)
-                .OrderBy(x => x.Name)
-                .ToListAsync()
-                )
-                .Select(x =>
-                {
-                    var res = x;
-                    res.Schedules = LoadSchedules(x.Id, db).ToList();
-                    return res;
-                })
-                .ToList();
+                return (await
+                    db.GetTable<Coach>()
+                    .LoadWith(x => x.ServiceToCoachesLinks)                    
+                    .Where(where)
+                    .Where(x => x.IsDeleted == false)
+                    .OrderBy(x => x.Name)
+                    .ToListAsync()
+                    )
+                    .Select(x =>
+                    {
+                        var res = x;
+                        res.Schedules = LoadSchedules(x.Id, db).ToList();
+                        return res;
+                    })
+                    .ToList();
                 
             }, dbContext);
         }

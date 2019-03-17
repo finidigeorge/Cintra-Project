@@ -9,14 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Client.ViewModels
-{
-    public class SelectableItem : BaseVm
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
+{   
     public class ServiceEditWindowVm : BaseVm
     {
         public ObservableCollection<SelectableItem> Coaches { get; set; } = new ObservableCollection<SelectableItem>();

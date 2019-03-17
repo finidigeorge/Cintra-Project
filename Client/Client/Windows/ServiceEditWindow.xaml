@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         FontSize="14"
-        Title="ServiceEditWindow" MinHeight="420" Height="420" MinWidth="490" Width="490" ResizeMode="NoResize">
+        Title="Assign Coaches and Horses for the selected Service " MinHeight="480" Height="480" MinWidth="640" Width="640" ResizeMode="NoResize">
     <Window.Resources>
         <viewModels:ServiceEditWindowVm x:Key="ViewModel" />
         <DataTemplate x:Key="ListBoxItemTemplate" >
@@ -20,28 +20,28 @@
         </DataTemplate>
     </Window.Resources>
     <Grid DataContext="{Binding Source={StaticResource ViewModel}}" Margin="0,0,0,-2">
-        <Label Content="Selected service:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <Label Content="{Binding ServiceData.Name}" HorizontalAlignment="Left" Margin="112,10,0,0" VerticalAlignment="Top"/>
-        <ListBox ItemsSource="{Binding Coaches, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" HorizontalAlignment="Left" Height="240" Margin="10,62,0,0" VerticalAlignment="Top" Width="210"/>
+        <Label Content="Selected service:" HorizontalAlignment="Left" Margin="11,5,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding ServiceData.Name}" HorizontalAlignment="Left" Margin="132,5,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.653,0.5" Height="26" Width="407"/>
+        <ListBox ItemsSource="{Binding Coaches, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" HorizontalAlignment="Left" Height="331" Margin="10,62,0,0" VerticalAlignment="Top" Width="289"/>
         <Label Content="Assigned Coaches" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>
-        <Label Content="Assigned Horses" HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top"/>
-        <ListBox ItemsSource="{Binding Horses, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" HorizontalAlignment="Left" Height="240" Margin="260,62,0,0" VerticalAlignment="Top" Width="211"/>
-        <Button Content="OK" HorizontalAlignment="Left" Margin="217,345,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsDefault="True" RenderTransformOrigin="0.456,1.77" Click="Button_Click"/>
-        <Button Content="Cancel" HorizontalAlignment="Left" Margin="350,345,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsCancel="True" RenderTransformOrigin="1.848,0.183"/>
-        <Button Name="CoachesSelectAll" HorizontalAlignment="Left" Margin="167,38,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Select All"
+        <Label Content="Assigned Horses" HorizontalAlignment="Left" Margin="342,33,0,0" VerticalAlignment="Top"/>
+        <ListBox ItemsSource="{Binding Horses, Mode=TwoWay}" ItemTemplate="{StaticResource ListBoxItemTemplate}" HorizontalAlignment="Left" Height="333" Margin="342,60,0,0" VerticalAlignment="Top" Width="279"/>
+        <Button Content="OK" HorizontalAlignment="Left" Margin="368,407,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsDefault="True" RenderTransformOrigin="0.456,1.77" Click="Button_Click"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="501,407,0,0" VerticalAlignment="Top" Width="120" Height ="36" IsCancel="True" RenderTransformOrigin="1.848,0.183"/>
+        <Button Name="CoachesSelectAll" HorizontalAlignment="Left" Margin="246,36,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Select All"
                 Command="{Binding SelectAllCoachesCommand}">
             <Image Source="/Resources/Images/SelectAll.png" />
         </Button>
-        <Button Name="CoachesUnSelectAll" HorizontalAlignment="Left" Margin="196,38,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Unselect All"
+        <Button Name="CoachesUnSelectAll" HorizontalAlignment="Left" Margin="275,36,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Unselect All"
                 Command="{Binding UnselectAllCoachesCommand}">
             <Image Source="/Resources/Images/Delete.ico" />
         </Button>
 
-        <Button Name="HorsesSelectAll" HorizontalAlignment="Left" Margin="417,38,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Select All"
+        <Button Name="HorsesSelectAll" HorizontalAlignment="Left" Margin="568,36,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Select All"
                 Command="{Binding SelectAllHorsesCommand}">
             <Image Source="/Resources/Images/SelectAll.png" RenderTransformOrigin="1.3,0.4" />
         </Button>
-        <Button Name="HorsesUnSelectAll" HorizontalAlignment="Left" Margin="446,38,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Unselect All"
+        <Button Name="HorsesUnSelectAll" HorizontalAlignment="Left" Margin="597,36,0,0" VerticalAlignment="Top" Width="24" Height ="24" ToolTip="Unselect All"
                 Command="{Binding UnselectAllHorsesCommand}">
             <Image Source="/Resources/Images/Delete.ico" />
         </Button>

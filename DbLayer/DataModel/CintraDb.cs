@@ -37,4 +37,5 @@ namespace DataModels
 
     public partial class ServiceToCoachesLink : IUniqueDto { }
     public partial class ServiceToHorsesLink : IUniqueDto { }
+    public partial class HorseToCoachesLink : IUniqueDto { }
 }

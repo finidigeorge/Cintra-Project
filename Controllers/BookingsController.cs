@@ -326,6 +326,32 @@ namespace Controllers
             }
         }
 
+        [HttpPost("/api/[controller]/HasHorseAssignedToAtLeastOneOfCoaches")]
+        public async Task<CheckResultDto> HasHorseAssignedToAtLeastOneOfCoaches([FromBody] BookingDto entity)
+        {
+            try
+            {
+                var booking = ObjectMapper.Map<Booking>(entity);
+                var result = new CheckResultDto();
+
+                foreach (var link in booking.BookingsToHorsesLinks)
+                {
+                    var check = await repository.HasHorseAssignedToAtLeastOneOfCoaches(link.Hor, booking);
+                    if (!check.Result)
+                    {
+                        result.ErrorMessage += check.ErrorMessage;
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message, entity);
+                throw;
+            }
+        }
+
         [HttpPost("/api/[controller]/HasCoachesScheduleFitBooking")]
         public async Task<CheckResultDto> HasCoachesScheduleFitBooking([FromBody] BookingDto entity)
         {

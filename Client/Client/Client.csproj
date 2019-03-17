@@ -189,6 +189,7 @@
     <Compile Include="ViewModels\Reports\HorsesWorkloadReportVm.cs" />
     <Compile Include="ViewModels\SchedulesDataRefVm.cs" />
     <Compile Include="ViewModels\SchedulesRefVm.cs" />
+    <Compile Include="ViewModels\SelectableItem.cs" />
     <Compile Include="ViewModels\ServiceEditWindowVm.cs" />
     <Compile Include="ViewModels\TimePickerVm.cs" />
     <Compile Include="Windows\BookingDeleteWindow.xaml.cs">

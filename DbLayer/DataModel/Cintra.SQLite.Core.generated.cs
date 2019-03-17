@@ -38,6 +38,7 @@ namespace DataModels
 		public ITable<Hors>                          Horses                        { get { return this.GetTable<Hors>(); } }
 		public ITable<HorsesScheduleData>            HorsesScheduleData            { get { return this.GetTable<HorsesScheduleData>(); } }
 		public ITable<HorsesUnavailabilityTypes>     HorsesUnavailabilityTypes     { get { return this.GetTable<HorsesUnavailabilityTypes>(); } }
+		public ITable<HorseToCoachesLink>            HorseToCoachesLink            { get { return this.GetTable<HorseToCoachesLink>(); } }
 		public ITable<PaymentTypes>                  PaymentTypes                  { get { return this.GetTable<PaymentTypes>(); } }
 		public ITable<Schedule>                      Schedules                     { get { return this.GetTable<Schedule>(); } }
 		public ITable<SchedulesData>                 SchedulesData                 { get { return this.GetTable<SchedulesData>(); } }
@@ -431,6 +432,12 @@ namespace DataModels
 		public CoachRoles CoachRole { get; set; }
 
 		/// <summary>
+		/// FK_horse_to_coaches_link_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<HorseToCoachesLink> HorseToCoachesLinks { get; set; }
+
+		/// <summary>
 		/// FK_schedules_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="CoachId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
@@ -529,6 +536,12 @@ namespace DataModels
 		public IEnumerable<HorsesScheduleData> HorsesScheduleData { get; set; }
 
 		/// <summary>
+		/// FK_horse_to_coaches_link_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<HorseToCoachesLink> HorseToCoachesLinks { get; set; }
+
+		/// <summary>
 		/// FK_service_to_horses_link_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="HorseId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
@@ -579,6 +592,30 @@ namespace DataModels
 		/// </summary>
 		[Association(ThisKey="Id", OtherKey="UnavailabilityTypeId", CanBeNull=true, Relationship=Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<HorsesScheduleData> HorsesScheduleData { get; set; }
+
+		#endregion
+	}
+
+	[Table("horse_to_coaches_link")]
+	public partial class HorseToCoachesLink
+	{
+		[Column("id"),       PrimaryKey, Identity] public long Id      { get; set; } // integer
+		[Column("horse_id"), NotNull             ] public long HorseId { get; set; } // integer
+		[Column("coach_id"), NotNull             ] public long CoachId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_horse_to_coaches_link_1_0
+		/// </summary>
+		[Association(ThisKey="CoachId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_horse_to_coaches_link_1_0", BackReferenceName="HorseToCoachesLinks")]
+		public Coach Coach { get; set; }
+
+		/// <summary>
+		/// FK_horse_to_coaches_link_0_0
+		/// </summary>
+		[Association(ThisKey="HorseId", OtherKey="Id", CanBeNull=false, Relationship=Relationship.ManyToOne, KeyName="FK_horse_to_coaches_link_0_0", BackReferenceName="HorseToCoachesLinks")]
+		public Hors Hor { get; set; }
 
 		#endregion
 	}
@@ -929,6 +966,12 @@ namespace DataModels
 		}
 
 		public static HorsesUnavailabilityTypes Find(this ITable<HorsesUnavailabilityTypes> table, long Id)
+		{
+			return table.FirstOrDefault(t =>
+				t.Id == Id);
+		}
+
+		public static HorseToCoachesLink Find(this ITable<HorseToCoachesLink> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);

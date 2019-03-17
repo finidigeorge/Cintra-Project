@@ -338,6 +338,25 @@ namespace Repositories
             }, dbContext);
         }
 
+        public async Task<CheckResultDto> HasHorseAssignedToAtLeastOneOfCoaches(Hors horse, Booking bookingData, DataConnection dbContext = null)
+        {
+            return await RunWithinTransaction(async (db) =>
+            {
+                var links = await db.GetTable<HorseToCoachesLink>().Where(x => x.HorseId == horse.Id).ToListAsync();
+
+                //null means all
+                if (!(links ?? Enumerable.Empty<HorseToCoachesLink>()).Any())
+                    return new CheckResultDto() { Result = true };
+
+                
+                if (links.Any(x => bookingData.BookingsToCoachesLinks.Any(b => b.CoachId == x.CoachId)))
+                    return new CheckResultDto() { Result = true };
+                
+                return new CheckResultDto() { Result = false, ErrorMessage = $"Coaches selected for the booking are not assinged to use {horse.Nickname}" }; 
+
+            }, dbContext);
+        }
+
         public async Task<bool> IsHorseAvialableForBooking(Hors horse, Booking bookingData, DataConnection dbContext = null)
         {
             return await RunWithinTransaction(async (db) =>
@@ -348,9 +367,11 @@ namespace Repositories
                 bool eligibleForService =
                     bookingData.Service.ServiceToHorsesLinks.Any(x => x.HorseId == horse.Id);
 
-                bool passedScheduleCheck = (await HasHorseScheduleFitBooking(horse, bookingData)).Result;
+                bool passedScheduleCheck = (await HasHorseScheduleFitBooking(horse, bookingData, db)).Result;
 
-                return !hasOverlappedBookings && eligibleForService && passedScheduleCheck;
+                bool isAssignedToCoach = (await HasHorseAssignedToAtLeastOneOfCoaches(horse, bookingData, db)).Result;
+
+                return !hasOverlappedBookings && eligibleForService && passedScheduleCheck && isAssignedToCoach;
             }, dbContext);
         }                
 
@@ -426,6 +447,7 @@ namespace Repositories
                     {
                         Append(error, (await HasHorseNotOverlappedBooking(horse, booking, db)).ToString());
                         Append(error, (await HasHorseScheduleFitBooking(horse, booking, db)).ToString());
+                        Append(error, (await HasHorseAssignedToAtLeastOneOfCoaches(horse, booking, db)).ToString());
                     }
                 }
                 //just Warnings

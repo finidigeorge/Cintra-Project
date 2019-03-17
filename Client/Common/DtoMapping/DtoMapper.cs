@@ -258,6 +258,17 @@ namespace Common.DtoMapping
         }
 
         public override string ToString() => NickName;
+
+        [DependsOn(nameof(AllowedCoaches))]
+        public String SelectedCoaches
+        {
+            get
+            {
+                return AllowedCoaches?.Any() ?? false 
+                    ? String.Join(", ", AllowedCoaches.Select(x => $"{x.Name} ({x.CoachRole})"))
+                    : "All Coaches";
+            }
+        }
     }
 
     public partial class ServiceDtoUi : ServiceDto, INotifyPropertyChanged

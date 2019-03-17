@@ -165,6 +165,7 @@ namespace Mapping
                     .AfterMap((db, vm) =>
                     {
                         vm.HorseScheduleData = db.HorsesScheduleData?.Select(x => _mapper.Map<HorseScheduleDataDto>(x)).ToList() ?? new List<HorseScheduleDataDto>();
+                        vm.AllowedCoaches = db.HorseToCoachesLinks?.Select(p => _mapper.Map<CoachDto>(p.Coach)).ToList() ?? new List<CoachDto>();
                     });
 
                 conf.CreateMap<HorseDto, Hors>()
@@ -172,6 +173,12 @@ namespace Mapping
                     .AfterMap((vm, db) =>
                     {
                         db.HorsesScheduleData = vm.HorseScheduleData?.Select(x => _mapper.Map<HorsesScheduleData>(x)).ToList() ?? new List<HorsesScheduleData>();
+                        db.HorseToCoachesLinks = vm.AllowedCoaches?.Select(x =>
+                            new HorseToCoachesLink()
+                            {
+                                CoachId = x.Id,
+                                HorseId = vm.Id
+                            }) ?? Enumerable.Empty<HorseToCoachesLink>();
                     });
 
                 conf.CreateMap<Service, ServiceDto>().AfterMap((db, vm) =>
