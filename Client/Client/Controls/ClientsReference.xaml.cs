@@ -34,5 +34,10 @@ namespace Client.Controls
         {
             SearchTextBox.Text = string.Empty;
         }
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) SearchTextBox.Text = string.Empty;
+        }
     }
 }

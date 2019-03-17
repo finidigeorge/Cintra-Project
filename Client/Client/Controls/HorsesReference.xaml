@@ -34,8 +34,8 @@
                 <ColumnDefinition Width="90"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" Content="Search for horses:"/>
-            <TextBox Name="SearchTextBox" Grid.Column="1" HorizontalAlignment="Stretch" Height="23"  TextWrapping="Wrap" Text="{Binding FilterExpression, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-            <Button Grid.Column="2" Content="Clear search" Height="23" Command="{Binding Path=ClearSearchCommand}" Click="ClearSearchButton_Click"/>
+            <TextBox Name="SearchTextBox" Grid.Column="1" HorizontalAlignment="Stretch" Height="23"  TextWrapping="Wrap" Text="{Binding FilterExpression, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" KeyDown="SearchTextBox_KeyDown"/>
+            <Button Grid.Column="2" ToolTip="Clean search string (or press Esc)" Content="Clear search" Height="23" Command="{Binding Path=ClearSearchCommand}" Click="ClearSearchButton_Click"/>
         </Grid>
         <DataGrid Name="ItemsDataGrid" 
                   ItemsSource="{Binding Path=ItemsCollectionView}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 

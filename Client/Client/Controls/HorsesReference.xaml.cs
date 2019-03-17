@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Client.Commands;
 using Client.Extentions;
 using Client.ViewModels;
@@ -43,6 +44,11 @@ namespace Client.Controls
         private void ClearSearchButton_Click(object sender, RoutedEventArgs e)
         {
             SearchTextBox.Text = string.Empty;
+        }
+
+        private void SearchTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape) SearchTextBox.Text = string.Empty;            
         }
     }
 
