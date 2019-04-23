@@ -1,6 +1,5 @@
 ﻿using Client.Commands;
 using Client.Controls.WpfScheduler;
-using Client.Extentions;
 using Client.ViewModels;
 using Common.DtoMapping;
 using Shared.Extentions;
@@ -9,16 +8,11 @@ using Shared.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Client.Windows.Helpers;
 
 namespace Client.Windows
 {
@@ -43,7 +37,7 @@ namespace Client.Windows
     /// Interaction logic for BookingWindow.xaml
     /// </summary>
     public partial class BookingWindow : Window
-    {        
+    {
         public BookingRefVm Model => (BookingRefVm)Resources["ViewModel"];
 
         public BookingWindow()
@@ -237,14 +231,17 @@ namespace Client.Windows
                 };
             }
             else
-                _bookingData = bookingData;
+                _bookingData = bookingData;            
 
-            var editor = new BookingEditWindow(_bookingData, IsEditMode) { Owner = this };            
-                        
-            var res = editor.ShowDialog() ?? false;
+            var editor = new BookingEditWindow(_bookingData, IsEditMode) { Owner = this };
+            
+            // wait for the dialog window to be closed
+            var helper = new CustomShowModalHelper(editor);
+            helper.ShowAndWait();                        
+
             return new BookingData()
             {
-                IsBooked = res,
+                IsBooked = helper.GetResult(),
                 IsFortnightly = editor.Model.IsFortnightly,                
                 Booking = editor.Model.BookingData,
                 HasRecurrentBookings = editor.Model.EnableRecurringApointments,

@@ -2,6 +2,7 @@
 using Client.Controls.WpfScheduler;
 using Client.Extentions;
 using Client.ViewModels;
+using Client.Windows.Interfaces;
 using Common;
 using Common.DtoMapping;
 using Shared;
@@ -26,13 +27,15 @@ namespace Client.Windows
     /// <summary>
     /// Interaction logic for BookingEditWindow.xaml
     /// </summary>
-    public partial class BookingEditWindow : Window
+    public partial class BookingEditWindow : Window, ICustomDialog
     {
         private SolidColorBrush weeklyEventBrush = new SolidColorBrush(Colors.WhiteSmoke);
 
         public BookingEditWindowVm Model => (BookingEditWindowVm)Resources["ViewModel"];
 
         private Event SelectedEvent { get; set; }
+
+        public bool CustomDialogResult { get; set;}
 
         public BookingEditWindow()
         {
@@ -130,7 +133,7 @@ namespace Client.Windows
             return (res, editor.Model);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OnOk_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(Model.CoachValidationFitScheduleWarning))
             {
@@ -153,7 +156,13 @@ namespace Client.Windows
                     return;
             }
 
-            DialogResult = true;
+            CustomDialogResult = true;
+            Close();
+        }
+
+        private void OnCancel_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            CustomDialogResult = false;
             Close();
         }
 
@@ -195,7 +204,7 @@ namespace Client.Windows
         private void WeeklyScheduler_OnEventClick(object sender, Controls.WpfScheduler.Event e)
         {
             SelectedEvent = e;
-        }
+        }        
     }
 }
 

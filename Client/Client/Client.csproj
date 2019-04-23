@@ -201,12 +201,14 @@
     <Compile Include="Windows\BookingWindow.xaml.cs">
       <DependentUpon>BookingWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Helpers\CustomShowModalHelper.cs" />
     <Compile Include="Windows\HorseEditScheduleWindow.xaml.cs">
       <DependentUpon>HorseEditScheduleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\HorseEditWindow.xaml.cs">
       <DependentUpon>HorseEditWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Interfaces\ICustomDialog.cs" />
     <Compile Include="Windows\Reports\HorsesWorkloadReportWindow.xaml.cs">
       <DependentUpon>HorsesWorkloadReportWindow.xaml</DependentUpon>
     </Compile>

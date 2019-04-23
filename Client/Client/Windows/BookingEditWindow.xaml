@@ -299,8 +299,8 @@
 
         </TabControl>
         <Button Content="OK" Margin="0,0,148,19" Width="120
-            " IsDefault="True" HorizontalAlignment="Right" IsEnabled="{Binding Path=BookingData.IsValid}" Click="Button_Click" RenderTransformOrigin="0.506,1.385" Height="36" VerticalAlignment="Bottom"/>
-        <Button Content="Cancel" Margin="0,0,10,19" IsCancel="True" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom"/>
+            " IsDefault="True" HorizontalAlignment="Right" IsEnabled="{Binding Path=BookingData.IsValid}" Click="OnOk_ButtonClick" RenderTransformOrigin="0.506,1.385" Height="36" VerticalAlignment="Bottom"/>
+        <Button Content="Cancel" Margin="0,0,10,19" IsCancel="True" HorizontalAlignment="Right" Width="120" Height="36" VerticalAlignment="Bottom" Click="OnCancel_ButtonClick"/>
 
     </Grid>
 </Window>
